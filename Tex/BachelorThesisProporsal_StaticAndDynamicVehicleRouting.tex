@@ -1,0 +1,132 @@
+%=======================
+% Thesis Proposal Template (Passau-style head + Cologne structure)
+%========================
+\documentclass[11pt,a4paper]{article}
+
+% --- Packages ---
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{graphicx}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{ulem}
+\normalem
+\usepackage{xcolor}
+
+
+% --- Metadata ---
+\newcommand{\studentname}{Philipp Stockerl}
+\newcommand{\matnr}{107829}
+\newcommand{\chair}{Chair of Business Decisions \& Data Science}
+\newcommand{\professor}{Prof.\ Dr.\ Marc Goerigk}
+\newcommand{\faculty}{Faculty of Business Administration and Economics}
+\newcommand{\unilogo}{figs/PassauLogo.png}
+\newcommand{\thesistype}{Bachelor's Thesis Proposal}
+\newcommand{\proposaltitle}{A Comparison of Static and Dynamic Vehicle Routing Algorithms}
+
+% --- Hyperref colors ---
+\hypersetup{
+	colorlinks=true,
+	linkcolor=black,
+	urlcolor=blue!50!black,
+	citecolor=black
+}
+
+% --- Section formatting ---
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{\MakeUppercase}
+\titlespacing*{\section}{0pt}{5.0ex plus .2ex}{0.6ex}
+\setlength{\parskip}{6pt}
+\setlength{\parindent}{0pt}
+
+% --- Header ---
+\newcommand{\makeproposalhead}{%
+	\noindent
+	\begin{minipage}[t]{0.62\textwidth}
+		{\large \textbf{\studentname}}\\[0.2em]
+		\textit{Matr. No} \ \matnr\\[0.8em]
+		\textbf{\chair}\\
+		\professor
+	\end{minipage}%
+	\hfill
+	\begin{minipage}[t]{0.35\textwidth}
+		\raggedleft
+		\vspace{0pt}
+		\includegraphics[height=1.7cm]{\unilogo}\\[-0.2em]
+		{\small \faculty}
+	\end{minipage}
+	
+	\vspace{1.0em}
+	\hrule height 0.8pt
+	\vspace{0.9em}
+	
+	{\Large \textbf{\thesistype}: \textbf{\proposaltitle}}\\[-0.3em]
+	\vspace{0.8em}
+}
+
+\begin{document}
+	
+	\makeproposalhead
+	
+	\section*{Research Question}
+	How does deterministic route planning for unmanned vehicles compare to robust optimization and dynamic path planning when operating under uncertainty? 
+	
+	\section*{Motivation and Background}
+	My interest in Operations Research was sparked by several courses offered by the Chair of Prof.\ Dr.\ Alena Otto at the University of Passau, which I have been attending since the summer semester of 2024. 
+	I have successfully completed the theoretical courses \textit{Supply Chain and Operations Management} and \textit{Fundamentals of Management Science I}, as well as the practical internship \textit{ZF Meisterklasse: Verhandlungsstrategien in der Beschaffungslogistik}. 
+	Furthermore, I wrote my bachelor seminar thesis in Operations Research on the topic of \textit{Competitive Facility Location with Random Utility}. 
+	In the \textit{Practical Course: Management Science}, I implemented a \textit{Minimum Cost Flow Problem} using Gurobi and Python. 
+	After applying for a bachelor’s thesis during the application period in January 2024, I received an email from Prof.\ Dr.\ Alena Otto informing me that she would not be able to supervise my thesis due to her upcoming leave.
+	
+	
+	The deployment of Unmanned Aerial Vehicles (UAVs) in logistics has increased rapidly. Efficient route planning is critical for safety, battery use, and delivery reliability. Classical shortest-path algorithms such as Dijkstra (1959) or A* provide optimal solutions in deterministic networks but cannot guarantee performance in uncertain conditions such as wind, battery degradation, or temporary no-fly zones.
+	
+	Robust optimization (Bertsimas \& Sim, 2003) offers a systematic framework to protect solutions against worst-case deviations, trading off cost and resilience. In contrast, dynamic heuristic algorithms like D*~Lite (Koenig \& Likhachev, 2002) continuously update paths as new information becomes available, favoring adaptability over precomputed guarantees. Comparing these paradigms reveals a key trade-off between conservatism and adaptability in UAV routing under uncertainty.
+	
+	\section*{Methodology and Data}
+	The core objective of this study is to compare static robust route planning and dynamic replanning for UAV pathfinding under uncertain travel costs. Three algorithmic paradigms will be implemented and evaluated: deterministic, robust, and dynamic.
+	
+	\textbf{1. Deterministic baseline.} 
+	Dijkstra’s and A* algorithms will serve as static benchmarks, computing optimal paths on graphs with fixed nominal edge costs. These represent the idealized case of perfect information without uncertainty.
+	
+	\textbf{2. Robust optimization.} 
+	The Bertsimas–Sim $\Gamma$-uncertainty framework will be used to model cost uncertainty. Each edge $i \in E$ has a nominal cost $c_i$ and a maximum deviation $d_i$, with an uncertainty budget $\Gamma$ limiting how many edges may simultaneously reach their upper bound. The resulting robust optimization problem,
+	\[
+	\min_{x \in \mathcal{X}} \left\{ \sum_{i \in E} c_i x_i + \Gamma \pi + \sum_{i \in E} [d_i x_i - \pi]_+ \right\},
+	\]
+	is formulated as a mixed-integer linear program and solved with Gurobi. The parameter $\Gamma$ directly controls the conservatism of the solution—higher $\Gamma$ values yield paths that hedge more strongly against worst-case scenarios.
+	
+	\textbf{3. Dynamic replanning.} 
+	The D* Lite algorithm (Koenig \& Likhachev, 2002) will be implemented as a representative of incremental search methods. Starting from the same nominal cost graph as the robust model, D* Lite receives the robust path as its initial input. During simulation, cost increases are revealed locally as the UAV progresses through the environment, prompting D* Lite to update its path in real time without full recomputation. 
+	
+	\textbf{Experimental graph design.} 
+	The most challenging aspect lies in constructing meaningful test graphs that allow both methods to operate under comparable conditions. To this end, synthetic flight networks will be generated with the following structure:
+	\begin{itemize}[leftmargin=1.2em]
+		\item Nodes represent waypoints or altitude levels; edges represent traversable flight corridors.
+		\item Each edge has a nominal cost proportional to Euclidean distance and an additional uncertainty interval $[c_i, c_i + d_i]$ simulating wind drift or local turbulence.
+		\item Instead of binary obstacles, \textit{uncertain regions} will be defined as clusters of edges with correlated cost increases. These act as ``wind zones'' or ``noisy areas'' that delay travel but do not block connectivity.
+	\end{itemize}
+	This setup ensures that the robust model and D* Lite face the same uncertainty information—one anticipates possible cost surges a priori, the other reacts adaptively as they occur.
+	
+	\textbf{Evaluation.} 
+	Simulation experiments will compare average, worst-case, and realized total path costs, as well as computational time and adaptability. Each graph configuration will be tested under multiple random realizations of the uncertain areas. Key metrics include the robustness ratio (worst-case/nominal cost), recovery frequency (number of replans), and computational effort per iteration. 
+	
+	By systematically varying $\Gamma$ and the spatial correlation of uncertainty zones, the study will highlight the trade-off between pre-computed robustness and online adaptability in uncertain UAV routing.
+
+
+	
+	\section*{Selected References}
+	\begin{itemize}[leftmargin=1.2em]
+		\item Dijkstra, E. W. (1959). A note on two problems in connexion with graphs. \textit{Numerische Mathematik, 1}(1), 269–271.
+		\item Bellman, R. (1958). On a routing problem. \textit{Quarterly of Applied Mathematics, 16}(1), 87–90.
+		\item Koenig, S., \& Likhachev, M. (2002). D*~Lite. In \textit{AAAI Conference on Artificial Intelligence}.
+		\item Bertsimas, D., \& Tsitsiklis, J. (1997). \textit{Introduction to Linear Optimization}. Athena Scientific.
+		\item Bertsimas, D., \& Sim, M. (2003). Robust discrete optimization and network flows. \textit{Mathematical Programming, 98}(1), 49–71.
+		\item Bertsimas, D., \& Kallus, N. (2020). From predictive to prescriptive analytics. \textit{Management Science, 66}(3), 1025–1044.
+	\end{itemize}
+	
+\end{document}
