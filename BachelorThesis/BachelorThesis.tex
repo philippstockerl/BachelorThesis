@@ -1,0 +1,238 @@
+%=======================
+% Bachelor's Thesis Proposal – Philipp Stockerl
+%========================
+\documentclass[11pt,a4paper]{article}
+
+% --- Packages ---
+\usepackage[english]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{graphicx}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{ulem}
+\normalem
+\usepackage{xcolor}
+\usepackage{amsmath, amssymb}
+
+% --- Metadata ---
+\newcommand{\studentname}{Philipp Stockerl}
+\newcommand{\matnr}{107829}
+\newcommand{\chair}{Chair of Business Decisions \& Data Science}
+\newcommand{\professor}{Prof.\ Dr.\ Marc Goerigk}
+\newcommand{\faculty}{Faculty of Business Administration and Economics}
+\newcommand{\unilogo}{figs/PassauLogo.png}
+\newcommand{\thesistype}{Bachelor's Thesis Proposal}
+\newcommand{\proposaltitle}{Static and Dynamic Vehicle Routing under Uncertainty}
+
+% --- Hyperref colors ---
+\hypersetup{
+	colorlinks=true,
+	linkcolor=black,
+	urlcolor=blue!50!black,
+	citecolor=black
+}
+
+% --- Section formatting ---
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{\MakeUppercase}
+\titlespacing*{\section}{0pt}{5.0ex plus .2ex}{0.6ex}
+\setlength{\parskip}{6pt}
+\setlength{\parindent}{0pt}
+
+% --- Header ---
+\newcommand{\makeproposalhead}{%
+	\noindent
+	\begin{minipage}[t]{0.62\textwidth}
+		{\large \textbf{\studentname}}\\[0.2em]
+		\textit{Matr. No} \ \matnr\\[0.8em]
+		\textbf{\chair}\\
+		\professor
+	\end{minipage}%
+	\hfill
+	\begin{minipage}[t]{0.35\textwidth}
+		\raggedleft
+		\vspace{0pt}
+		\includegraphics[height=1.7cm]{\unilogo}\\[-0.2em]
+		{\small \faculty}
+	\end{minipage}
+	
+	\vspace{1.0em}
+	\hrule height 0.8pt
+	\vspace{0.9em}
+	
+	{\Large \textbf{\thesistype}: \textbf{\proposaltitle}}\\[-0.3em]
+	\vspace{-1.5em}
+}
+
+\begin{document}
+	
+	\makeproposalhead
+	
+	\section{Research Question}
+	“How much does dynamic adaptation (D* Lite) improve cost efficiency and resilience compared to a static robust plan under spatially correlated uncertainty?”
+	
+	\section{Gaussian Random Field}
+	Creates Gaussain Random Field map that acts as data for comparison. The generator produces synthetic environemnts for further testing.
+	\begin{itemize}
+		\item Forecast edges: map used by the robust model 
+		\item Actual edges: map used by D* Lite
+	\end{itemize}
+	Both maps are derived from the same Gaussian Random Field, so they are statistically correlated but not identical. The idea is that the robust, static model pre-plans the route using forecast data. The actual map contains data that the vehicle´s sensors are going to pick up. Theoretically this should mimic a weather forecast versus real atmospheric conditions scenario.
+	\begin{itemize}
+		\item temporal sequence
+		\item spatio-temporal uncertainty model
+	\end{itemize}
+	
+	
+	\subsection*{Modeling Interpretation of Forecast and Actual GRF Maps}
+	
+	The Gaussian Random Field (GRF) generator produces two spatially correlated cost maps, denoted as the \emph{forecast field} and the \emph{actual field}, which represent different levels of environmental knowledge available to the planner. Both maps originate from the same base GRF and are normalized to a comparable cost range $[1,10]$ to ensure numerical consistency across models.
+	
+	The \textbf{actual field} corresponds to the true cost surface $c_i^{\text{actual}}$, i.e., the underlying spatial reality as experienced by the dynamic path-planning algorithm (D*~Lite). In contrast, the \textbf{forecast field} represents a smoothed version of the same GRF obtained by applying a Gaussian blur with parameter $\sigma = \text{BLUR\_SIGMA}$. This blurring process systematically removes high-frequency local variations, thereby mimicking the loss of spatial detail that occurs in real-world forecasting, e.g., through weather prediction or low-resolution sensing.
+	
+	The \textbf{uncertainty} between the forecast and actual environments is not artificially added but instead \emph{emerges naturally} from this difference in spatial resolution. Specifically, for each edge $i$, the local deviation is computed as
+	\[
+	d_i = \left| c_i^{\text{actual}} - c_i^{\text{forecast}} \right|,
+	\]
+	which quantifies the discrepancy between predicted and realized costs. These deviations $d_i$ serve as the uncertainty parameters in the Bertsimas–Sim robust optimization model, where the planner anticipates that up to $\Gamma$ of these deviations may simultaneously worsen the travel cost.
+	
+	This formulation ensures that the two maps remain statistically comparable: both encode nominal costs $c_i$, but the forecast field reflects an \emph{imperfect estimate} of the true environment. Consequently, the blurring operation itself functions as the uncertainty-generating mechanism, introducing spatially correlated forecast errors without modifying the nominal cost structure or artificially inflating costs.
+	
+	\subsection*{Nominal Cost Derivation from the Gaussian Random Field}
+	
+	The Gaussian Random Field (GRF) $Z(x,y)$ provides the continuous spatial foundation for cost generation. 
+	Each grid point $(x,y)$ represents an environmental condition (e.g., wind resistance, terrain difficulty, or congestion intensity) modeled as a realization of a zero-mean, stationary Gaussian process with variance $\sigma^2$ and correlation length $l$:
+	\[
+	Z(x,y) \sim \mathcal{GP}\big(0,\, k(r)\big), \quad \text{with} \quad k(r) = \sigma^2 \exp\!\left(-\frac{r^2}{2l^2}\right),
+	\]
+	where $r$ denotes the Euclidean distance between two locations. This formulation yields spatially correlated, smooth cost landscapes in which nearby regions exhibit similar values.
+	
+	To obtain operationally meaningful cost data, the GRF values are linearly rescaled into a normalized cost range $[1, 10]$, defining the \textbf{nominal cost} $c_i$ associated with each node or edge:
+	\[
+	c_i = 1 + 9 \cdot \frac{Z_i - \min(Z)}{\max(Z) - \min(Z)}.
+	\]
+	Here, lower values correspond to favorable traversal conditions, while higher values represent costly or risky regions. 
+	This normalization ensures comparability across different random field realizations and maintains consistent magnitude scales for optimization.
+	
+	Two distinct nominal cost fields are then derived from the same base GRF:
+	\begin{itemize}
+		\item \textbf{Actual cost field} $c_i^{\text{actual}}$: obtained directly from the normalized GRF, preserving full local variation. It represents the true, fine-grained environment encountered by the D*~Lite path-planning algorithm.
+		\item \textbf{Forecast cost field} $c_i^{\text{forecast}}$: generated by applying a Gaussian blur (with parameter $\sigma_{\text{blur}}$) to the base GRF before normalization. The smoothing operation removes small-scale features, simulating the coarser spatial resolution of predictive models such as weather forecasts.
+	\end{itemize}
+	
+	The difference between these two correlated but non-identical fields gives rise to the element-wise deviation term used in the robust optimization model:
+	\[
+	d_i = \big|\, c_i^{\text{actual}} - c_i^{\text{forecast}} \,\big|.
+	\]
+	Thus, the nominal costs $c_i$ are statistically grounded quantities derived from the GRF, while the blurring process naturally introduces spatially structured uncertainty without artificial noise injection.
+	
+	\section{Robust Min-Max Optimization under Budget Uncertainty}
+	In operations planning route planning often has to take place under uncertain conditions. To account for discrapencies a certain threshold has to be considered. In this case possible deviation from the initial route occurs because of unpredictable changes in weather conditions. Although forecasting methods are able to pick up bad weather cells, their actual impact on route budget can vary. 
+	
+\begin{align}
+	\min_{x \in \mathcal{X}} \max_{c \in \mathcal{U}} \sum_{i \in [n]} c_i x_i \tag{1.0}
+\end{align}
+
+\begin{align}
+	= \min \sum_{i \in [n]} c_i x_i + \Gamma \pi + \sum_{i \in [n]} \rho_i \tag{1.1}
+\end{align}
+
+\begin{align}
+	\text{s.t.} \quad & \pi + \rho_i \ge d_i x_i && \forall i \in [n] \tag{2}\\
+	& x \in \mathcal{X} && \tag{3}\\
+	& \pi \ge 0 && \tag{4}\\
+	& \rho_i \ge 0 && \forall i \in [n] \tag{5}
+\end{align}
+
+
+\begin{description}[leftmargin=2.8cm, style=nextline]
+	\item[$x_i$] 
+	Decision variable indicating whether edge $i$ is included in the route 
+	($x_i = 1$ if edge $i$ is chosen, $0$ otherwise).
+	
+	\item[$c_i$] 
+	Nominal (forecast) cost associated with edge $i$, obtained from the Gaussian Random Field representing the predicted environment.
+	
+	\item[$d_i$] 
+	Maximum deviation of edge $i$ from its nominal cost, defining the upper bound of uncertainty 
+	($c_i \in [c_i, c_i + d_i]$).
+	
+	\item[$\Gamma$] 
+	Budget of uncertainty controlling how many edges may simultaneously take on their worst-case deviations.
+	Higher $\Gamma$ leads to more conservative (robust) solutions.
+	
+	\item[$\pi$] 
+	Shared protection variable that captures the common level of protection against the $\Gamma$ worst deviations. 
+	It represents the dual value of the uncertainty budget constraint in the Bertsimas–Sim model.
+	
+	\item[$\rho_i$] 
+	Individual excess variable for edge $i$, representing the amount by which its deviation exceeds the shared protection level $\pi$.
+	Only activated for edges that belong to the worst-case subset.
+\end{description}
+
+The data for the robust model is explained in the following table.
+\begin{table}[h!]
+	\centering
+	\caption{Mapping between GRF-generated data and robust optimization model inputs}
+	\renewcommand{\arraystretch}{1.25}
+	\begin{tabular}{p{3.2cm} p{3.2cm} p{7.2cm}}
+		\hline
+		\textbf{Generated File / Variable} & \textbf{Model Parameter} & \textbf{Description and Creation Process} \\
+		\hline
+		
+		\texttt{nodes.csv} &
+		Network nodes $(V)$ &
+		Each node represents a grid point in the Gaussian Random Field (GRF). Created by iterating over a $GRID\_SIZE \times GRID\_SIZE$ lattice with coordinates $(x, y)$ and unique node IDs. \\
+		
+		\texttt{edges\_forecast.csv} &
+		Nominal cost $c_i$ and deviation $d_i$ &
+		Each edge $(u,v)$ connects adjacent nodes in 4-neighbour topology.  
+		\textit{Nominal cost} $c_i$ is taken from the \texttt{forecast\_field.npy} (blurred GRF).  
+		\textit{Deviation} $d_i$ is the absolute difference between the forecast and actual field values at node $u$, i.e.\ $d_i = |a_u - f_u|$.  
+		This represents uncertainty between predicted and real local conditions. \\
+		
+		\texttt{edges\_actual.csv} &
+		Realized cost $c_i^{\text{actual}}$ &
+		Contains the same edge structure as the forecast but with the \textit{actual} GRF values assigned as cost.  
+		Used to evaluate realized travel cost after the robust solution or D*~Lite path is computed. \\
+		
+		\texttt{forecast\_field.npy} &
+		Forecast cost surface (nominal map) &
+		A blurred version of the base GRF produced using a Gaussian filter ($\sigma = BLUR\_SIGMA$).  
+		Represents the spatially smoothed forecast that serves as input to the robust model. \\
+		
+		\texttt{actual\_field.npy} &
+		Actual cost surface (realized map) &
+		Identical to the base GRF (no white noise added).  
+		Represents the true underlying cost environment used by the D*~Lite algorithm. \\
+		
+		\texttt{SEED} &
+		Reproducibility control &
+		Global random seed ensuring identical GRF layouts between forecast and actual maps.  
+		Changing this seed produces a new synthetic environment while maintaining statistical comparability. \\
+		\hline
+	\end{tabular}
+	\label{tab:grf_bertsimas_mapping}
+\end{table}
+
+
+
+The nominal problem can be formulated as following:
+
+\begin{equation}
+	\begin{aligned}
+		\min_{x \in \mathcal{X}} \quad & \sum_{i \in [n]} c_i x_i \\[0.4em]
+		\text{s.t.} \quad 
+		& x \in \mathcal{X}
+	\end{aligned}
+	\label{eq:nominal}
+\end{equation}
+	
+	\section{Incremental Path Replanning}
+
+	
+\end{document}

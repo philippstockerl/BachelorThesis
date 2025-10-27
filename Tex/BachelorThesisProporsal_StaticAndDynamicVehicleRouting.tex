@@ -1,5 +1,5 @@
 %=======================
-% Thesis Proposal Template (Passau-style head + Cologne structure)
+% Bachelor's Thesis Proposal – Philipp Stockerl
 %========================
 \documentclass[11pt,a4paper]{article}
 
@@ -18,7 +18,6 @@
 \normalem
 \usepackage{xcolor}
 
-
 % --- Metadata ---
 \newcommand{\studentname}{Philipp Stockerl}
 \newcommand{\matnr}{107829}
@@ -27,7 +26,7 @@
 \newcommand{\faculty}{Faculty of Business Administration and Economics}
 \newcommand{\unilogo}{figs/PassauLogo.png}
 \newcommand{\thesistype}{Bachelor's Thesis Proposal}
-\newcommand{\proposaltitle}{A Comparison of Static and Dynamic Vehicle Routing Algorithms}
+\newcommand{\proposaltitle}{Static and Dynamic Vehicle Routing under Uncertainty}
 
 % --- Hyperref colors ---
 \hypersetup{
@@ -65,7 +64,7 @@
 	\vspace{0.9em}
 	
 	{\Large \textbf{\thesistype}: \textbf{\proposaltitle}}\\[-0.3em]
-	\vspace{0.8em}
+	\vspace{-1.5em}
 }
 
 \begin{document}
@@ -73,60 +72,52 @@
 	\makeproposalhead
 	
 	\section*{Research Question}
-	How does deterministic route planning for unmanned vehicles compare to robust optimization and dynamic path planning when operating under uncertainty? 
+	How can static and dynamic optimization approaches be compared in vehicle routing problems when operating under uncertain and spatially variable environmental conditions?
 	
 	\section*{Motivation and Background}
-	My interest in Operations Research was sparked by several courses offered by the Chair of Prof.\ Dr.\ Alena Otto at the University of Passau, which I have been attending since the summer semester of 2024. 
-	I have successfully completed the theoretical courses \textit{Supply Chain and Operations Management} and \textit{Fundamentals of Management Science I}, as well as the practical internship \textit{ZF Meisterklasse: Verhandlungsstrategien in der Beschaffungslogistik}. 
-	Furthermore, I wrote my bachelor seminar thesis in Operations Research on the topic of \textit{Competitive Facility Location with Random Utility}. 
-	In the \textit{Practical Course: Management Science}, I implemented a \textit{Minimum Cost Flow Problem} using Gurobi and Python. 
-	After applying for a bachelor’s thesis during the application period in January 2024, I received an email from Prof.\ Dr.\ Alena Otto informing me that she would not be able to supervise my thesis due to her upcoming leave.
+	During my studies, I have focused on Operations Research and Decision Analytics within both the Business Administration and Information Systems degree programs. 
+	I completed all courses previously offered by the former Chair of Prof.\ Dr.\ Alena Otto, including the bachelor seminar on uncertainty in competitive facility location, with the original intention of writing my thesis under her supervision. 
+	Following her unexpected departure from the University of Passau in early 2024 and the subsequent written notice regarding my application, I now aim to continue my thesis project in close alignment with her research area under the supervision of Prof.\ Dr.\ Marc Goerigk at the Chair of Business Decisions \& Data Science.
 	
+	In my seminar paper with Prof.\ Dr.\ Alena Otto on Competitive Facility Location, I studied Drezner’s model (\textit{Competitive Facility: Random Utility}) and explored classical approaches such as Huff and Hotelling. 
+	In the \textit{Practical Course: Management Science}, I implemented a \textit{Minimum Cost Flow Problem} using Gurobi and Python, which has prepared me well to handle both the robust extension and its implementation in this thesis. 
 	
-	The deployment of Unmanned Aerial Vehicles (UAVs) in logistics has increased rapidly. Efficient route planning is critical for safety, battery use, and delivery reliability. Classical shortest-path algorithms such as Dijkstra (1959) or A* provide optimal solutions in deterministic networks but cannot guarantee performance in uncertain conditions such as wind, battery degradation, or temporary no-fly zones.
+	The deployment of Unmanned Aerial Vehicles (UAVs) in logistics has increased rapidly. 
+	Efficient route planning is critical for safety, energy consumption, and reliability. 
+	While static optimization techniques compute fixed routes based on predicted data, dynamic approaches allow continuous adaptation as new information becomes available. 
+	This thesis examines how both paradigms perform when confronted with uncertain or imperfect information about travel conditions, highlighting the trade-off between conservatism and adaptability in UAV routing.
 	
-	Robust optimization (Bertsimas \& Sim, 2003) offers a systematic framework to protect solutions against worst-case deviations, trading off cost and resilience. In contrast, dynamic heuristic algorithms like D*~Lite (Koenig \& Likhachev, 2002) continuously update paths as new information becomes available, favoring adaptability over precomputed guarantees. Comparing these paradigms reveals a key trade-off between conservatism and adaptability in UAV routing under uncertainty.
+		\section*{Connection to Business Informatics}
+	This thesis is closely related to the field of Business Informatics, as it combines methods of Operations Research with data-driven decision support and intelligent information systems. The project focuses on the integration of optimization and adaptive planning models into digital decision-making architectures that process uncertain and spatially distributed data. By simulating real-time updates, sensor-based information flows, and autonomous decision logic, it reflects the principles of prescriptive analytics and intelligent decision support systems. Such systems are fundamental in modern business analytics, where organizations increasingly rely on algorithmic decision-making to enhance responsiveness, transparency, and operational efficiency. The developed framework thus represents a bridge between analytical modeling and information systems design, contributing to the digital transformation of operational processes and providing methodological insights for future decision-support and business intelligence applications in dynamic environments.
+	
 	
 	\section*{Methodology and Data}
-	The core objective of this study is to compare static robust route planning and dynamic replanning for UAV pathfinding under uncertain travel costs. Three algorithmic paradigms will be implemented and evaluated: deterministic, robust, and dynamic.
-	
-	\textbf{1. Deterministic baseline.} 
-	Dijkstra’s and A* algorithms will serve as static benchmarks, computing optimal paths on graphs with fixed nominal edge costs. These represent the idealized case of perfect information without uncertainty.
-	
-	\textbf{2. Robust optimization.} 
-	The Bertsimas–Sim $\Gamma$-uncertainty framework will be used to model cost uncertainty. Each edge $i \in E$ has a nominal cost $c_i$ and a maximum deviation $d_i$, with an uncertainty budget $\Gamma$ limiting how many edges may simultaneously reach their upper bound. The resulting robust optimization problem,
-	\[
-	\min_{x \in \mathcal{X}} \left\{ \sum_{i \in E} c_i x_i + \Gamma \pi + \sum_{i \in E} [d_i x_i - \pi]_+ \right\},
-	\]
-	is formulated as a mixed-integer linear program and solved with Gurobi. The parameter $\Gamma$ directly controls the conservatism of the solution—higher $\Gamma$ values yield paths that hedge more strongly against worst-case scenarios.
-	
-	\textbf{3. Dynamic replanning.} 
-	The D* Lite algorithm (Koenig \& Likhachev, 2002) will be implemented as a representative of incremental search methods. Starting from the same nominal cost graph as the robust model, D* Lite receives the robust path as its initial input. During simulation, cost increases are revealed locally as the UAV progresses through the environment, prompting D* Lite to update its path in real time without full recomputation. 
-	
-	\textbf{Experimental graph design.} 
-	The most challenging aspect lies in constructing meaningful test graphs that allow both methods to operate under comparable conditions. To this end, synthetic flight networks will be generated with the following structure:
+	The study compares representative static and dynamic optimization models in a controlled simulation environment. 
+	Synthetic spatial networks will be generated where edge costs are derived from Gaussian random fields that mimic environmental effects such as wind or turbulence. 
+	Two data layers will be created:
 	\begin{itemize}[leftmargin=1.2em]
-		\item Nodes represent waypoints or altitude levels; edges represent traversable flight corridors.
-		\item Each edge has a nominal cost proportional to Euclidean distance and an additional uncertainty interval $[c_i, c_i + d_i]$ simulating wind drift or local turbulence.
-		\item Instead of binary obstacles, \textit{uncertain regions} will be defined as clusters of edges with correlated cost increases. These act as ``wind zones'' or ``noisy areas'' that delay travel but do not block connectivity.
+		\item A \textbf{blurred forecast map} representing anticipated cost patterns (e.g., weather prediction). 
+		\item A \textbf{clear actual map} representing true realized travel conditions as encountered by the vehicle.
 	\end{itemize}
-	This setup ensures that the robust model and D* Lite face the same uncertainty information—one anticipates possible cost surges a priori, the other reacts adaptively as they occur.
+	The static model, based on the Bertsimas Sim robust optimization framework, computes a pre-planned route using the forecast data and an uncertainty budget~$\Gamma$. 
+	This route is then provided as the initial path to a dynamic replanning model implemented with algorithms like D*~Lite, which receives local sensor updates and may adapt the route if actual conditions differ. 
+	Instead of binary obstacles, uncertain regions will be modeled as \textit{delay zones} that increase traversal cost without blocking connectivity.
 	
-	\textbf{Evaluation.} 
-	Simulation experiments will compare average, worst-case, and realized total path costs, as well as computational time and adaptability. Each graph configuration will be tested under multiple random realizations of the uncertain areas. Key metrics include the robustness ratio (worst-case/nominal cost), recovery frequency (number of replans), and computational effort per iteration. 
-	
-	By systematically varying $\Gamma$ and the spatial correlation of uncertainty zones, the study will highlight the trade-off between pre-computed robustness and online adaptability in uncertain UAV routing.
-
-
+	\section*{Evaluation Design}
+	The performance of both methods will be analyzed under varying relationships between forecast and actual conditions:
+	\begin{itemize}[leftmargin=1.2em]
+		\item Actual conditions are \textbf{better than expected}: robust model overcompensates; dynamic method may improve efficiency.
+		\item Actual conditions \textbf{match the forecast}: both models expected to behave similarly.
+		\item Actual conditions are \textbf{worse than expected}: stress-test for robustness and recovery capability.
+	\end{itemize}
+	Key metrics include total realized cost, computational time, robustness ratio (worst/nominal cost), and adaptability (number of successful replans). 
+	This setup enables a quantitative assessment of how pre-computed robustness and real-time adaptability balance efficiency and reliability in uncertain routing environments.
 	
 	\section*{Selected References}
 	\begin{itemize}[leftmargin=1.2em]
-		\item Dijkstra, E. W. (1959). A note on two problems in connexion with graphs. \textit{Numerische Mathematik, 1}(1), 269–271.
-		\item Bellman, R. (1958). On a routing problem. \textit{Quarterly of Applied Mathematics, 16}(1), 87–90.
-		\item Koenig, S., \& Likhachev, M. (2002). D*~Lite. In \textit{AAAI Conference on Artificial Intelligence}.
-		\item Bertsimas, D., \& Tsitsiklis, J. (1997). \textit{Introduction to Linear Optimization}. Athena Scientific.
-		\item Bertsimas, D., \& Sim, M. (2003). Robust discrete optimization and network flows. \textit{Mathematical Programming, 98}(1), 49–71.
-		\item Bertsimas, D., \& Kallus, N. (2020). From predictive to prescriptive analytics. \textit{Management Science, 66}(3), 1025–1044.
+		\item Bertsimas, D., \& Sim, M. (2003). \textit{Robust discrete optimization and network flows.} Mathematical Programming, 98(1), 49–71.
+		\item Dijkstra, E. W. (1959). \textit{A note on two problems in connexion with graphs.} Numerische Mathematik, 1(1), 269–271.
+		\item Koenig, S., \& Likhachev, M. (2002). \textit{D* Lite.} In AAAI Conference on Artificial Intelligence.
 	\end{itemize}
 	
 \end{document}
