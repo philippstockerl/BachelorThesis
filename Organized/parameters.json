@@ -1,0 +1,33 @@
+{
+  "general": {
+    "master_seed": [999],
+    "num_seeds": 1,
+    "output_dir": "../Data",
+    "visualize": true
+  },
+  "grid": {
+    "sizes": [100]
+  },
+  "field": {
+    "kernels": ["Stable"],
+    "len_scales": [30.0],
+    "variances": [1.0],
+    "nuggets": [40.0],
+    "nu": [2.5],
+    "alpha": [1.5],
+    "beta": [5.0]
+  },
+
+  "robust": {
+    "Gamma_values": ["FULL"]
+},
+
+  "dstar": {
+    "sensing_radius": 1,
+    "use_robust_path": true,
+    "change_mode": "relative",        
+    "change_threshold": 0.1,           
+    "output_dir": "dstar_results",
+    "visualize": true
+  }
+}

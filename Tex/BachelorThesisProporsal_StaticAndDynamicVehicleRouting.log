@@ -1,4 +1,4 @@
-This is LuaHBTeX, Version 1.18.0 (TeX Live 2024)  (format=lualatex 2024.11.28)  27 OCT 2025 13:19
+This is LuaHBTeX, Version 1.18.0 (TeX Live 2024)  (format=lualatex 2024.11.28)  3 NOV 2025 19:41
  restricted system commands enabled.
 **BachelorThesisProporsal_StaticAndDynamicVehicleRouting.tex
 (./BachelorThesisProporsal_StaticAndDynamicVehicleRouting.tex
@@ -571,36 +571,38 @@ Package luatex.def Info: figs/PassauLogo.png  used on input line 72.
 Missing character: There is no ’ (U+2019) in font ec-lmr10!
 <./figs/PassauLogo.png>]
 LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 1
-02.
+08.
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 1
-02.
+08.
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
-102.
+108.
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
-102.
+108.
 
 (/usr/local/texlive/2024/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10.95> on input line 102.
+(Font)              <10.95> on input line 108.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 102.
+(Font)              <8> on input line 108.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 102.
- [2
+(Font)              <6> on input line 108.
+ [2] [3
+Missing character: There is no – (U+2013) in font ec-lmr10!
+Missing character: There is no – (U+2013) in font ec-lmr10!
 Missing character: There is no – (U+2013) in font ec-lmr10!
 Missing character: There is no – (U+2013) in font ec-lmr10!
 ] (./BachelorThesisProporsal_StaticAndDynamicVehicleRouting.aux)
@@ -614,15 +616,15 @@ cleRouting.out' has not changed.
 )
 
 Here is how much of LuaTeX's memory you used:
- 11989 strings out of 476447
+ 11990 strings out of 476447
  125027,1977958 words of node,token memory allocated
  435 words of node memory still in use:
    3 hlist, 1 vlist, 1 rule, 2 glue, 3 kern, 1 glyph, 6 attribute, 53 glue_spec,
  4 attribute_list, 1 write nodes
-   avail lists: 2:376,3:155,4:40,5:550,6:39,7:10621,8:2,9:247,10:15,11:1094
+   avail lists: 1:1,2:353,3:172,4:36,5:557,6:42,7:10026,8:2,9:249,10:8,11:1007
  33859 multiletter control sequences out of 65536+600000
  35 fonts using 2176607 bytes
- 72i,6n,75p,1144b,345s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 72i,6n,75p,567b,477s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/tex
 live/2024/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}{/usr/local/texlive/2024/texm
 f-dist/fonts/enc/dvips/lm/lm-ec.enc}</usr/local/texlive/2024/texmf-dist/fonts/ty
@@ -630,11 +632,11 @@ pe1/public/lm/lmbx10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/
 lm/lmbx12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr10.pf
 b></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/loca
 l/texlive/2024/texmf-dist/fonts/type1/public/lm/lmri10.pfb>
-Output written on BachelorThesisProporsal_StaticAndDynamicVehicleRouting.pdf (2
- pages, 160100 bytes).
+Output written on BachelorThesisProporsal_StaticAndDynamicVehicleRouting.pdf (3
+ pages, 167405 bytes).
 
-PDF statistics: 46 PDF objects out of 1000 (max. 8388607)
- 34 compressed objects within 1 object stream
- 3 named destinations out of 1000 (max. 131072)
+PDF statistics: 50 PDF objects out of 1000 (max. 8388607)
+ 37 compressed objects within 1 object stream
+ 4 named destinations out of 1000 (max. 131072)
  1 words of extra memory for PDF output out of 10000 (max. 100000000)
 
