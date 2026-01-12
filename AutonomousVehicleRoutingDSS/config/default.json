@@ -1,7 +1,7 @@
 {
     "seed": 420,
     "paths": {
-        "data_root": "/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/Data/ShowCase2",
+        "data_root": "AutonomousVehicleRoutingDSS/Data/ShowCase2",
         "dstar_edges_scenario": 0,
         "dstar_robust_path": "/path/to/robust/path.csv"
     },
