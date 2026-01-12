@@ -72,10 +72,10 @@ def _jaccard(a: np.ndarray, b: np.ndarray) -> float:
 
 def _tail_mass(xs: np.ndarray, density: np.ndarray, center: float, width: float) -> float:
     mask = (xs < center - width) | (xs > center + width)
-    total = np.trapz(density, xs)
+    total = np.trapezoid(density, xs)
     if total <= 0:
         return 0.0
-    tail = np.trapz(density[mask], xs[mask])
+    tail = np.trapezoid(density[mask], xs[mask])
     return float(tail / total)
 
 
