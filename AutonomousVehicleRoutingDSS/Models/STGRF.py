@@ -294,7 +294,7 @@ class STGRF:
             if self.gif_2d:
                 fig = plt.figure(figsize=(6,6))
                 ax = fig.add_subplot(111)
-                ax.axis("off")
+                ax.axis("on")
                 ax.imshow(f_t, cmap="viridis", origin="lower")
                 fig.tight_layout(pad=0)
                 img = self._figure_to_array(fig)
