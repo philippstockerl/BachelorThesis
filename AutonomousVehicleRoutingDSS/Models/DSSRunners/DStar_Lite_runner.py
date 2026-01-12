@@ -21,6 +21,10 @@ def run_dstar_pipeline(cfg):
     mode = cfg["dstar_lite"].get("warmstart_mode", "none")
     if mode == "lbu":  # legacy alias
         mode = "budgeted"
+    robust_cfg = cfg.get("robust_model", {})
+    start_node = int(robust_cfg.get("start_node", 0))
+    goal_cfg = robust_cfg.get("goal_node", "auto")
+    goal_node = None if str(goal_cfg).lower() == "auto" else int(goal_cfg)
 
     nodes = str(base / "nodes.csv")
     edges = str(base / "scenario_000" / "edges.csv")
@@ -42,6 +46,8 @@ def run_dstar_pipeline(cfg):
         pred,
         scen_changes,
         robust_list,
+        start_node=start_node,
+        goal_node=goal_node,
         beacon_cap=beacon_cap,
         debug=debug,
         debug_stride=debug_stride,

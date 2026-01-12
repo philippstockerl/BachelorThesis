@@ -139,6 +139,8 @@ class DStarLite:
         pred,
         scenario_changes,
         robust_path,
+        start_node=None,
+        goal_node=None,
         beacon_cap=10,
         debug=False,
         debug_stride=0,
@@ -159,8 +161,16 @@ class DStarLite:
         self.rhs = {}
 
         # start/ goal node
-        self.s_start = min(nodes.keys())
-        self.final_goal = max(nodes.keys())
+        if start_node is None:
+            start_node = min(nodes.keys())
+        if goal_node is None:
+            goal_node = max(nodes.keys())
+        if start_node not in nodes:
+            raise ValueError(f"Start node {start_node} is not in nodes.")
+        if goal_node not in nodes:
+            raise ValueError(f"Goal node {goal_node} is not in nodes.")
+        self.s_start = int(start_node)
+        self.final_goal = int(goal_node)
         self.current_goal = self.final_goal
 
 
