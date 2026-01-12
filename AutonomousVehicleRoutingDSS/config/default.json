@@ -1,7 +1,7 @@
 {
-    "seed": 3,
+    "seed": 420,
     "paths": {
-        "data_root": "AutonomousVehicleRoutingDSS/Data/StreamlitShowCase",
+        "data_root": "/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/Data/ShowCase2",
         "dstar_edges_scenario": 0,
         "dstar_robust_path": "/path/to/robust/path.csv"
     },
@@ -11,9 +11,9 @@
         "kernel": "Gaussian",
         "variance": 1.0,
         "length_scale": [
-            25.0,
-            25.0,
-            10.0
+            15.0,
+            15.0,
+            5.0
         ],
         "anis": [
             1.0,
@@ -34,8 +34,8 @@
         "step_per_layer": 10
     },
     "robust_model": {
-        "start_node": 0,
-        "goal_node": "auto"
+        "start_node": 1010,
+        "goal_node": "8989"
     },
     "budgeted_model": {
         "gamma": 20.0,
