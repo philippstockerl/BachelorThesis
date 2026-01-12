@@ -70,12 +70,18 @@ def _jaccard(a: np.ndarray, b: np.ndarray) -> float:
     return float(inter) / float(union)
 
 
+def _integrate_trapezoid(y: np.ndarray, x: np.ndarray) -> float:
+    if hasattr(np, "trapezoid"):
+        return float(np.trapezoid(y, x))
+    return float(np.trapz(y, x))
+
+
 def _tail_mass(xs: np.ndarray, density: np.ndarray, center: float, width: float) -> float:
     mask = (xs < center - width) | (xs > center + width)
-    total = np.trapezoid(density, xs)
+    total = _integrate_trapezoid(density, xs)
     if total <= 0:
         return 0.0
-    tail = np.trapezoid(density[mask], xs[mask])
+    tail = _integrate_trapezoid(density[mask], xs[mask])
     return float(tail / total)
 
 
