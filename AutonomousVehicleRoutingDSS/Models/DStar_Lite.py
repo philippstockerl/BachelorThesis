@@ -840,6 +840,9 @@ class DStarLite:
 
             out_png = out_dir / f"dstar_frame_{i:03d}.png"
             ax.axis("off")
+            ax.set_title(f"Scenario {i:03d}")
+            ax.set_xlabel("X coordinate")
+            ax.set_ylabel("Y coordinate")
             fig.tight_layout(pad=0)
             fig.savefig(out_png, dpi=150)
             plt.close(fig)
