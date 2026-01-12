@@ -1,0 +1,10 @@
+gstools
+gurobipy
+imageio
+matplotlib
+networkx
+numpy
+pandas
+Pillow
+scipy
+streamlit
