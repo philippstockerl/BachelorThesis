@@ -1,0 +1,62 @@
+\contentsline {section}{Notation}{1}{}%
+\contentsline {section}{List of Tables}{3}{}%
+\contentsline {section}{List of Figures}{4}{}%
+\contentsline {chapter}{\numberline {1}INTRODUCTION}{5}{}%
+\contentsline {paragraph}{Problem Setting}{5}{}%
+\contentsline {paragraph}{Research Objective}{7}{}%
+\contentsline {paragraph}{Motivation}{7}{}%
+\contentsline {paragraph}{Contribution}{8}{}%
+\contentsline {chapter}{\numberline {2}CONCEPTUAL FOUNDATIONS}{9}{}%
+\contentsline {section}{\numberline {2-1}Model and Data Driven \newline Decision Support Systems}{9}{}%
+\contentsline {paragraph}{DSS for Vehicle Routing}{9}{}%
+\contentsline {paragraph}{Model and Data Utilization}{10}{}%
+\contentsline {section}{\numberline {2-2}Data Component: \newline Geostatistical Data Generation}{10}{}%
+\contentsline {section}{\numberline {2-3}Model Component: \newline Shortest-Path Planning Under Uncertainty}{12}{}%
+\contentsline {paragraph}{Shortest-path problem formulation}{12}{}%
+\contentsline {paragraph}{Nominal shortest-path problem}{12}{}%
+\contentsline {paragraph}{Shortest-path planning under uncertainty}{14}{}%
+\contentsline {section}{\numberline {2-4}Robust Combinatorial Optimization}{15}{}%
+\contentsline {paragraph}{Robust Optimization and the Min--Max Principle}{16}{}%
+\contentsline {paragraph}{Uncertainty Sets}{16}{}%
+\contentsline {paragraph}{Discrete Uncertainty Sets}{16}{}%
+\contentsline {paragraph}{Continuous Budgeted Uncertainty Sets}{18}{}%
+\contentsline {paragraph}{Summary}{19}{}%
+\contentsline {section}{\numberline {2-5}Incremental Search-Based Path-Planning}{19}{}%
+\contentsline {paragraph}{Incremental Heuristic Search as an Execution Model}{20}{}%
+\contentsline {paragraph}{D* Lite as a Canonical Incremental Planner}{20}{}%
+\contentsline {paragraph}{State Representation and Local Consistency}{21}{}%
+\contentsline {paragraph}{Priority Queue and Lexicographic Keys}{21}{}%
+\contentsline {paragraph}{Heuristic Shift and Moving Start}{22}{}%
+\contentsline {paragraph}{Greedy Path Execution}{22}{}%
+\contentsline {paragraph}{Role Within the Experimental Framework}{22}{}%
+\contentsline {chapter}{\numberline {3}IMPLEMENTATION DETAILS}{23}{}%
+\contentsline {section}{\numberline {3-1}Decision Support Systems}{23}{}%
+\contentsline {section}{\numberline {3-2}Geostatistical Data Generation for Spatio-Temporal Cost Fields}{23}{}%
+\contentsline {paragraph}{Step 1: Covariance model and kernel selection.}{23}{}%
+\contentsline {paragraph}{Step 2: Structured space--time grid.}{24}{}%
+\contentsline {paragraph}{Step 3: Spectral random field generation.}{24}{}%
+\contentsline {paragraph}{Step 4: Global normalization.}{24}{}%
+\contentsline {paragraph}{Step 5: Scenario slices and graph mapping.}{24}{}%
+\contentsline {paragraph}{Step 6: Export for downstream models.}{24}{}%
+\contentsline {section}{\numberline {3-3}Discrete Uncertainty Min--Max Model}{25}{}%
+\contentsline {section}{\numberline {3-4}Budgeted Uncertainty Min--Max Model}{26}{}%
+\contentsline {section}{\numberline {3-5}D* Lite}{27}{}%
+\contentsline {paragraph}{Modeling Differences.}{27}{}%
+\contentsline {paragraph}{Scenario-Based Cost Evolution.}{28}{}%
+\contentsline {paragraph}{Coupling Robust Planning and Incremental Execution.}{28}{}%
+\contentsline {paragraph}{Algorithmic Structure and Pseudocode Mapping.}{28}{}%
+\contentsline {chapter}{\numberline {4}EXPERIMENTAl RESULTS}{30}{}%
+\contentsline {paragraph}{Research Questions}{30}{}%
+\contentsline {section}{\numberline {4-1}Baseline}{31}{}%
+\contentsline {paragraph}{Length Scale}{31}{}%
+\contentsline {paragraph}{Uncertainty Budget}{32}{}%
+\contentsline {section}{\numberline {4-2}Experiment 1: Urban vs. Regional Scale}{33}{}%
+\contentsline {section}{\numberline {4-3}Experiment 2: Short vs. Long Exposure}{34}{}%
+\contentsline {section}{\numberline {4-4}Experiment 3: Rough vs. Smooth Terrain}{35}{}%
+\contentsline {section}{\numberline {4-5}Experiment 4: Temporal Stability}{36}{}%
+\contentsline {section}{\numberline {4-6}Experiment 5: Uncertainty Budgeted}{37}{}%
+\contentsline {section}{\numberline {4-7}Experiment 6: Number of Beacons}{38}{}%
+\contentsline {chapter}{\numberline {5}CONCLUSION}{39}{}%
+\contentsline {chapter}{\numberline {6}APPENDIX}{45}{}%
+\contentsline {section}{\numberline {6-1}Geostatistical Formulations}{45}{}%
+\contentsfinish 

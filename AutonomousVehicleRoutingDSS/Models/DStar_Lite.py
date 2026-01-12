@@ -4,10 +4,13 @@ import os
 import time
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.collections import LineCollection
 from PIL import Image
 import glob
 import os
 from pathlib import Path
+import math
+import collections
 
 
 
@@ -129,12 +132,24 @@ def Preprocessing(nodes_path, edges_path, base_folder, robust_path_path):
 
 
 class DStarLite:
-    def __init__(self, nodes, graph, pred, scenario_changes, robust_path):
+    def __init__(
+        self,
+        nodes,
+        graph,
+        pred,
+        scenario_changes,
+        robust_path,
+        beacon_cap=10,
+        debug=False,
+        debug_stride=0,
+        max_steps=None,
+    ):
         # graph data
         self.nodes = nodes
         self.graph = graph
         self.pred_list = pred
         self.scenario_changes = scenario_changes
+        self.max_scenario = max(scenario_changes.keys(), default=0)
         
         # warm-start path
         self.robust_path = robust_path
@@ -145,7 +160,8 @@ class DStarLite:
 
         # start/ goal node
         self.s_start = min(nodes.keys())
-        self.s_goal = max(nodes.keys())
+        self.final_goal = max(nodes.keys())
+        self.current_goal = self.final_goal
 
 
         # {02"}
@@ -161,8 +177,11 @@ class DStarLite:
         # variables for the scenario switch
         self.step = 0
         self.current_scenario = 1
+        self.last_applied_scenario = 0
+        self.beacons_applied_for_scenario = None
 
         self.key = {}
+        self.in_queue = {}
 
         # main solution data
         self.path = [self.s_start]
@@ -177,24 +196,109 @@ class DStarLite:
         self.end_time = 0.0
 
         self.warmstart_used = (len(robust_path) > 0)
+        self.beacon_hits = []  # (step, scenario, beacon_id) when an active beacon is reached
 
         self.data_root = None
         self.robust_g = {}
         self.coords = nodes
+
         # grid size for overlay reconstruction
         self.grid_size = int(max(y for (_, y) in nodes.values()) + 1)
         self.replans = 0
         self.step_cost_details = []
         self.result = {}
+        self.visit_counts = collections.defaultdict(int)
+        self.debug = bool(debug)
+        self.debug_stride = int(debug_stride) if debug_stride else 0
+        self.max_steps = int(max_steps) if max_steps else None
 
         self.baseline_cost = []
         self.baseline_cost_map = []
 
         self.manual_g_per_scenario = {}
+        self.beacon_cap = beacon_cap
+
+        self.grid_size = int(max(y for (_, y) in nodes.values()) + 1)
+
+        # Calculate the appropriate number of steps to take 
+        sx, sy = self.nodes[self.s_start]
+        gx, gy = self.nodes[self.final_goal]
+        min_steps = abs(sx - gx) + abs(gy - sy)
+        num_scenarios = self.max_scenario + 1
+        self.steps_per_layer = math.ceil(min_steps / num_scenarios)
+
+        # Beacon implementation (scheduled one per scenario/layer)
+        self.beacon_sequence = []
+        if self.robust_path:
+            # skip start/goal; cap to at most 10 evenly spaced beacons to limit queue blow-up
+            inner = self.robust_path[1:-1]
+            if inner:
+                cap = max(1, int(self.beacon_cap))
+                cap = min(cap, len(inner))
+                if cap <= 0:
+                    self.beacon_sequence = []
+                else:
+                    n = len(inner)
+                    indices = []
+                    for i in range(cap):
+                        start = int(i * n / cap)
+                        end = int((i + 1) * n / cap) - 1
+                        end = max(start, end)
+                        mid = (start + end) // 2
+                        indices.append(mid)
+                    indices = sorted(set(indices))
+                    self.beacon_sequence = [inner[i] for i in indices]
+        self.active_beacons = set()
+        self.next_beacon_idx = 0
+        self.goal_from_scenario = None
+        total_layers = self.max_scenario + 1 if self.max_scenario is not None else 1
+        self.beacon_interval = (
+            math.ceil(total_layers / len(self.beacon_sequence))
+            if self.beacon_sequence
+            else 0
+        )
 
 
+    def ResetSearchForGoal(self):
+        """
+        Reinitialize g/rhs/queue for the current goal (beacon milestone or final goal).
+        """
+        self.g = {n: float('inf') for n in self.nodes}
+        self.rhs = {n: float('inf') for n in self.nodes}
+        self.key = {}
+        self.in_queue = {}
+        self.U = []
+        self.km = 0
+        self.s_last = self.s_start
+        self.rhs[self.current_goal] = 0
+        initial_key = self.CalculateKey(self.current_goal)
+        self.key[self.current_goal] = initial_key
+        hq.heappush(self.U, (initial_key, self.current_goal))
 
-    
+    def ActivateNextBeacon(self, force=False):
+        """
+        Promote the next beacon to be the temporary goal.
+        Only one beacon per scenario layer unless force=True.
+        """
+        if self.next_beacon_idx >= len(self.beacon_sequence):
+            return False
+        if (not force) and (self.goal_from_scenario == self.current_scenario):
+            return False
+
+        idx = self.next_beacon_idx
+        m = self.beacon_sequence[idx]
+        self.next_beacon_idx += 1
+        self.active_beacons = {m}
+        self.current_goal = m
+        self.goal_from_scenario = self.current_scenario
+        self.beacons_applied_for_scenario = self.current_scenario
+        remaining = len(self.beacon_sequence) - self.next_beacon_idx
+        if self.debug:
+            print(f"[DEBUG] Activate beacon {m} (#{idx+1}/{len(self.beacon_sequence)}), remaining={remaining}")
+        self.ResetSearchForGoal()
+        return True
+
+
     # procedure Inititalize()
     def Initialize(self):
         # {04"}
@@ -202,80 +306,20 @@ class DStarLite:
             self.g[s] = float('inf')
             self.rhs[s] = float('inf')
 
-        #if len(self.robust_path) > 0:
-        #    print("Injecting manual robust g-values...")
-        
-        #    g_manual = self.ComputeGValues()
-        #    self.robust_g = g_manual
-        
-        #    for n, gv in g_manual.items():
-        #        self.g[n] = gv
-        #        self.rhs[n] = gv
 
 
-        if len(self.robust_path) > 0:
+        # pick initial goal: first beacon if available, else final goal
+        if self.beacon_sequence:
+            self.current_goal = self.beacon_sequence[0]
+            self.next_beacon_idx = 1
+            self.active_beacons = {self.current_goal}
+            self.goal_from_scenario = self.current_scenario
+        else:
+            self.current_goal = self.final_goal
+            self.active_beacons = set()
 
-            # Compute g values for ENTIRE robust path beforehand 
-            manual_g = self.ComputeGValues()
-            
-            #rp = self.robust_path[:]  # do i need to flip? we start backwards 
-            
-            
-            beacons = self.robust_path[1:-1:3]
-            #beacons = self.robust_path[1:-1:3]
-
-            print("Milestones:", beacons)
-
-            # calculate beacon-key pair
-                # k2 = min(g[s], rhs[s])  <- rhs = 0 -> k2 = g[s]
-                # k1 = min(g[s], rhs[s]) + h(s_start, s) + km
-                #    = min(g[s], 'inf') + h(s_start, s) + 0
-
-            for m in beacons:
-                # inside for m in beacons:
-                g_m = manual_g[m]
-                self.g[m] = float('inf')      # keep g unset
-                self.rhs[m] = g_m             # seed rhs with manual upper bound
-                key_m = self.CalculateKey(m)
-                self.key[m] = key_m
-                hq.heappush(self.U, (key_m, m))
-            
-            # Precompute g-values for robust path in every scenario
-            self.manual_g_per_scenario = {}
-
-            # ALWAYS include scenario 0 + all others
-            all_scenarios = [0] + sorted(self.scenario_changes.keys())
-
-            for scen in all_scenarios:
-                # build graph_copy starting from base costs
-                graph_copy = {u: dict(vs) for u, vs in self.graph.items()}
-
-                # apply scenario changes only if scen > 0
-                if scen > 0:
-                    for (u, v, new_cost) in self.scenario_changes[scen]:
-                        graph_copy[u][v] = new_cost
-
-                # compute g-values along robust path
-                gvals = {}
-                rp = self.robust_path
-                gvals[rp[-1]] = 0.0
-                for i in range(len(rp)-2, -1, -1):
-                    u = rp[i]
-                    v = rp[i+1]
-                    gvals[u] = graph_copy[u][v] + gvals[v]
-
-                self.manual_g_per_scenario[scen] = gvals
-
-
-        # {05"}
-        self.rhs[self.s_goal] = 0
-
-        self.initial_key = self.CalculateKey(self.s_goal)
-        self.key[self.s_goal] = self.initial_key
-
-        # {06"}
-        #initial_key = self.CalculateKey(self.s_goal)
-        hq.heappush(self.U, (self.initial_key, self.s_goal))
+        self.ResetSearchForGoal()
+        self.beacons_applied_for_scenario = self.current_scenario
         
     # Manhattan heuristic
     def h(self, a, b):
@@ -303,22 +347,24 @@ class DStarLite:
     
     # procedure UpdateVertex(u)
     def UpdateVertex(self, u):
+        if u != self.current_goal:
+            rhs_new = float('inf')
+            for s in self.pred(u):
+                rhs_new = min(rhs_new, self.graph[s][u] + self.g[s])
 
-        # {07"}
-        if u != self.s_goal:
-            self.rhs[u] = float('inf')
-            for s in self.pred(u): 
-                self.rhs[u] = min(self.rhs[u], self.graph[s][u] + self.g[s])
+            self.rhs[u] = rhs_new
 
         key_u = self.CalculateKey(u)
 
-        # {07"} & {08"}
         if self.g[u] != self.rhs[u]:
-            self.key[u] = key_u          
-            hq.heappush(self.U, (key_u, u)) 
+            # push only if key changed or node believed absent from queue to limit duplicates
+            if self.key.get(u) != key_u or not self.in_queue.get(u, False):
+                self.key[u] = key_u
+                self.in_queue[u] = True
+                hq.heappush(self.U, (key_u, u))
         else:
-            # {09"}
             self.key[u] = (float('inf'), float('inf'))
+            self.in_queue[u] = False
 
     # helper for UpdateVertex(u) rhs
     def pred(self, u):
@@ -328,50 +374,6 @@ class DStarLite:
     def c(self, u, v):
         return self.graph.get(u, {}).get(v, float('inf'))
     
-    # Hybrid approach: manually calculate the g-values for the robust path
-    def ComputeGValues(self):
-        rp = self.robust_path
-        g_manual = {}
-
-        g_manual[rp[-1]] = 0.0
-
-        for i in range(len(rp)-2, -1, -1):
-            u = rp[i]
-            v = rp[i+1]
-            cost_uv = self.graph[u][v]
-            g_manual[u] = cost_uv + g_manual[v]
-        
-        return g_manual
-    
-
-
-        """
-        Build a set of allowed nodes around the robust path. 
-        radius = Manhattan distance from robust path.
-        """
-        envelope = set()
-
-        # reverse map: coordinate → node
-        coord_to_node = {coord: n for n, coord in self.nodes.items()}
-
-        # Build a grid index for faster lookup
-        from collections import defaultdict
-        grid = defaultdict(list)
-        for node, (x, y) in self.nodes.items():
-            grid[(int(x), int(y))].append(node)
-
-        robust_coords = [self.nodes[n] for n in self.robust_path]
-
-        for (rx, ry) in robust_coords:
-            for dx in range(-radius, radius+1):
-                for dy in range(-radius, radius+1):
-                    cx = rx + dx
-                    cy = ry + dy
-                    if (cx, cy) in grid:
-                        for node in grid[(cx, cy)]:
-                            envelope.add(node)
-
-        return envelope
 
     # procedure ComputeShortestPath()
     def ComputeShortestPath(self):
@@ -383,34 +385,24 @@ class DStarLite:
             return self.U[0][0]
         
         # {10"}
+        popped = 0
         while (top_key() < self.CalculateKey(self.s_start)) or (self.rhs[self.s_start] != self.g[self.s_start]):
 
             # {11"} & {12"}
             k_old, u = hq.heappop(self.U)
+            popped += 1
+            if popped % 5000 == 0:
+                if self.debug:
+                    print(f"[DEBUG] ComputeShortestPath popped={popped} queue={len(self.U)}")
+
+            # this entry is being handled (even if stale)
+            self.in_queue[u] = False
 
             # lazy deletion: skip stale entries
             if self.key.get(u) != k_old:
                 continue
 
-
-            # NOT ORIGINAL
-            # HARD LOCK: NO DEVIATION DURING BACKWARD SEARCH
-            #if hasattr(self, 'protect_robust') and self.protect_robust:
-            #    if u in self.robust_path:
-            #        # skip any Bellman update; keep injected value
-            #        continue
-            
-            # NOT ORIGINAL
-            # Allow robust nodes, but only keep their injected values if they are still minimal
-            #if hasattr(self, 'protect_robust') and self.protect_robust:
-            #    if u in self.robust_path:
-            #        # compute what rhs[u] WOULD be
-            #        rhs_new = self.rhs[u]
-            
-            #        # If the manual robust g-value is still the best, skip updates
-            #        if self.g[u] <= rhs_new:
-            #           continue
-            #        # Otherwise: fall through → allow updates!
+            # mark as removed; UpdateVertex will requeue if still inconsistent
 
             # {13"}
             k_new = self.CalculateKey(u)
@@ -437,7 +429,7 @@ class DStarLite:
 
 
                     # {20"}
-                    if s != self.s_goal:
+                    if s != self.current_goal:
                         self.rhs[s] = min(self.rhs[s], self.c(s, u) + self.g[u])
 
                     # {21"}
@@ -458,7 +450,7 @@ class DStarLite:
 
 
                     # {26"}
-                    if s != self.s_goal and self.rhs[s] == self.c(s, u) + g_old:
+                    if s != self.current_goal and self.rhs[s] == self.c(s, u) + g_old:
 
                         # reset rhs to inf
                         self.rhs[s] = float('inf')
@@ -472,40 +464,8 @@ class DStarLite:
                     # {28"}
                     self.UpdateVertex(s)
 
+        return popped
 
-    def ExportPathOverlay(self, base_folder, out_folder):
-        out_dir = Path(out_folder) 
-        out_dir.mkdir(parents=True, exist_ok=True)
-
-        scenario_paths = sorted(glob.glob(os.path.join(base_folder, "scenario_*", "field.npy")))
-        frames = [np.load(fp) for fp in scenario_paths]
-
-        images = []
-        xs = [self.nodes[n][0] for n in self.path]
-        ys = [self.nodes[n][1] for n in self.path]
-
-        for i, frame in enumerate(frames):
-            plt.figure(figsize=(6,6))
-            plt.imshow(frame, cmap="viridis", origin="lower")
-            plt.plot(xs, ys, color='red', linewidth=2)
-
-            out_png = out_dir / f"dstar_frame_{i:03d}.png"
-            plt.axis("off")
-            plt.tight_layout(pad=0)
-            plt.savefig(out_png, dpi=150)
-            plt.close()
-
-            images.append(Image.open(out_png))
-
-        gif_path = out_dir / "dstar_overlay_animation.gif"
-        images[0].save(
-            gif_path,
-            save_all=True,
-            append_images=images[1:],
-            duration=500,
-            loop=0
-        )
-    
 
     # procedure Main()
     def DStarMain(self):
@@ -516,44 +476,54 @@ class DStarLite:
         # {29"} duplicate, one in for DStar class __init__ initialize
         self.s_last = self.s_start
 
-        #self.protect_robust = True
 
         # {30"}
         self.Initialize()
 
 
         # {31"}  
-        self.ComputeShortestPath()
+        pops = self.ComputeShortestPath()
+        if self.debug:
+            print(f"[DEBUG] Initial ComputeShortestPath popped={pops} queue={len(self.U)}")
 
         # NOT ORIGINAL
         self.baseline_cost_map = dict(self.g)
         self.baseline_cost = self.g[self.s_start]
         print("Baseline backward-search cost (A*):", self.baseline_cost)
 
-        # NOT ORIGINAL
-        # INSERT ROBUST G VALUES *HERE*
-        #if len(self.robust_path) > 0:
-        #    g_manual = self.ComputeGValues()
-        #    for n, gv in g_manual.items():
-        #        self.g[n] = gv
-        # DO NOT TOUCH rhs[n]!
-
-        #self.protect_robust = False
-        
-        # NOT ORIGINAL: SKIP SCENARIO 0 FOR FORWARD SEARCH ENTIRELY!
-
-
-
-
-
-
         # {32"}
-        while(self.s_start != self.s_goal):
+        while True:
+            if self.max_steps is not None and len(self.path) >= self.max_steps:
+                raise RuntimeError(
+                    f"DStar Lite exceeded max_steps={self.max_steps} at node {self.s_start}."
+                )
+
+            # reached current goal (beacon or final)
+            if self.s_start == self.current_goal:
+                if self.current_goal == self.final_goal:
+                    break
+                # reached a beacon milestone; immediately activate the next beacon if available
+                activated = self.ActivateNextBeacon(force=True)
+                if not activated:
+                    self.active_beacons.clear()
+                    self.current_goal = self.final_goal
+                    self.ResetSearchForGoal()
+                continue
+
+            # Ensure start is consistent before choosing the next step
+            if (self.g.get(self.s_start, float('inf')) == float('inf')) or (self.g[self.s_start] != self.rhs[self.s_start]):
+                pops = self.ComputeShortestPath()
+                if self.debug:
+                    print(f"[DEBUG] Replan (consistency) popped={pops} queue={len(self.U)} step={len(self.path)-1} scen={self.current_scenario}")
 
             # {33"}
             if(self.g[self.s_start] == float('inf')):
                 print("ERROR! No known path to goal.")
                 print("Exiting DStar Lite, check ST-GRF output!")
+                succs = [(s2, self.c(self.s_start, s2), self.g.get(s2), self.rhs.get(s2), s2 in self.active_beacons)
+                    for s2 in self.graph.get(self.s_start, {})]
+                print("Dead end at", self.s_start, "succs:", succs)
+
                 return None
             
             # helper variables
@@ -561,22 +531,65 @@ class DStarLite:
             min_cost = float('inf')
 
             # {34"}
+            candidates = []
+            prev_node = self.path[-2] if len(self.path) > 1 else None
             for s2, cost_s_s2 in self.graph.get(self.s_start, {}).items():
-                val = cost_s_s2 + self.g[s2]
-                if val < min_cost:
-                    min_cost = val
-                    next_s = s2
+                g_s2 = self.g.get(s2, float('inf'))
+                if not math.isfinite(g_s2):
+                    continue
+                val = cost_s_s2 + g_s2
+                candidates.append((val, self.h(s2, self.current_goal), s2))
+
+            if not candidates:
+                for s2, cost_s_s2 in self.graph.get(self.s_start, {}).items():
+                    rhs_s2 = self.rhs.get(s2, float('inf'))
+                    if not math.isfinite(rhs_s2):
+                        continue
+                    val = cost_s_s2 + rhs_s2
+                    candidates.append((val, self.h(s2, self.current_goal), s2))
+
+            candidates.sort()
+            if candidates:
+                min_cost, _, next_s = candidates[0]
+
+            # debug candidate ordering when we revisit/oscillate
+            candidates_debug = candidates[:3]
 
             if next_s is None:
+                succs = [
+                    (s2, self.c(self.s_start, s2), self.g.get(s2), self.rhs.get(s2), s2 in self.active_beacons)
+                    for s2 in self.graph.get(self.s_start, {})
+                ]
+
+                if self.debug:
+                    print(f"[DEBUG] Dead end at {self.s_start}, successors detail: {succs}")
                 print("ERROR! Dead end, no successors available to walk to!")
                 print("Exiting DStar Lite, check ST-GRF output!")
                 return None
 
-            
+
             old_start = self.path[-1]
+
+            # log potential oscillation/backtracking
+            backtracking = (len(self.path) > 1 and next_s == self.path[-2])
+            self.visit_counts[next_s] += 1
+            should_log = backtracking or self.visit_counts[next_s] in {2, 5, 10, 20, 50}
+            if self.debug and self.debug_stride:
+                should_log = should_log and (len(self.path) % self.debug_stride == 0)
+            if self.debug and should_log:
+                print(f"[DEBUG] Step {len(self.path)-1} scen {self.current_scenario}: from {self.s_start} -> {next_s} "
+                      f"(backtrack={backtracking}, visits={self.visit_counts[next_s]}, top3={candidates_debug})")
 
             # {35"}
             self.s_start = next_s
+            if next_s in self.active_beacons:
+                self.beacon_hits.append((len(self.path)-1, self.current_scenario, next_s))
+                if self.debug:
+                    print(f"[DEBUG] Beacon {next_s} reached at step {len(self.path)-1} (scenario {self.current_scenario})")
+
+            # shift keys to the new start position (D* Lite invariant)
+            self.km += self.h(self.s_last, self.s_start)
+            self.s_last = self.s_start
 
             # step counter for scenario switch 
             self.step += 1
@@ -611,75 +624,37 @@ class DStarLite:
             # only now we can introduce new costs at time frames we want!
 
             # NOT ORIGINAL
-            # CONDITION TO SWITCH SCENARIO: HARDCODED TO GRID SIZE 100
-
-            if(self.step == 20):
-                self.current_scenario += 1
+            if(self.step == self.steps_per_layer):
+                self.current_scenario = min(self.current_scenario + 1, self.max_scenario)
                 self.step = 0
             # change to next scenario
-            changed_edges = self.scenario_changes.get(self.current_scenario, [])
+            scenario_changed = self.current_scenario != self.last_applied_scenario
+            if scenario_changed:
+                raw_changes = self.scenario_changes.get(self.current_scenario, [])
+                changed_edges = []
+                for (u, v, new_cost) in raw_changes:
+                    old_cost = self.c(u, v)
+                    if old_cost != new_cost:
+                        changed_edges.append((u, v, new_cost))
+                if raw_changes and not changed_edges:
+                    if self.debug:
+                        print(f"[DEBUG] Scenario {self.current_scenario}: no effective cost changes (all identical).")
+                self.last_applied_scenario = self.current_scenario
+            else:
+                changed_edges = []
 
 
 
             # {37"}
+            need_replan = False
+            replan_due_to_edges = bool(changed_edges)
             if changed_edges:
 
-
-                # === INSERT THE SCENARIO'S MILESTONE ===
-
-                # heuristic shift for moved start
-                self.km += self.h(self.s_last, self.s_start)
-                self.s_last = self.s_start
-
-                # apply cost changes
-                for (u, v, new_cost) in changed_edges:
-                    c_old = self.c(u, v)
-                    self.graph[u][v] = new_cost
-                    if c_old > new_cost:
-                        self.replans += 1
-                        if u != self.s_goal:
-                            self.rhs[u] = min(self.rhs[u], new_cost + self.g[v])
-                    elif self.rhs[u] == c_old + self.g[v]:
-                        if u != self.s_goal:
-                            self.rhs[u] = float('inf')
-                            for s2, cost_s2 in self.graph.get(u, {}).items():
-                                self.rhs[u] = min(self.rhs[u], cost_s2 + self.g[s2])
-                    self.UpdateVertex(u)
-
-                # insert the scenario’s milestone after costs/km are up to date
-                if len(self.robust_path) > 0:
-                    manual_g = self.manual_g_per_scenario[self.current_scenario]
-                    all_scenarios = [0] + sorted(self.scenario_changes.keys())
-                    ratio = self.current_scenario / max(all_scenarios)
-                    milestone_index = int(ratio * (len(self.robust_path) - 2))
-                    m = self.robust_path[milestone_index]
-                    g_m = manual_g[m]
-
-                    self.g[m] = float('inf')
-                    self.rhs[m] = g_m
-                    key_m = self.CalculateKey(m)
-                    self.key[m] = key_m
-                    hq.heappush(self.U, (key_m, m))
-
-                self.ComputeShortestPath()
-
-
-
-
-
-
-
-
-
-
-
-
-
                 # {38"}
-                #self.km += self.h(self.s_last, self.s_start)
+                self.km += self.h(self.s_last, self.s_start)
 
                 # {39"}
-                #self.s_last = self.s_start
+                self.s_last = self.s_start
 
                 # {40"}
                 for(u, v, new_cost) in changed_edges:
@@ -692,10 +667,8 @@ class DStarLite:
 
                     # {43"}
                     if c_old > new_cost:
-                        
-                        self.replans += 1
                         # {44"}
-                        if u != self.s_goal:
+                        if u != self.current_goal:
                             self.rhs[u] = min(self.rhs[u], new_cost + self.g[v])
                     
                     # {45"}
@@ -704,16 +677,33 @@ class DStarLite:
                     
 
                         # {46"}
-                        if u != self.s_goal:
+                        if u != self.current_goal:
                             self.rhs[u] = float('inf')
                             for s2, cost_s2 in self.graph.get(u, {}).items():
                                 self.rhs[u] = min(self.rhs[u], cost_s2 + self.g[s2])
 
                     # {47"}
                     self.UpdateVertex(u)
-                
+                need_replan = True
+            
+            if scenario_changed:
+                should_activate_beacon = (
+                    self.beacon_interval > 0
+                    and ((self.current_scenario - 1) % self.beacon_interval == 0)
+                )
+                applied_beacon = False
+                if should_activate_beacon:
+                    applied_beacon = self.ActivateNextBeacon(force=False)
+                if applied_beacon:
+                    need_replan = True
+
+            if need_replan:
                 # {48"}
-                self.ComputeShortestPath()
+                pops = self.ComputeShortestPath()
+                if replan_due_to_edges and pops > 0:
+                    self.replans += 1
+                if self.debug:
+                    print(f"[DEBUG] Replan (scenario/beacon) popped={pops} queue={len(self.U)} step={len(self.path)-1} scen={self.current_scenario}")
 
         # timer end
         self.end_time = time.time()
@@ -727,6 +717,7 @@ class DStarLite:
         "total_cost": self.cost,
         "scenario_per_step": self.scenario_per_step,
         "runtime": self.end_time - self.start_time,
+        "replans": self.replans,
         "warmstart_used": self.warmstart_used,
         "data_root": self.data_root,
         "robust_path": self.robust_path,
@@ -737,6 +728,12 @@ class DStarLite:
         "baseline_cost": self.baseline_cost,
         "baseline_cost_map": self.baseline_cost_map
         }
+        if self.beacon_hits:
+            self.result["beacon_hits"] = self.beacon_hits
+        if self.beacon_sequence:
+            self.result["beacon_sequence"] = list(self.beacon_sequence)
+            # store coordinates for easy plotting downstream
+            self.result["beacon_coords"] = [self.coords[b] for b in self.beacon_sequence]
 
         # solution output
         print("\n=== D* Lite Finished ===")
@@ -746,8 +743,107 @@ class DStarLite:
         print(f"Total Runtime:{self.end_time - self.start_time}s")
 
 
+    def ExportPathOverlay(self, base_folder, out_folder):
+        out_dir = Path(out_folder) 
+        out_dir.mkdir(parents=True, exist_ok=True)
 
+        scenario_paths = sorted(glob.glob(os.path.join(base_folder, "scenario_*", "field.npy")))
+        frames = [np.load(fp) for fp in scenario_paths]
 
+        if not frames or len(self.path) < 2:
+            return
+
+        images = []
+        path_nodes = self.path
+        xs = [self.nodes[n][0] for n in path_nodes]
+        ys = [self.nodes[n][1] for n in path_nodes]
+
+        # Build colored path segments by scenario slice.
+        scenarios = getattr(self, "scenario_per_step", []) or []
+        segments = []
+        segment_scenarios = []
+        for i in range(1, len(path_nodes)):
+            segments.append(
+                [
+                    (xs[i - 1], ys[i - 1]),
+                    (xs[i], ys[i]),
+                ]
+            )
+            if i < len(scenarios):
+                segment_scenarios.append(int(scenarios[i]))
+            elif scenarios:
+                segment_scenarios.append(int(scenarios[-1]))
+            else:
+                segment_scenarios.append(0)
+
+        unique_scenarios = []
+        seen = set()
+        for sc in segment_scenarios:
+            if sc not in seen:
+                unique_scenarios.append(sc)
+                seen.add(sc)
+        styles = ["-", ":"]
+        scenario_style = {sc: styles[idx % len(styles)] for idx, sc in enumerate(unique_scenarios)}
+        segment_colors = ["#FF0000"] * len(segment_scenarios)
+        segment_styles = [scenario_style.get(sc, styles[0]) for sc in segment_scenarios]
+
+        # Beacon markers (milestones).
+        beacon_nodes = list(getattr(self, "beacon_sequence", []) or [])
+        beacon_coords = [(self.nodes[n][0], self.nodes[n][1]) for n in beacon_nodes if n in self.nodes]
+        show_labels = len(beacon_coords) <= 20
+
+        for i, frame in enumerate(frames):
+            fig, ax = plt.subplots(figsize=(6, 6))
+            ax.imshow(frame, cmap="viridis", origin="lower")
+            line_collection = LineCollection(
+                segments,
+                colors=segment_colors,
+                linewidths=2.0,
+                linestyles=segment_styles,
+                zorder=3,
+            )
+            ax.add_collection(line_collection)
+
+            if beacon_coords:
+                bx = [c[0] for c in beacon_coords]
+                by = [c[1] for c in beacon_coords]
+                ax.scatter(
+                    bx,
+                    by,
+                    marker="*",
+                    s=90,
+                    c="white",
+                    edgecolors="black",
+                    linewidths=0.8,
+                    zorder=4,
+                )
+                if show_labels:
+                    for idx, (bx_i, by_i) in enumerate(beacon_coords, start=1):
+                        ax.text(
+                            bx_i + 0.1,
+                            by_i + 0.1,
+                            str(idx),
+                            fontsize=8,
+                            color="black",
+                            zorder=5,
+                        )
+
+            out_png = out_dir / f"dstar_frame_{i:03d}.png"
+            ax.axis("off")
+            fig.tight_layout(pad=0)
+            fig.savefig(out_png, dpi=150)
+            plt.close(fig)
+
+            images.append(Image.open(out_png))
+
+        gif_path = out_dir / "dstar_overlay_animation.gif"
+        images[0].save(
+            gif_path,
+            save_all=True,
+            append_images=images[1:],
+            duration=500,
+            loop=0
+        )
 
 
 

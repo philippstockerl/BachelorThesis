@@ -1,0 +1,26 @@
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {2.1}{\ignorespaces Conceptual distinctions between nominal shortest-path planning, ex-ante robust optimization, and ex-post incremental search under cost uncertainty.}}{14}{}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {3.1}{\ignorespaces Notation for the discrete-scenario min--max shortest-path model}}{25}{}%
+\contentsline {table}{\numberline {3.2}{\ignorespaces Notation for the budgeted-uncertainty min--max shortest-path model}}{26}{}%
+\contentsline {table}{\numberline {3.3}{\ignorespaces Notation for the D* Lite incremental shortest-path algorithm}}{27}{}%
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {4.1}{\ignorespaces Baseline experimental configuration}}{31}{}%
+\contentsline {table}{\numberline {4.2}{\ignorespaces Performance comparison under the baseline configuration.}}{31}{}%
+\contentsline {table}{\numberline {4.3}{\ignorespaces Experiment 1: Parameter variations relative to the baseline configuration}}{33}{}%
+\contentsline {table}{\numberline {4.4}{\ignorespaces Performance comparison across grid sizes}}{33}{}%
+\contentsline {table}{\numberline {4.5}{\ignorespaces Experiment 2: Parameter variations relative to the baseline configuration}}{34}{}%
+\contentsline {table}{\numberline {4.6}{\ignorespaces Performance comparison across exposure levels $|\mathcal {T}|$}}{34}{}%
+\contentsline {table}{\numberline {4.7}{\ignorespaces Experiment 4: Parameter variations relative to the baseline configuration}}{35}{}%
+\contentsline {table}{\numberline {4.8}{\ignorespaces Performance comparison across spatial scaling factors $\alpha $}}{35}{}%
+\contentsline {table}{\numberline {4.9}{\ignorespaces Experiment 6: Parameter variations relative to the baseline configuration}}{36}{}%
+\contentsline {table}{\numberline {4.10}{\ignorespaces Performance comparison across temporal scaling factors $\beta $}}{36}{}%
+\contentsline {table}{\numberline {4.11}{\ignorespaces Experiment 7: Parameter variations relative to the baseline configuration}}{37}{}%
+\contentsline {table}{\numberline {4.12}{\ignorespaces Performance comparison across budget levels $\lambda $}}{37}{}%
+\contentsline {table}{\numberline {4.13}{\ignorespaces Experiment 8: Parameter variations relative to the baseline configuration}}{38}{}%
+\contentsline {table}{\numberline {4.14}{\ignorespaces Performance comparison across beacon counts}}{38}{}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {6.1}{\ignorespaces Predefined covariance models in GSTools \cite {muller2022}.}}{46}{}%
+\contentsfinish 

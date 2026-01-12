@@ -1,0 +1,226 @@
+\newcommand{\etalchar}[1]{$^{#1}$}
+\begin{thebibliography}{WWW{\etalchar{+}}25}
+
+\bibitem[AK23]{abdulsaheb2023}
+Jaafar~Ahmed Abdulsaheb and Dheyaa~Jasim Kadhim.
+\newblock Classical and {{Heuristic Approaches}} for {{Mobile Robot Path Planning}}: {{A Survey}}.
+\newblock {\em Robotics}, 12(4):93, June 2023.
+
+\bibitem[AS24]{azizi2024}
+Elnaz Azizi and Abbas Seifi.
+\newblock Shortest path network interdiction with incomplete information: A robust optimization approach.
+\newblock {\em Annals of Operations Research}, 335(2):727--759, April 2024.
+
+\bibitem[ASSM{\etalchar{+}}22]{aitsaadi2022}
+Amylia Ait~Saadi, Assia Soukane, Yassine Meraihi, Asma Benmessaoud~Gabis, Seyedali Mirjalili, and Amar {Ramdane-Cherif}.
+\newblock {{UAV Path Planning Using Optimization Approaches}}: {{A Survey}}.
+\newblock {\em Archives of Computational Methods in Engineering}, 29(6):4233--4284, October 2022.
+
+\bibitem[BDG{\etalchar{+}}24]{bagad2024}
+Prathamesh Bagad, Prachi Dahatonde, Rushikesh Gagare, Ishwari Athare, and Gauri Ghule.
+\newblock Optimizing {{Pathfinding}} in {{Dynamic Environments}}: {{A Comparative Study}} of {{A}}* and {{D-Lite Algorithms}}.
+\newblock In {\em 2024 {{IEEE Pune Section International Conference}} ({{PuneCon}})}, pages 1--11, Pune, India, December 2024. IEEE.
+
+\bibitem[CDG19]{chassein2019}
+Andr{\'e} Chassein, Trivikram Dokka, and Marc Goerigk.
+\newblock Algorithms and uncertainty sets for data-driven robust shortest path problems.
+\newblock {\em European Journal of Operational Research}, 274(2):671--686, April 2019.
+
+\bibitem[Dij59]{dijkstra1959}
+E~W Dijkstra.
+\newblock A note on two problems in connexion with graphs.
+\newblock 1959.
+
+\bibitem[DP84]{deo1984}
+Narsingh Deo and Chi-Yin Pang.
+\newblock Shortest-path algorithms: {{Taxonomy}} and annotation.
+\newblock {\em Networks}, 14(2):275--323, June 1984.
+
+\bibitem[FB22]{fernando2022}
+Joey~G. Fernando and Myelinda Baldelovar.
+\newblock Decision {{Support System}}: {{Overview}}, {{Different Types}} and {{Elements}}.
+\newblock {\em TechnoareteTransactions on Intelligent Data Mining and Knowledge Discovery}, 2(2), May 2022.
+
+\bibitem[FIU{\etalchar{+}}15]{fanti2015}
+M.P. Fanti, G.~Iacobellis, W.~Ukovich, V.~Boschian, G.~Georgoulas, and C.~Stylios.
+\newblock A simulation based {{Decision Support System}} for logistics management.
+\newblock {\em Journal of Computational Science}, 10:86--96, September 2015.
+
+\bibitem[GH23]{gugan2023}
+Gopi Gugan and Anwar Haque.
+\newblock Path {{Planning}} for {{Autonomous Drones}}: {{Challenges}} and {{Future Directions}}.
+\newblock {\em Drones}, 7(3):169, February 2023.
+
+\bibitem[GH24]{goerigk2024}
+Marc Goerigk and Michael Hartisch.
+\newblock {\em An {{Introduction}} to {{Robust Combinatorial Optimization}}: {{Concepts}}, {{Models}} and {{Algorithms}} for {{Decision Making}} under {{Uncertainty}}}, volume 361 of {\em International {{Series}} in {{Operations Research}} \& {{Management Science}}}.
+\newblock Springer Nature Switzerland, Cham, 2024.
+
+\bibitem[GHF{\etalchar{+}}24]{gao2024}
+Yang Gao, Qidong Han, Shuo Feng, Zhen Wang, Teng Meng, and Jingshuai Yang.
+\newblock Improvement and {{Fusion}} of {{D}}*{{Lite Algorithm}} and {{Dynamic Window Approach}} for {{Path Planning}} in {{Complex Environments}}.
+\newblock {\em Machines}, 12(8):525, August 2024.
+
+\bibitem[GK25]{goerigk2025}
+Marc Goerigk and Jannis Kurtz.
+\newblock Data-driven prediction of relevant scenarios for robust combinatorial optimization.
+\newblock {\em Computers \& Operations Research}, 174:106886, February 2025.
+
+\bibitem[GL21]{goerigk2021}
+Marc Goerigk and Stefan Lendl.
+\newblock Robust {{Combinatorial Optimization}} with {{Locally Budgeted Uncertainty}}.
+\newblock {\em Open Journal of Mathematical Optimization}, 2:1--18, May 2021.
+
+\bibitem[GRT{\etalchar{+}}16]{gounaris2016}
+Chrysanthos~E. Gounaris, Panagiotis~P. Repoussis, Christos~D. Tarantilis, Wolfram Wiesemann, and Christodoulos~A. Floudas.
+\newblock An {{Adaptive Memory Programming Framework}} for the {{Robust Capacitated Vehicle Routing Problem}}.
+\newblock {\em Transportation Science}, 50(4):1239--1260, November 2016.
+
+\bibitem[HHW24]{he2024}
+Yong He, Ticheng Hou, and Mingran Wang.
+\newblock A new method for unmanned aerial vehicle path planning in complex environments.
+\newblock {\em Scientific Reports}, 14(1):9257, April 2024.
+
+\bibitem[HNR68]{hart1968}
+Peter Hart, Nils Nilsson, and Bertram Raphael.
+\newblock A {{Formal Basis}} for the {{Heuristic Determination}} of {{Minimum Cost Paths}}.
+\newblock {\em IEEE Transactions on Systems Science and Cybernetics}, 4(2):100--107, 1968.
+
+\bibitem[Kee98]{keenan1998}
+Peter~B Keenan.
+\newblock Spatial decision support systems for vehicle routing.
+\newblock {\em Decision Support Systems}, 22(1):65--71, January 1998.
+
+\bibitem[KL02]{koenig2002}
+Sven Koenig and Maxim Likhachev.
+\newblock D* {{Lite}}.
+\newblock {\em AAAI-02 Proceedings}, 2002.
+
+\bibitem[KLF04]{koenig2004}
+Sven Koenig, Maxim Likhachev, and David Furcy.
+\newblock Lifelong {{Planning A}}{$\ast$}.
+\newblock {\em Artificial Intelligence}, 155(1-2):93--146, May 2004.
+
+\bibitem[KNK24]{katona2024}
+Korn{\'e}l Katona, Husam~A. Neamah, and P{\'e}ter Korondi.
+\newblock Obstacle {{Avoidance}} and {{Path Planning Methods}} for {{Autonomous Navigation}} of {{Mobile Robot}}.
+\newblock {\em Sensors}, 24(11):3573, June 2024.
+
+\bibitem[KSDS21]{karur2021}
+Karthik Karur, Nitin Sharma, Chinmay Dharmatti, and Joshua~E. Siegel.
+\newblock A {{Survey}} of {{Path Planning Algorithms}} for {{Mobile Robots}}.
+\newblock {\em Vehicles}, 3(3):448--468, August 2021.
+
+\bibitem[LD25]{lu2025}
+Yaping Lu and Chen Da.
+\newblock Global and local path planning of robots combining {{ACO}} and dynamic window algorithm.
+\newblock {\em Scientific Reports}, 15(1):9452, March 2025.
+
+\bibitem[LLZ{\etalchar{+}}24]{li2024}
+Xiaomei Li, Ye~Lu, Xiaoyu Zhao, Xiong Deng, and Zhijiang Xie.
+\newblock Path planning for intelligent vehicles based on improved {{D}}* {{Lite}}.
+\newblock {\em The Journal of Supercomputing}, 80(1):1294--1330, January 2024.
+
+\bibitem[LRS21]{lacomme2021}
+Philippe Lacomme, Gw{\'e}na{\"e}l Rault, and Marc Sevaux.
+\newblock Integrated decision support system for rich vehicle routing problems.
+\newblock {\em Expert Systems with Applications}, 178:114998, September 2021.
+
+\bibitem[MAR{\etalchar{+}}17]{madkour2017}
+Amgad Madkour, Walid~G. Aref, Faizan~Ur Rehman, Mohamed~Abdur Rahman, and Saleh Basalamah.
+\newblock A {{Survey}} of {{Shortest-Path Algorithms}}, May 2017.
+
+\bibitem[MPW26]{matsypura2026}
+Dmytro Matsypura, Yu~Pan, and Hanzhao Wang.
+\newblock Learning {{Shortest Paths When Data}} is {{Scarce}}, January 2026.
+
+\bibitem[MSY{\etalchar{+}}25]{meng2025}
+Lingkai Meng, Yu~Shao, Long Yuan, Longbin Lai, Peng Cheng, Xue Li, Wenyuan Yu, Wenjie Zhang, Xuemin Lin, and Jingren Zhou.
+\newblock Revisiting {{Graph Analytics Benchmark}}.
+\newblock {\em Proceedings of the ACM on Management of Data}, 3(3):1--28, June 2025.
+
+\bibitem[MSZH22]{muller2022}
+Sebastian M{\"u}ller, Lennart Sch{\"u}ler, Alraune Zech, and Falk He{\ss}e.
+\newblock {{GSTools}} v1.3: A toolbox for geostatistical modelling in {{Python}}.
+\newblock {\em Geoscientific Model Development}, 15(7):3161--3182, April 2022.
+
+\bibitem[Pow02]{power2002}
+Daniel~J. Power.
+\newblock {\em Decision Support Systems: Concepts and Resources for Managers}.
+\newblock Quorum Books, Westport, Conn., 1. publ edition, 2002.
+
+\bibitem[PS07]{power2007}
+Daniel~J. Power and Ramesh Sharda.
+\newblock Model-driven decision support systems: {{Concepts}} and research directions.
+\newblock {\em Decision Support Systems}, 43(3):1044--1061, April 2007.
+
+\bibitem[QSW{\etalchar{+}}23]{qin2023}
+Hongwei Qin, Shiliang Shao, Ting Wang, Xiaotian Yu, Yi~Jiang, and Zonghan Cao.
+\newblock Review of {{Autonomous Path Planning Algorithms}} for {{Mobile Robots}}.
+\newblock {\em Drones}, 7(3):211, March 2023.
+
+\bibitem[Rai19]{raimbault2019}
+Juste Raimbault.
+\newblock Second-order control of complex systems with correlated synthetic data.
+\newblock {\em Complex Adaptive Systems Modeling}, 7(1):4, December 2019.
+
+\bibitem[RGRM24]{roytvandghiasvand2024}
+Mohsen Roytvand~Ghiasvand, Donya Rahmani, and Mohammad {Moshref-Javadi}.
+\newblock Data-driven robust optimization for a multi-trip truck-drone routing problem.
+\newblock {\em Expert Systems with Applications}, 241:122485, May 2024.
+
+\bibitem[RMA04]{ruiz2004}
+Rub{\'e}n Ruiz, Concepci{\'o}n Maroto, and Javier Alcaraz.
+\newblock A decision support system for a real vehicle routing problem.
+\newblock {\em European Journal of Operational Research}, 153(3):593--606, March 2004.
+
+\bibitem[Ste94]{stentz1994}
+Anthony Stentz.
+\newblock The {{D}}* {{Algorithm}} for {{Real-Time Planning}} of {{Optimal Traverses}}.
+\newblock 1994.
+
+\bibitem[UHV17]{ulmer2017}
+Marlin~W. Ulmer, Leonard Heilig, and Stefan Vo{\ss}.
+\newblock On the {{Value}} and {{Challenge}} of {{Real-Time Information}} in {{Dynamic Dispatching}} of {{Service Vehicles}}.
+\newblock {\em Business \& Information Systems Engineering}, 59(3):161--171, June 2017.
+
+\bibitem[WLJ{\etalchar{+}}22]{wang2022}
+Huanwei Wang, Shangjie Lou, Jing Jing, Yisen Wang, Wei Liu, and Tieming Liu.
+\newblock The {{EBS-A}}* algorithm: {{An}} improved {{A}}* algorithm for path planning.
+\newblock {\em PLOS ONE}, 17(2):e0263841, February 2022.
+
+\bibitem[WQL{\etalchar{+}}21]{wang2021}
+Huanwei Wang, Xuyan Qi, Shangjie Lou, Jing Jing, Hongqi He, and Wei Liu.
+\newblock An {{Efficient}} and {{Robust Improved A}}* {{Algorithm}} for {{Path Planning}}.
+\newblock {\em Symmetry}, 13(11):2213, November 2021.
+
+\bibitem[WWW{\etalchar{+}}25]{wu2025}
+Xuan Wu, Di~Wang, Lijie Wen, Yubin Xiao, Chunguo Wu, Yuesong Wu, Chaoyu Yu, Douglas~L. Maskell, and You Zhou.
+\newblock Neural {{Combinatorial Optimization Algorithms}} for {{Solving Vehicle Routing Problems}}: {{A Comprehensive Survey}} with {{Perspectives}}, April 2025.
+
+\bibitem[XXG{\etalchar{+}}25]{xu2025}
+Longyan Xu, Mao Xi, Ren Gao, Ziheng Ye, and Zaihan He.
+\newblock Dynamic path planning of {{UAV}} with least inflection point based on adaptive neighborhood {{A}}* algorithm and multi-strategy fusion.
+\newblock {\em Scientific Reports}, 15(1):8563, March 2025.
+
+\bibitem[YAB23]{yu2023}
+Vincent~F. Yu, Pham~Tuan Anh, and Roberto Baldacci.
+\newblock A robust optimization approach for the vehicle routing problem with cross-docking under demand uncertainty.
+\newblock {\em Transportation Research Part E: Logistics and Transportation Review}, 173:103106, May 2023.
+
+\bibitem[ZLS{\etalchar{+}}22]{zhang2022}
+Yunfan Zhang, Feng Liu, Yifan Su, Yue Chen, Zhaojian Wang, and Joao P.~S. Catalao.
+\newblock Two-{{Stage Robust Optimization Under Decision Dependent Uncertainty}}.
+\newblock {\em IEEE/CAA Journal of Automatica Sinica}, 9(7):1295--1306, July 2022.
+
+\bibitem[ZM18]{zafar2018}
+Mohd.~Nayab Zafar and J.C. Mohanta.
+\newblock Methodology for {{Path Planning}} and {{Optimization}} of {{Mobile Robots}}: {{A Review}}.
+\newblock {\em Procedia Computer Science}, 133:141--152, 2018.
+
+\bibitem[ZZL23]{zhang2023}
+Aobei Zhang, Ying Zhang, and Yanqiu Liu.
+\newblock Robust {{Optimization}} of {{Electric Vehicle Paths}} in {{Uncertain Environments}}.
+\newblock {\em IEEE Access}, 11:124240--124251, 2023.
+
+\end{thebibliography}

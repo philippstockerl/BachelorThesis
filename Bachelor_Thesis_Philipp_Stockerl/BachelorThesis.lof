@@ -1,0 +1,16 @@
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces Spatial environmental data with sensor locations and inferred wind intensity over a two-dimensional domain.}}{5}{}%
+\contentsline {figure}{\numberline {1.2}{\ignorespaces Spatial cost realizations at two different time points over a fixed graph topology.}}{6}{}%
+\contentsline {figure}{\numberline {1.3}{\ignorespaces Top-down architecture of the conceptual decision support system used for experimental comparison, integrating spatio-temporal cost generation, robust optimization, incremental search-based planning, and a hybrid guidance variant within a unified pipeline.}}{8}{}%
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Basic architecture of a model-driven decision support system}}{9}{}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Difference of covariance models for same parameters visualized}}{11}{}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Conceptual overview of the shortest-path problem under uncertainty. The underlying graph structure remains fixed, while traversal costs evolve over time. Robust combinatorial optimization and incremental search-based planning represent two distinct responses to uncertainty within the same problem setting.}}{15}{}%
+\contentsline {figure}{\numberline {2.4}{\ignorespaces Geometric interpretation of uncertainty sets in cost space. Left: discrete uncertainty represented by a finite set of scenario realizations. Right: continuous budgeted uncertainty defined by nominal costs and bounded deviations under a global uncertainty budget $\Gamma $.}}{17}{}%
+\contentsline {figure}{\numberline {2.5}{\ignorespaces Visualization of D* Lite internals, illustrating backward search, heuristic guidance, and forward path execution. $s = u$ being the corresponding top node in $U$ at this point.}}{21}{}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Visualization of the baseline cost field for the first time frame.}}{32}{}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsfinish 
