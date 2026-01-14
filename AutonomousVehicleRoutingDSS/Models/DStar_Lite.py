@@ -543,7 +543,7 @@ class DStarLite:
 
             candidates.sort()
             if candidates:
-                 _, next_s = candidates[0]
+                _, _, next_s = candidates[0]
 
             if next_s is None:
                 succs = [
