@@ -1,6 +1,11 @@
 \newcommand{\etalchar}[1]{$^{#1}$}
 \begin{thebibliography}{WWW{\etalchar{+}}25}
 
+\bibitem[ABV09]{aissi2009}
+Hassene Aissi, Cristina Bazgan, and Daniel Vanderpooten.
+\newblock Min--max and min--max regret versions of combinatorial optimization problems: {{A}} survey.
+\newblock {\em European Journal of Operational Research}, 197(2):427--438, September 2009.
+
 \bibitem[AK23]{abdulsaheb2023}
 Jaafar~Ahmed Abdulsaheb and Dheyaa~Jasim Kadhim.
 \newblock Classical and {{Heuristic Approaches}} for {{Mobile Robot Path Planning}}: {{A Survey}}.
@@ -20,6 +25,16 @@ Amylia Ait~Saadi, Assia Soukane, Yassine Meraihi, Asma Benmessaoud~Gabis, Seyeda
 Prathamesh Bagad, Prachi Dahatonde, Rushikesh Gagare, Ishwari Athare, and Gauri Ghule.
 \newblock Optimizing {{Pathfinding}} in {{Dynamic Environments}}: {{A Comparative Study}} of {{A}}* and {{D-Lite Algorithms}}.
 \newblock In {\em 2024 {{IEEE Pune Section International Conference}} ({{PuneCon}})}, pages 1--11, Pune, India, December 2024. IEEE.
+
+\bibitem[BS03]{bertsimas2003}
+Dimitris Bertsimas and Melvyn Sim.
+\newblock Robust discrete optimization and network flows.
+\newblock {\em Mathematical Programming}, 98(1-3):49--71, September 2003.
+
+\bibitem[BS04]{bertsimas2004}
+Dimitris Bertsimas and Melvyn Sim.
+\newblock The {{Price}} of {{Robustness}}.
+\newblock {\em Operations Research}, 52(1):35--53, February 2004.
 
 \bibitem[CDG19]{chassein2019}
 Andr{\'e} Chassein, Trivikram Dokka, and Marc Goerigk.
@@ -207,6 +222,11 @@ Longyan Xu, Mao Xi, Ren Gao, Ziheng Ye, and Zaihan He.
 Vincent~F. Yu, Pham~Tuan Anh, and Roberto Baldacci.
 \newblock A robust optimization approach for the vehicle routing problem with cross-docking under demand uncertainty.
 \newblock {\em Transportation Research Part E: Logistics and Transportation Review}, 173:103106, May 2023.
+
+\bibitem[YY98]{yu1998}
+Gang Yu and Jian Yang.
+\newblock On the {{Robust Shortest Path Problem}}.
+\newblock {\em Computers \& Operations Research}, 25(6):457--468, June 1998.
 
 \bibitem[ZLS{\etalchar{+}}22]{zhang2022}
 Yunfan Zhang, Feng Liu, Yifan Su, Yue Chen, Zhaojian Wang, and Joao P.~S. Catalao.

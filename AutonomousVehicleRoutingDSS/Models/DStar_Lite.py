@@ -10,7 +10,6 @@ import glob
 import os
 from pathlib import Path
 import math
-import collections
 
 
 
@@ -189,7 +188,6 @@ class DStarLite:
         self.current_scenario = 1
         self.last_applied_scenario = 0
         self.beacons_applied_for_scenario = None
-
         self.key = {}
         self.in_queue = {}
 
@@ -217,9 +215,6 @@ class DStarLite:
         self.replans = 0
         self.step_cost_details = []
         self.result = {}
-        self.visit_counts = collections.defaultdict(int)
-        self.debug = bool(debug)
-        self.debug_stride = int(debug_stride) if debug_stride else 0
         self.max_steps = int(max_steps) if max_steps else None
 
         self.baseline_cost = []
@@ -302,9 +297,6 @@ class DStarLite:
         self.current_goal = m
         self.goal_from_scenario = self.current_scenario
         self.beacons_applied_for_scenario = self.current_scenario
-        remaining = len(self.beacon_sequence) - self.next_beacon_idx
-        if self.debug:
-            print(f"[DEBUG] Activate beacon {m} (#{idx+1}/{len(self.beacon_sequence)}), remaining={remaining}")
         self.ResetSearchForGoal()
         return True
 
@@ -388,7 +380,7 @@ class DStarLite:
     # procedure ComputeShortestPath()
     def ComputeShortestPath(self):
 
-        # helper to get top node in U
+        # helper to get top node in U (heapq limitation)
         def top_key():
             if not self.U:
                 return (float('inf'), float('inf'))
@@ -401,9 +393,6 @@ class DStarLite:
             # {11"} & {12"}
             k_old, u = hq.heappop(self.U)
             popped += 1
-            if popped % 5000 == 0:
-                if self.debug:
-                    print(f"[DEBUG] ComputeShortestPath popped={popped} queue={len(self.U)}")
 
             # this entry is being handled (even if stale)
             self.in_queue[u] = False
@@ -411,7 +400,6 @@ class DStarLite:
             # lazy deletion: skip stale entries
             if self.key.get(u) != k_old:
                 continue
-
             # mark as removed; UpdateVertex will requeue if still inconsistent
 
             # {13"}
@@ -493,16 +481,15 @@ class DStarLite:
 
         # {31"}  
         pops = self.ComputeShortestPath()
-        if self.debug:
-            print(f"[DEBUG] Initial ComputeShortestPath popped={pops} queue={len(self.U)}")
 
-        # NOT ORIGINAL
         self.baseline_cost_map = dict(self.g)
         self.baseline_cost = self.g[self.s_start]
-        print("Baseline backward-search cost (A*):", self.baseline_cost)
 
         # {32"}
         while True:
+            # Included safety break if queue explodes; 
+            # fixed with avg edge cost of connecting nodes instead of edge cost
+            # being cost of travelling to node
             if self.max_steps is not None and len(self.path) >= self.max_steps:
                 raise RuntimeError(
                     f"DStar Lite exceeded max_steps={self.max_steps} at node {self.s_start}."
@@ -523,13 +510,11 @@ class DStarLite:
             # Ensure start is consistent before choosing the next step
             if (self.g.get(self.s_start, float('inf')) == float('inf')) or (self.g[self.s_start] != self.rhs[self.s_start]):
                 pops = self.ComputeShortestPath()
-                if self.debug:
-                    print(f"[DEBUG] Replan (consistency) popped={pops} queue={len(self.U)} step={len(self.path)-1} scen={self.current_scenario}")
 
             # {33"}
             if(self.g[self.s_start] == float('inf')):
                 print("ERROR! No known path to goal.")
-                print("Exiting DStar Lite, check ST-GRF output!")
+                print("Exiting DStar Lite, check STGRF output!")
                 succs = [(s2, self.c(self.s_start, s2), self.g.get(s2), self.rhs.get(s2), s2 in self.active_beacons)
                     for s2 in self.graph.get(self.s_start, {})]
                 print("Dead end at", self.s_start, "succs:", succs)
@@ -538,11 +523,9 @@ class DStarLite:
             
             # helper variables
             next_s = None
-            min_cost = float('inf')
 
             # {34"}
             candidates = []
-            prev_node = self.path[-2] if len(self.path) > 1 else None
             for s2, cost_s_s2 in self.graph.get(self.s_start, {}).items():
                 g_s2 = self.g.get(s2, float('inf'))
                 if not math.isfinite(g_s2):
@@ -560,10 +543,7 @@ class DStarLite:
 
             candidates.sort()
             if candidates:
-                min_cost, _, next_s = candidates[0]
-
-            # debug candidate ordering when we revisit/oscillate
-            candidates_debug = candidates[:3]
+                 _, next_s = candidates[0]
 
             if next_s is None:
                 succs = [
@@ -571,8 +551,6 @@ class DStarLite:
                     for s2 in self.graph.get(self.s_start, {})
                 ]
 
-                if self.debug:
-                    print(f"[DEBUG] Dead end at {self.s_start}, successors detail: {succs}")
                 print("ERROR! Dead end, no successors available to walk to!")
                 print("Exiting DStar Lite, check ST-GRF output!")
                 return None
@@ -580,22 +558,10 @@ class DStarLite:
 
             old_start = self.path[-1]
 
-            # log potential oscillation/backtracking
-            backtracking = (len(self.path) > 1 and next_s == self.path[-2])
-            self.visit_counts[next_s] += 1
-            should_log = backtracking or self.visit_counts[next_s] in {2, 5, 10, 20, 50}
-            if self.debug and self.debug_stride:
-                should_log = should_log and (len(self.path) % self.debug_stride == 0)
-            if self.debug and should_log:
-                print(f"[DEBUG] Step {len(self.path)-1} scen {self.current_scenario}: from {self.s_start} -> {next_s} "
-                      f"(backtrack={backtracking}, visits={self.visit_counts[next_s]}, top3={candidates_debug})")
-
             # {35"}
             self.s_start = next_s
             if next_s in self.active_beacons:
                 self.beacon_hits.append((len(self.path)-1, self.current_scenario, next_s))
-                if self.debug:
-                    print(f"[DEBUG] Beacon {next_s} reached at step {len(self.path)-1} (scenario {self.current_scenario})")
 
             # shift keys to the new start position (D* Lite invariant)
             self.km += self.h(self.s_last, self.s_start)
@@ -646,9 +612,6 @@ class DStarLite:
                     old_cost = self.c(u, v)
                     if old_cost != new_cost:
                         changed_edges.append((u, v, new_cost))
-                if raw_changes and not changed_edges:
-                    if self.debug:
-                        print(f"[DEBUG] Scenario {self.current_scenario}: no effective cost changes (all identical).")
                 self.last_applied_scenario = self.current_scenario
             else:
                 changed_edges = []
@@ -712,8 +675,6 @@ class DStarLite:
                 pops = self.ComputeShortestPath()
                 if replan_due_to_edges and pops > 0:
                     self.replans += 1
-                if self.debug:
-                    print(f"[DEBUG] Replan (scenario/beacon) popped={pops} queue={len(self.U)} step={len(self.path)-1} scen={self.current_scenario}")
 
         # timer end
         self.end_time = time.time()

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.11.28)  12 JAN 2026 18:10
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.11.28)  14 JAN 2026 13:17
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -499,6 +499,8 @@ File: tikzlibrarytopaths.code.tex 2023-01-15 v3.1.10 (3.1.10)
 \WF@box=\box70
 \WF@everypar=\toks41
 Package: wrapfig 2003/01/31  v 3.6
+) (/usr/local/texlive/2024/texmf-dist/tex/latex/placeins/placeins.sty
+Package: placeins 2005/04/18  v 2.2
 ) (/usr/local/texlive/2024/texmf-dist/tex/latex/multirow/multirow.sty
 Package: multirow 2021/03/15 v2.8 Span multiple rows of a table
 \multirow@colwidth=\skip62
@@ -727,7 +729,7 @@ Package: titletoc 2023/10/27 v2.16 TOC entries
 ) (/usr/local/texlive/2024/texmf-dist/tex/latex/psnfss/helvet.sty
 Package: helvet 2020/03/25 PSNFSS-v9.3 (WaS) 
 )
-LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 160.
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 161.
  (/usr/local/texlive/2024/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 ) (./BachelorThesis.aux
@@ -743,20 +745,20 @@ LaTeX Warning: Label `tab:param-variations-var' multiply defined.
 )
 \openout1 = `BachelorThesis.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 160.
-LaTeX Font Info:    ... okay on input line 160.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 160.
-LaTeX Font Info:    ... okay on input line 160.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 160.
-LaTeX Font Info:    ... okay on input line 160.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 160.
-LaTeX Font Info:    ... okay on input line 160.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 160.
-LaTeX Font Info:    ... okay on input line 160.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 160.
-LaTeX Font Info:    ... okay on input line 160.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 160.
-LaTeX Font Info:    ... okay on input line 160.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 161.
+LaTeX Font Info:    ... okay on input line 161.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 161.
+LaTeX Font Info:    ... okay on input line 161.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 161.
+LaTeX Font Info:    ... okay on input line 161.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 161.
+LaTeX Font Info:    ... okay on input line 161.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 161.
+LaTeX Font Info:    ... okay on input line 161.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 161.
+LaTeX Font Info:    ... okay on input line 161.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 161.
+LaTeX Font Info:    ... okay on input line 161.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -825,43 +827,43 @@ File: fc-english.def 2016/01/12
 <figs/LogoBlack.png, id=4, 369.7815pt x 113.7048pt>
 File: figs/LogoBlack.png Graphic file (type png)
 <use figs/LogoBlack.png>
-Package pdftex.def Info: figs/LogoBlack.png  used on input line 169.
+Package pdftex.def Info: figs/LogoBlack.png  used on input line 170.
 (pdftex.def)             Requested size: 277.59497pt x 85.35826pt.
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 200.
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 201.
  (/usr/local/texlive/2024/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 200.
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 201.
  (/usr/local/texlive/2024/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 200.
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 201.
  (/usr/local/texlive/2024/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 200.
+(Font)              <12> on input line 201.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 200.
+(Font)              <8> on input line 201.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 200.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 200.
+(Font)              <6> on input line 201.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 201.
  (/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 200.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 201.
  (/usr/local/texlive/2024/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
 
 {/usr/local/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-rmsc.enc}{/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc} <./figs/LogoBlack.png>]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 256.
+(Font)              <10> on input line 257.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 256.
+(Font)              <7> on input line 257.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 256.
-LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 256.
+(Font)              <5> on input line 257.
+LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 257.
  (/usr/local/texlive/2024/texmf-dist/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 ) [2
@@ -873,7 +875,7 @@ File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 \openout4 = `BachelorThesis.toc'.
 
  [2]
-Overfull \hbox (5.48741pt too wide) in paragraph at lines 329--329
+Overfull \hbox (5.48741pt too wide) in paragraph at lines 330--330
 []|$[]\OT1/lmr/m/n/12 ()$| 
  []
 
@@ -901,7 +903,7 @@ Chapter 1.
 <figs/PassauWeatherMapSensor.png, id=47, 383.25pt x 340.107pt>
 File: figs/PassauWeatherMapSensor.png Graphic file (type png)
 <use figs/PassauWeatherMapSensor.png>
-Package pdftex.def Info: figs/PassauWeatherMapSensor.png  used on input line 382.
+Package pdftex.def Info: figs/PassauWeatherMapSensor.png  used on input line 383.
 (pdftex.def)             Requested size: 220.50887pt x 195.68973pt.
 [5
 
@@ -910,12 +912,12 @@ Package pdftex.def Info: figs/PassauWeatherMapSensor.png  used on input line 382
 <figs/HighLevelT1.png, id=54, 386.316pt x 289.956pt>
 File: figs/HighLevelT1.png Graphic file (type png)
 <use figs/HighLevelT1.png>
-Package pdftex.def Info: figs/HighLevelT1.png  used on input line 412.
+Package pdftex.def Info: figs/HighLevelT1.png  used on input line 413.
 (pdftex.def)             Requested size: 220.50887pt x 165.50668pt.
 <figs/HighLevelT2.png, id=55, 386.316pt x 289.956pt>
 File: figs/HighLevelT2.png Graphic file (type png)
 <use figs/HighLevelT2.png>
-Package pdftex.def Info: figs/HighLevelT2.png  used on input line 416.
+Package pdftex.def Info: figs/HighLevelT2.png  used on input line 417.
 (pdftex.def)             Requested size: 220.50887pt x 165.50668pt.
  [6
 
@@ -923,14 +925,14 @@ Package pdftex.def Info: figs/HighLevelT2.png  used on input line 416.
 <figs/TopDownArchitecture.png, id=66, 931.407pt x 442.599pt>
 File: figs/TopDownArchitecture.png Graphic file (type png)
 <use figs/TopDownArchitecture.png>
-Package pdftex.def Info: figs/TopDownArchitecture.png  used on input line 523.
+Package pdftex.def Info: figs/TopDownArchitecture.png  used on input line 522.
 (pdftex.def)             Requested size: 441.01773pt x 209.57486pt.
  [8 <./figs/TopDownArchitecture.png>]
 Chapter 2.
 <figs/BasicDSSArchitectureNew.png, id=71, 493.845pt x 277.911pt>
 File: figs/BasicDSSArchitectureNew.png Graphic file (type png)
 <use figs/BasicDSSArchitectureNew.png>
-Package pdftex.def Info: figs/BasicDSSArchitectureNew.png  used on input line 549.
+Package pdftex.def Info: figs/BasicDSSArchitectureNew.png  used on input line 548.
 (pdftex.def)             Requested size: 352.81552pt x 198.5437pt.
 [9
 
@@ -981,137 +983,612 @@ Package mdframed Info: mdframed detected package amsthm
 (mdframed)              on input line 700.
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 739.
+(mdframed)              on input line 741.
  [13] [14]
 <figs/ShortestPathUnderUncertainty.png, id=109, 747.666pt x 476.763pt>
 File: figs/ShortestPathUnderUncertainty.png Graphic file (type png)
 <use figs/ShortestPathUnderUncertainty.png>
-Package pdftex.def Info: figs/ShortestPathUnderUncertainty.png  used on input line 835.
+Package pdftex.def Info: figs/ShortestPathUnderUncertainty.png  used on input line 837.
 (pdftex.def)             Requested size: 441.01773pt x 281.22226pt.
  [15 <./figs/ShortestPathUnderUncertainty.png>]
 <figs/DiscreteUncertaintySet.png, id=115, 337.26pt x 321.054pt>
 File: figs/DiscreteUncertaintySet.png Graphic file (type png)
 <use figs/DiscreteUncertaintySet.png>
-Package pdftex.def Info: figs/DiscreteUncertaintySet.png  used on input line 902.
-(pdftex.def)             Requested size: 202.87111pt x 193.12376pt.
-<figs/ContiniousBudgetedUncertaintySet.png, id=116, 338.136pt x 321.054pt>
+Package pdftex.def Info: figs/DiscreteUncertaintySet.png  used on input line 910.
+(pdftex.def)             Requested size: 132.30666pt x 125.95027pt.
+ [16 <./figs/DiscreteUncertaintySet.png>]
+Package mdframed Info: mdframed detected package amsthm 
+ changed the theorem header of amsthm
+(mdframed)              on input line 940.
+<figs/ContiniousBudgetedUncertaintySet.png, id=121, 338.136pt x 321.054pt>
 File: figs/ContiniousBudgetedUncertaintySet.png Graphic file (type png)
 <use figs/ContiniousBudgetedUncertaintySet.png>
-Package pdftex.def Info: figs/ContiniousBudgetedUncertaintySet.png  used on input line 908.
-(pdftex.def)             Requested size: 202.87111pt x 192.62408pt.
- [16]
+Package pdftex.def Info: figs/ContiniousBudgetedUncertaintySet.png  used on input line 992.
+(pdftex.def)             Requested size: 132.30666pt x 125.62206pt.
+ [17]
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 968.
- [17 <./figs/DiscreteUncertaintySet.png> <./figs/ContiniousBudgetedUncertaintySet.png>]
-Package mdframed Info: mdframed detected package amsthm 
- changed the theorem header of amsthm
-(mdframed)              on input line 1031.
- [18] [19] [20]
-<figs/DStar_internal.png, id=136, 877.095pt x 296.088pt>
+(mdframed)              on input line 1020.
+
+Underfull \hbox (badness 4518) in paragraph at lines 1065--1066
+[]|\OT1/lmr/m/n/10.95 Uncertainty rep-re-sen-ta-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1067--1068
+[]|\OT1/lmr/m/n/10.95 Nominal val-ues with
+ []
+
+[18 <./figs/ContiniousBudgetedUncertaintySet.png>] [19] [20]
+<figs/DStar_internal.png, id=138, 885.198pt x 300.03pt>
 File: figs/DStar_internal.png Graphic file (type png)
 <use figs/DStar_internal.png>
-Package pdftex.def Info: figs/DStar_internal.png  used on input line 1199.
-(pdftex.def)             Requested size: 441.01773pt x 148.87944pt.
- [21 <./figs/DStar_internal.png>] [22]
-Chapter 3.
-
-Overfull \hbox (37.9295pt too wide) in paragraph at lines 1251--1251
-|[]\OT1/lmr/bx/n/17.28 Geostatistical Data Gen-er-a-tion for Spatio-Temporal
+Package pdftex.def Info: figs/DStar_internal.png  used on input line 1229.
+(pdftex.def)             Requested size: 441.01773pt x 149.47899pt.
+ [21 <./figs/DStar_internal.png>]
+Overfull \hbox (23.0931pt too wide) in paragraph at lines 1236--1238
+\OT1/lmr/m/n/12 go-rith-mi-cally in D* Lite, fol-low-ing the orig-i-nal pseu-docode by Koenig and Likhachev [[]]: 
  []
 
-LaTeX Font Info:    Trying to load font information for OT1+lmtt on input line 1255.
+<figs/CalculateKeys.png, id=144, 1032.85875pt x 80.3pt>
+File: figs/CalculateKeys.png Graphic file (type png)
+<use figs/CalculateKeys.png>
+Package pdftex.def Info: figs/CalculateKeys.png  used on input line 1256.
+(pdftex.def)             Requested size: 207.27887pt x 16.11484pt.
+<figs/Initialize.png, id=145, 609.27625pt x 199.74625pt>
+File: figs/Initialize.png Graphic file (type png)
+<use figs/Initialize.png>
+Package pdftex.def Info: figs/Initialize.png  used on input line 1277.
+(pdftex.def)             Requested size: 207.27887pt x 67.95549pt.
+<figs/UpdateVertex.png, id=146, 995.72pt x 133.49875pt>
+File: figs/UpdateVertex.png Graphic file (type png)
+<use figs/UpdateVertex.png>
+Package pdftex.def Info: figs/UpdateVertex.png  used on input line 1300.
+(pdftex.def)             Requested size: 207.27887pt x 27.78908pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 1312--1317
+[]\OT1/lmr/m/it/12 ComputeShortestPath \OT1/lmr/m/n/12 re-peat-edly ex-
+ []
+
+
+Underfull \hbox (badness 3229) in paragraph at lines 1312--1317
+\OT1/lmr/m/n/12 is re-entered when-ever cost changes
+ []
+
+<figs/ComputeShortestPath.png, id=147, 1025.8325pt x 652.4375pt>
+File: figs/ComputeShortestPath.png Graphic file (type png)
+<use figs/ComputeShortestPath.png>
+Package pdftex.def Info: figs/ComputeShortestPath.png  used on input line 1322.
+(pdftex.def)             Requested size: 207.27887pt x 131.82916pt.
+[22
+
+ <./figs/CalculateKeys.png> <./figs/Initialize.png> <./figs/UpdateVertex.png>]
+<figs/Main.png, id=154, 1035.87pt x 700.6175pt>
+File: figs/Main.png Graphic file (type png)
+<use figs/Main.png>
+Package pdftex.def Info: figs/Main.png  used on input line 1350.
+(pdftex.def)             Requested size: 207.27887pt x 140.18515pt.
+ [23 <./figs/ComputeShortestPath.png> <./figs/Main.png>]
+Chapter 3.
+LaTeX Font Info:    Trying to load font information for OT1+lmtt on input line 1369.
 (/usr/local/texlive/2024/texmf-dist/tex/latex/lm/ot1lmtt.fd
 File: ot1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)
-Overfull \hbox (14.83832pt too wide) in paragraph at lines 1265--1266
-[]\OT1/lmtt/m/n/12 Kernel(spatial[]dim=3, temporal=False, var=..., len[]scale=..., anis=...)\OT1/lmr/m/n/12 . 
- []
+) [24
 
-[23
+{/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-rmtt.enc}]
 
-{/usr/local/texlive/2024/texmf-dist/fonts/enc/dvips/lm/lm-rmtt.enc}] [24]
+LaTeX Warning: Reference `chap:experiments' on page 25 undefined on input line 1432.
+
+[25]
 Package mdframed Info: mdframed detected package amsthm 
  changed the theorem header of amsthm
-(mdframed)              on input line 1382.
- [25]
-Overfull \hbox (58.72961pt too wide) in paragraph at lines 1416--1467
- [][] 
- []
+(mdframed)              on input line 1482.
 
-Package mdframed Info: mdframed detected package amsthm 
- changed the theorem header of amsthm
-(mdframed)              on input line 1477.
+
+LaTeX Warning: Reference `subsec:computational-efficiency-robust-models' on page 26 undefined on input line 1506.
+
 [26]
-Overfull \hbox (60.19122pt too wide) in paragraph at lines 1508--1571
- [][] 
+Package mdframed Info: mdframed detected package amsthm 
+ changed the theorem header of amsthm
+(mdframed)              on input line 1572.
+
+Overfull \vbox (101.93507pt too high) detected at line 1598
  []
 
+Package mdframed Info: Box was splittet wrong
+ starting loop to iterate the splitting point
+(mdframed)              on input line 1598.
+
+Overfull \vbox (102.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (103.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (104.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (105.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (106.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (107.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (108.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (109.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (110.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (111.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (112.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (113.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (114.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (115.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (116.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (117.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (118.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (119.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (120.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (121.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (122.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (123.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (124.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (125.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (126.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (127.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (128.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (129.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (130.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (131.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (132.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (133.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (134.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (135.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (136.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (137.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (138.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (139.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (140.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (141.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (142.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (143.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (144.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (145.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (146.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (147.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (148.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (149.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (150.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (151.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (152.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (153.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (154.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (155.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (156.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (157.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (158.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (159.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (160.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (161.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (162.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (163.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (164.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (165.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (166.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (167.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (168.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (169.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (170.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (171.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (172.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (173.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (174.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (175.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (176.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (177.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (178.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (179.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (180.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (181.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (182.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (183.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (184.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (185.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (186.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (187.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (188.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (189.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (190.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (191.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (192.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (193.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (194.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (195.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (196.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (197.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (198.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (199.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (200.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (201.93507pt too high) detected at line 1598
+ []
+
+
+Overfull \vbox (202.93507pt too high) detected at line 1598
+ []
+
+
+Package mdframed Warning: correct box splittet fails
+ It seems you are using a non splittable contents
+(mdframed)                 on input line 1598.
+
+Package mdframed Info: You first box width is to small
+ mdframed fixed it
+(mdframed)              on input line 1598.
 [27]
-LaTeX Font Info:    Trying to load font information for OMS+lmr on input line 1631.
- (/usr/local/texlive/2024/texmf-dist/tex/latex/lm/omslmr.fd
+
+LaTeX Warning: Reference `subsec:computational-efficiency-robust-models' on page 28 undefined on input line 1603.
+
+[28]
+Overfull \hbox (22.20172pt too wide) in paragraph at lines 1629--1632
+[] []\OT1/lmr/bx/n/12 Mod-el-ing Dif-fer-ences.[] \OT1/lmr/m/n/12 Com-pared to the ref-er-ence for-mu-la-tion by Koenig and Likhachev
+ []
+
+LaTeX Font Info:    Trying to load font information for OMS+lmr on input line 1675.
+(/usr/local/texlive/2024/texmf-dist/tex/latex/lm/omslmr.fd
 File: omslmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Font shape `OMS/lmr/m/n' in size <12> not available
-(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 1631.
- [28] [29]
+(Font)              Font shape `OMS/lmsy/m/n' tried instead on input line 1675.
+ [29] [30] [31]
 Chapter 4.
-[30
 
-]
-Overfull \hbox (19.82678pt too wide) in paragraph at lines 1737--1757
+LaTeX Warning: Reference `subsec:computational-efficiency-robust-models' on page 32 undefined on input line 1797.
+
+[32
+
+] [33]
+Overfull \hbox (19.82678pt too wide) in paragraph at lines 1837--1857
  [][] 
  []
 
-<figs/Baseline2D.png, id=175, 433.62pt x 433.62pt>
+<figs/Baseline2D.png, id=195, 433.62pt x 433.62pt>
 File: figs/Baseline2D.png Graphic file (type png)
 <use figs/Baseline2D.png>
-Package pdftex.def Info: figs/Baseline2D.png  used on input line 1765.
+Package pdftex.def Info: figs/Baseline2D.png  used on input line 1865.
 (pdftex.def)             Requested size: 132.30666pt x 132.30353pt.
-[31] [32 <./figs/Baseline2D.png>] [33] [34] [35] [36] [37] [38]
+[34] [35 <./figs/Baseline2D.png>] [36] [37] [38] [39] [40] [41] [42]
 Chapter 5.
-(./BachelorThesis.bbl [39
+(./BachelorThesis.bbl [43
 
 ]
-Underfull \hbox (badness 1412) in paragraph at lines 20--23
+Underfull \hbox (badness 1412) in paragraph at lines 25--28
 []\OT1/lmr/m/n/12 Prathamesh Bagad, Prachi Da-ha-tonde, Rushikesh Gagare, Ish-wari
  []
 
-[40
+[44
 
 
-] [41] [42] [43]) [44]
+] [45] [46] [47]) [48]
 Chapter 6.
 
-Overfull \hbox (58.96776pt too wide) in paragraph at lines 2574--2651
+Overfull \hbox (58.96776pt too wide) in paragraph at lines 2675--2752
  [][] 
  []
 
-[45
+[49
 
-] [46] (./BachelorThesis.aux)
+] [50] (./BachelorThesis.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-02-20>
  ***********
 
 
+LaTeX Warning: There were undefined references.
+
+
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 21590 strings out of 474116
- 433050 string characters out of 5743681
+ 21670 strings out of 474116
+ 435032 string characters out of 5743681
  1957187 words of memory out of 5000000
- 43473 multiletter control sequences out of 15000+600000
- 653339 words of font info for 102 fonts, out of 8000000 for 9000
+ 43548 multiletter control sequences out of 15000+600000
+ 653965 words of font info for 104 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 84i,21n,93p,667b,828s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 84i,21n,93p,709b,828s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmex10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi7.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmmib10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr17.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr6.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmri12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmri8.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/lm/lmtt12.pfb></usr/local/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on BachelorThesis.pdf (50 pages, 5221070 bytes).
+Output written on BachelorThesis.pdf (54 pages, 5923830 bytes).
 PDF statistics:
- 348 PDF objects out of 1000 (max. 8388607)
- 203 compressed objects within 3 object streams
+ 370 PDF objects out of 1000 (max. 8388607)
+ 211 compressed objects within 3 object streams
  0 named destinations out of 1000 (max. 500000)
- 108 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 133 words of extra memory for PDF output out of 10000 (max. 10000000)
 

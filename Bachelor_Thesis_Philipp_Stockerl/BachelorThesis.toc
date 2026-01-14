@@ -19,44 +19,46 @@
 \contentsline {paragraph}{Robust Optimization and the Min--Max Principle}{16}{}%
 \contentsline {paragraph}{Uncertainty Sets}{16}{}%
 \contentsline {paragraph}{Discrete Uncertainty Sets}{16}{}%
-\contentsline {paragraph}{Continuous Budgeted Uncertainty Sets}{18}{}%
-\contentsline {paragraph}{Summary}{19}{}%
+\contentsline {paragraph}{Continuous Budgeted Uncertainty Sets}{17}{}%
+\contentsline {paragraph}{Summary}{18}{}%
 \contentsline {section}{\numberline {2-5}Incremental Search-Based Path-Planning}{19}{}%
-\contentsline {paragraph}{Incremental Heuristic Search as an Execution Model}{20}{}%
-\contentsline {paragraph}{D* Lite as a Canonical Incremental Planner}{20}{}%
-\contentsline {paragraph}{State Representation and Local Consistency}{21}{}%
-\contentsline {paragraph}{Priority Queue and Lexicographic Keys}{21}{}%
-\contentsline {paragraph}{Heuristic Shift and Moving Start}{22}{}%
-\contentsline {paragraph}{Greedy Path Execution}{22}{}%
-\contentsline {paragraph}{Role Within the Experimental Framework}{22}{}%
-\contentsline {chapter}{\numberline {3}IMPLEMENTATION DETAILS}{23}{}%
-\contentsline {section}{\numberline {3-1}Decision Support Systems}{23}{}%
-\contentsline {section}{\numberline {3-2}Geostatistical Data Generation for Spatio-Temporal Cost Fields}{23}{}%
-\contentsline {paragraph}{Step 1: Covariance model and kernel selection.}{23}{}%
-\contentsline {paragraph}{Step 2: Structured space--time grid.}{24}{}%
-\contentsline {paragraph}{Step 3: Spectral random field generation.}{24}{}%
-\contentsline {paragraph}{Step 4: Global normalization.}{24}{}%
-\contentsline {paragraph}{Step 5: Scenario slices and graph mapping.}{24}{}%
-\contentsline {paragraph}{Step 6: Export for downstream models.}{24}{}%
-\contentsline {section}{\numberline {3-3}Discrete Uncertainty Min--Max Model}{25}{}%
-\contentsline {section}{\numberline {3-4}Budgeted Uncertainty Min--Max Model}{26}{}%
-\contentsline {section}{\numberline {3-5}D* Lite}{27}{}%
-\contentsline {paragraph}{Modeling Differences.}{27}{}%
-\contentsline {paragraph}{Scenario-Based Cost Evolution.}{28}{}%
-\contentsline {paragraph}{Coupling Robust Planning and Incremental Execution.}{28}{}%
-\contentsline {paragraph}{Algorithmic Structure and Pseudocode Mapping.}{28}{}%
-\contentsline {chapter}{\numberline {4}EXPERIMENTAl RESULTS}{30}{}%
-\contentsline {paragraph}{Research Questions}{30}{}%
-\contentsline {section}{\numberline {4-1}Baseline}{31}{}%
-\contentsline {paragraph}{Length Scale}{31}{}%
-\contentsline {paragraph}{Uncertainty Budget}{32}{}%
-\contentsline {section}{\numberline {4-2}Experiment 1: Urban vs. Regional Scale}{33}{}%
-\contentsline {section}{\numberline {4-3}Experiment 2: Short vs. Long Exposure}{34}{}%
-\contentsline {section}{\numberline {4-4}Experiment 3: Rough vs. Smooth Terrain}{35}{}%
-\contentsline {section}{\numberline {4-5}Experiment 4: Temporal Stability}{36}{}%
-\contentsline {section}{\numberline {4-6}Experiment 5: Uncertainty Budgeted}{37}{}%
-\contentsline {section}{\numberline {4-7}Experiment 6: Number of Beacons}{38}{}%
-\contentsline {chapter}{\numberline {5}CONCLUSION}{39}{}%
-\contentsline {chapter}{\numberline {6}APPENDIX}{45}{}%
-\contentsline {section}{\numberline {6-1}Geostatistical Formulations}{45}{}%
+\contentsline {paragraph}{Conceptual View: Backward Search and Forward Execution}{20}{}%
+\contentsline {paragraph}{State Representation and Local Consistency}{20}{}%
+\contentsline {paragraph}{Priority Queue and Lexicographic Keys}{20}{}%
+\contentsline {paragraph}{Heuristic Shift under Start-Vertex Movement}{20}{}%
+\contentsline {paragraph}{Computational Effort}{21}{}%
+\contentsline {paragraph}{Algorithmic Overview}{21}{}%
+\contentsline {paragraph}{Procedural Realization}{22}{}%
+\contentsline {chapter}{\numberline {3}IMPLEMENTATION DETAILS}{24}{}%
+\contentsline {section}{\numberline {3-1}Decision Support Interface}{24}{}%
+\contentsline {section}{\numberline {3-2}Data and Graph Generation}{24}{}%
+\contentsline {paragraph}{Step 1: Covariance model and kernel selection}{24}{}%
+\contentsline {paragraph}{Step 2: Structured space--time grid.}{25}{}%
+\contentsline {paragraph}{Step 3: Spectral random field generation.}{25}{}%
+\contentsline {paragraph}{Step 4: Global normalization.}{25}{}%
+\contentsline {paragraph}{Step 5: Scenario slices and graph mapping.}{25}{}%
+\contentsline {paragraph}{Step 6: Export for downstream models.}{25}{}%
+\contentsline {section}{\numberline {3-3}Discrete Uncertainty Min--Max Model}{26}{}%
+\contentsline {section}{\numberline {3-4}Budgeted Uncertainty Min--Max Model}{27}{}%
+\contentsline {section}{\numberline {3-5}Solver Settings}{28}{}%
+\contentsline {section}{\numberline {3-6}D* Lite}{29}{}%
+\contentsline {paragraph}{Modeling Differences.}{29}{}%
+\contentsline {paragraph}{Preprocessing and Graph Construction.}{29}{}%
+\contentsline {paragraph}{Scenario-Based Cost Evolution.}{30}{}%
+\contentsline {paragraph}{Coupling Robust Planning and Incremental Execution.}{30}{}%
+\contentsline {chapter}{\numberline {4}EXPERIMENTAl RESULTS}{32}{}%
+\contentsline {paragraph}{Research Questions}{32}{}%
+\contentsline {paragraph}{Computational Effort}{33}{}%
+\contentsline {section}{\numberline {4-1}Baseline}{34}{}%
+\contentsline {paragraph}{Length Scale}{34}{}%
+\contentsline {paragraph}{Uncertainty Budget}{35}{}%
+\contentsline {section}{\numberline {4-2}Experiment 1: Urban vs. Regional Scale}{36}{}%
+\contentsline {section}{\numberline {4-3}Experiment 2: Short vs. Long Exposure}{37}{}%
+\contentsline {section}{\numberline {4-4}Experiment 3: Rough vs. Smooth Terrain}{39}{}%
+\contentsline {section}{\numberline {4-5}Experiment 4: Temporal Stability}{40}{}%
+\contentsline {section}{\numberline {4-6}Experiment 5: Uncertainty Budgeted}{41}{}%
+\contentsline {section}{\numberline {4-7}Experiment 6: Number of Beacons}{42}{}%
+\contentsline {chapter}{\numberline {5}CONCLUSION}{43}{}%
+\contentsline {chapter}{\numberline {6}APPENDIX}{49}{}%
+\contentsline {section}{\numberline {6-1}Geostatistical Formulations}{49}{}%
 \contentsfinish 

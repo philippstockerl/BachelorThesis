@@ -73,6 +73,7 @@
 \usepackage[font=footnotesize,labelfont=bf,textfont=it]{caption}
 \usepackage{tikz}
 \usepackage{wrapfig}
+\usepackage{placeins}
 \usepackage{multirow}
 
 \usetikzlibrary{
@@ -463,8 +464,6 @@ $\gamma(r)$, $C(\cdot)$, $\rho(\cdot)$ & Semi-variogram, covariance, and correla
   Incremental search-based methods likewise aim to compute globally consistent paths, but rely
   on locally grounded exploration and adaptation, trading increased online computation for
   the ability to react to newly revealed cost information.
-  As a result, incremental planners are particularly well suited to onboard execution in
-  mobile robotic systems, where sensing and computation are tightly coupled.
   Although both paradigms address the same underlying routing task, they differ fundamentally
   in their information assumptions, degree of adaptivity, and evaluation criteria.
 
@@ -582,6 +581,7 @@ We employ a conceptual DSS for our autonomous vehicle routing problem as an inte
 that embeds a data component and model components.
 
 \section{Data Component: \newline Geostatistical Data Generation}
+\label{sec:data-component}
 For the data component of our conceptual framework, we generate spatio-temporally correlated cost fields using geostatistical methods. These fields serve as controlled, reproducible inputs to all shortest-path models evaluated in this work. Since geostatistics is used purely as a data generation tool, we focus on implementation-relevant design choices rather than a detailed statistical treatment.
 
 Using simulated data for model comparison is common practice when real-world data is scarce or difficult to control experimentally \cite{matsypura2026,meng2025}. Geostatistical frameworks provide a principled way to generate spatially and temporally correlated synthetic data while maintaining full control over variance, correlation length, and anisotropy \cite{muller2022}. In particular, we rely on the GSTools library, which offers reproducible implementations of second-order random field models widely used in simulation studies \cite{raimbault2019}.
@@ -648,7 +648,7 @@ We begin with the classical shortest-path problem under nominal assumptions and 
 introduce cost uncertainty, highlighting how violations of these assumptions lead to
 fundamentally different planning logics.
 
-Although both paradigms address the same underlying routing problem on an identical graph
+Although both paradigms introduced in the introduction address the same underlying routing problem on an identical graph
 structure, they differ in how this problem is represented and solved.
 Following the taxonomy of Hart et al.~\cite{hart1968}, we distinguish between
 optimization-based formulations and heuristic search--based methods as two complementary
@@ -703,7 +703,9 @@ the nominal shortest-path problem can be formulated as
       \min \quad & \sum_{e \in A} c_e x_e \\
       \text{s.t.} \quad
       & \sum_{(i,j)\in A} x_{ij} - \sum_{(j,i)\in A} x_{ji} = b_i
-      && \forall i \in V, \\
+      && \forall i \in V, 
+            \label{eq:flow-balance-constraint}
+      \\
       & x_e \in \{0,1\}
       && \forall e \in A,
       \label{eq:nominal-combinatorial-shortest-path}
@@ -855,19 +857,16 @@ search-based planning as an ex-post adaptive alternative.
 
 \section{Robust Combinatorial Optimization}
   \label{sec:robust-combinatorial-optimization}
-  Building on the nominal formulation in Section~\ref{sec:shortest-path-planning-under-uncertainty} for the
+  Building on the nominal formulation for the
   shortest-path problem (Equation~\ref{eq:nominal-combinatorial-shortest-path}),
-  robust optimization replaces fixed costs $c$ with an uncertainty set $\mathcal{U}$ and
-  seeks a path $x \in \mathcal{X}$ that minimizes the worst-case cost over $\mathcal{U}$.
-  We refer to \cite{goerigk2024} for this section.
+  we introduce uncertainty modeling and "robustify" our nominal problem.
+  We refer generally to \cite{goerigk2024} for formulations in this section.
 
     \paragraph{Robust Optimization and the Min--Max Principle}
-      In robust shortest-path planning, edge costs are not assumed to be known exactly at
-      planning time.
-      Instead, costs are assumed to belong to a prescribed uncertainty set
-      $\mathcal{U}\subseteq\mathbb{R}_{\ge0}^{|E|}$.
-      The planner selects a feasible path, while the adversary selects a cost realization
-      from $\mathcal{U}$ that maximizes the cost of that path.
+      In robust shortest-path planning, costs are assumed to lie in a prescribed uncertainty
+      set $\mathcal{U}\subseteq\mathbb{R}_{\ge0}^{|E|}$, and the planner selects a feasible
+      path before the adversary selects a realization from $\mathcal{U}$ that maximizes its
+      cost.
 
       Formally, robust planning is based on the min--max criterion
       \[
@@ -875,17 +874,15 @@ search-based planning as an ex-post adaptive alternative.
       \sum_{(i,j)\in E} c_{ij} x_{ij},
       \]
       where $\mathcal{X}$ denotes the set of feasible $s$--$t$ paths defined by the
-      flow-balance constraints.
+      flow-balance constraints (\ref{eq:flow-balance-constraint}).
       This criterion guarantees worst-case protection against all cost realizations
       contained in $\mathcal{U}$.
-      Alternative robustness concepts exist, but the min--max formulation provides the
-      strongest feasibility guarantees and is therefore adopted throughout this thesis.
+      Alternative robustness concepts exist; in this thesis we adopt the min--max 
+      formulation as a simple, widely used baseline for worst--case analysis.
 
-      The choice of the uncertainty set $\mathcal{U}$ determines the level of conservatism
-      and the computational structure of the resulting model.
       In the following paragraphs, we introduce the uncertainty models used in this thesis.
       Their integration into fully specified shortest-path formulations is deferred to the
-      Methodology chapter, where implementation details are discussed.
+      Implementation chapter, where implementation details are discussed as well.
 
 
     \paragraph{Uncertainty Sets}
@@ -895,64 +892,39 @@ search-based planning as an ex-post adaptive alternative.
       In the context of shortest-path planning, each component of a cost vector
       corresponds to a single directed edge of the underlying graph.
 
-            \begin{figure}[htbp]
-  \centering
-  \begin{subfigure}{0.46\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{figs/DiscreteUncertaintySet.png}
-    \caption{Discrete scenario-based uncertainty set}
-    \label{fig:discrete-uncertainty-set}
-  \end{subfigure}\hfill
-  \begin{subfigure}{0.46\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{figs/ContiniousBudgetedUncertaintySet.png}
-    \caption{Continuous budgeted uncertainty set}
-    \label{fig:budgeted-uncertainty-set}
-  \end{subfigure}
-
-  \caption{Geometric interpretation of uncertainty sets in cost space.  
-  Left: discrete uncertainty represented by a finite set of scenario realizations.  
-  Right: continuous budgeted uncertainty defined by nominal costs and bounded deviations
-  under a global uncertainty budget $\Gamma$.}
-  \label{fig:uncertainty-sets}
-\end{figure}
-
-      In this thesis, uncertainty sets are not inferred from observational data, but
-      constructed deliberately from synthetic spatio-temporal random fields to enable
-      controlled experimentation.
-      Edge costs are generated as a three-dimensional array indexed over space and
-      time, where each two-dimensional slice corresponds to a spatial cost realization
-      at a given time step.
-      Based on this representation, two complementary uncertainty models are derived
-      and evaluated: discrete scenario-based uncertainty and continuous budgeted
-      uncertainty.
-      Figure~\ref{fig:uncertainty-sets} provides a geometric illustration of the two uncertainty
-models considered in this thesis.
+      In this thesis, uncertainty sets are constructed from the synthetic spatio-temporal
+      random fields used throughout; each temporal slice yields a spatial cost scenario (\ref{sec:data-component}).
+      Based on this representation, two complementary uncertainty models are derived and
+      evaluated: discrete scenario-based uncertainty and continuous budgeted uncertainty.
 
 
     \paragraph{Discrete Uncertainty Sets}
       A discrete uncertainty set consists of a finite collection of cost scenarios
       \[
-      \mathcal{U} = \{\mathbf{c}^1, \dots, \mathbf{c}^K\},
+      \mathcal{U} = \{\mathbf{c}^{\omega} \mid \omega \in \Omega\},
       \]
-      where each vector $\mathbf{c}^k$ represents a complete realization of edge costs
+
+      \begin{wrapfigure}[9]{r}{0.3\textwidth}
+      \vspace{-1cm}
+      \centering
+      \includegraphics[width=\linewidth]{figs/DiscreteUncertaintySet.png}
+      \caption{Geometric interpretation of a discrete uncertainty set in a cost space.}
+      \label{fig:discrete-uncertainty-set-fig}
+      \end{wrapfigure}
+
+      where each vector $\mathbf{c}^{\omega}$ represents a complete realization of edge costs
       over the graph.
-      As illustrated in Figure~\ref{fig:discrete-uncertainty-set}, discrete uncertainty models
-represent uncertainty through a finite set of cost vectors, each corresponding to a
-complete scenario realization.
 
-      In the experimental setup of this thesis, discrete uncertainty arises naturally
-      from the spatio-temporal random field representation.
-      Each cost vector $\mathbf{c}^k$ corresponds to a single two-dimensional time slice
-      of the three-dimensional spatio-temporal random field array.
-      That is, all edge costs within one scenario are taken from the same temporal
-      snapshot, preserving spatial correlation while treating scenarios as mutually
-      independent realizations.
+      As illustrated in Figure~\ref{fig:discrete-uncertainty-set-fig}, discrete uncertainty
+      represents uncertainty through a finite set of cost vectors corresponding to complete
+      scenario realizations.
 
-      As a result, the number of scenarios $K$ directly corresponds to the number of
-      time steps generated in the random field.
-      Robust optimization with discrete uncertainty therefore evaluates candidate paths
-      against all temporal realizations of the cost field considered in the experiment.
+      Discrete uncertainty arises directly from the spatio-temporal random field
+      representation: each cost vector $\mathbf{c}^{\omega}$ is a temporal slice, so all
+      edge costs within a scenario come from the same snapshot. 
+      Thus, $|\Omega|$ equals the number of time steps, and robust
+      optimization evaluates candidate paths against all temporal realizations.
+    
 
       For discrete uncertainty sets, the min--max problem can be reformulated using an
       epigraph formulation:
@@ -970,32 +942,40 @@ complete scenario realization.
       \begin{empheq}{align}
       \min \quad & z \\
       \text{s.t.}\quad
-      & z \ge \sum_{i \in [n]} c_i^k x_i && \forall k \in [K], \\
+      & z \ge \sum_{i \in [n]} c_i^{\omega} x_i && \forall \omega \in \Omega, \\
       & x \in \mathcal{X}.
       \end{empheq}
       \end{mdframed}
-
       This reformulation replaces the inner maximization by a finite set of linear
       constraints and yields a deterministic mixed-integer optimization problem.
 
+      These modeling choices have important computational consequences.
+      From a theoretical perspective, the discrete scenario-based min--max shortest-path
+      problem is NP--hard in general, even when the nominal shortest-path problem is
+      polynomially solvable. Hardness results already arise for small numbers of scenarios,
+      and the problem becomes strongly NP--hard when the number of scenarios is part of the
+      input \cite{yu1998,goerigk2024}. Although pseudopolynomial dynamic programming
+      algorithms exist for fixed scenario counts \cite{aissi2009}, their runtime grows rapidly
+      with the number of scenarios, which limits practical scalability.
 
+      The size of the epigraph reformulation grows linearly with the number of scenarios.
+      For a graph with $|E|$ edges, $|V|$ vertices, and $|\Omega|$ scenarios, the resulting
+      mixed-integer formulation contains $O(|E|)$ binary variables, $O(|V|)$ flow constraints,
+      one additional continuous epigraph variable $z$, and $O(|\Omega|)$ robust constraints.
+      Equivalently, the overall model size scales as $O(|E| + |V| + |\Omega|)$.
 
+      
 
     \paragraph{Continuous Budgeted Uncertainty Sets}
-      Continuous budgeted uncertainty sets aggregate information across multiple cost
-      scenarios into a compact representation consisting of nominal costs and bounded
-      deviations.
-      Rather than treating each scenario independently, this model summarizes the
-      range of cost variation observed across time.
+      Continuous budgeted uncertainty summarizes cost variation across scenarios via
+      nominal costs and bounded deviations.
 
-      In this thesis, nominal and worst-case edge costs are derived by aggregating all
-      scenario realizations of a given edge across time.
-      For each directed edge, a nominal cost $\underline{c}_i$ and a maximum deviation
-      $d_i$ are computed from the set of observed costs across scenarios.
-      The resulting budgeted uncertainty set restricts the total amount of deviation
-      that may occur simultaneously across edges by means of a global budget parameter
-      $\Gamma$.
-      \[
+      Given nominal costs $\underline{c}_i$ and maximum deviations $d_i$, the budgeted
+      uncertainty set restricts the total amount of deviation that may occur
+      simultaneously across edges by means of a global budget parameter $\Gamma$.
+
+      \begin{equation}
+      \label{eq:budgeted-uncertainty-set}
       \mathcal{U}
       =
       \left\{
@@ -1004,18 +984,27 @@ complete scenario realization.
       0 \le \delta_i \le 1,\;
       \sum_{i \in [n]} \delta_i \le \Gamma
       \right\}.
-      \]
-      In contrast to the discrete uncertainty set, the budgeted uncertainty set shown in Figure~\ref{fig:budgeted-uncertainty-set}
-defines a continuous polyhedral region around a nominal cost vector, where the total
-deviation across edges is limited by the budget parameter $\Gamma$.
+      \end{equation}
+
+                \begin{wrapfigure}[11]{r}{0.3\textwidth}
+          \vspace{0cm}
+          \centering
+          \includegraphics[width=\linewidth]{figs/ContiniousBudgetedUncertaintySet.png}
+          \caption{Geometric interpretation of a continuous budgeted uncertainty set in cost space.}
+          \label{fig:budgeted-uncertainty-set-fig}
+          \end{wrapfigure}
+      In contrast to the discrete uncertainty set, the budgeted uncertainty set shown in Figure~\ref{fig:budgeted-uncertainty-set-fig}
+      defines a continuous polyhedral region around a nominal cost vector, where the total
+      deviation across edges is limited by the budget parameter $\Gamma$.
+
 
       For shortest-path planning, the budget parameter $\Gamma$ admits an intuitive
       interpretation.
       It bounds the number or aggregate magnitude of edges along a path whose costs are
       allowed to deviate from their nominal values at the same time.
-      Small values of $\Gamma$ correspond to mild uncertainty and yield solutions close
-      to the nominal shortest path, while larger values model increasingly adverse and
-      coordinated cost deviations, resulting in more conservative paths.
+      Varying $\Gamma$ interpolates between the nominal solution ($\Gamma = 0$) and full
+      worst-case protection ($\Gamma \ge |E|$), yielding a controlled robustness--conservatism
+      trade-off.
 
       Following standard duality arguments, the inner maximization problem can be
       dualized, yielding the following robust counterpart:
@@ -1042,23 +1031,68 @@ deviation across edges is limited by the budget parameter $\Gamma$.
       \end{empheq}
       \end{mdframed}
 
-      In the experimental implementation, nominal costs and deviations for budgeted
-      uncertainty are computed by aggregating all scenario realizations of each edge
-      across time.
-      Nominal costs are derived either as the minimum or the average observed cost per
-      edge, while worst-case costs are given by the maximum observed value.
-      The deviation parameter is then defined as the difference between worst-case and
-      nominal cost.
-      A detailed description of this aggregation procedure and its implementation is
-      provided in the Methodology chapter.
-
       This formulation preserves the combinatorial structure of the shortest-path
       problem while incorporating controlled worst-case protection against uncertain
       edge costs.
-      It constitutes the robust shortest-path model used for ex-ante planning in the
-      experimental evaluation of this thesis.
 
-    \paragraph{Summary}
+      Bertsimas and Sim show that the inner maximization problem admits a compact dual
+      reformulation that introduces one global variable and one auxiliary variable per
+      uncertain coefficient. The resulting robust counterpart scales linearly in the number
+      of edges and constraints. For shortest-path problems, this reformulation preserves
+      polynomial solvability at the continuous level: whenever the nominal problem is
+      solvable in polynomial time, the corresponding budgeted robust counterpart remains
+      polynomially solvable as a linear optimization problem \cite{bertsimas2004,bertsimas2003}.
+
+      Importantly, this complexity guarantee applies to the continuous robust counterpart.
+      Integrality enforcement and solver settings are discussed in
+      Section~\ref{sec:solver-settings}.
+
+      \paragraph{Summary}
+      Table~\ref{tab:computational-comparison} summarizes the main computational properties
+      of the two uncertainty models.
+
+
+      \begin{table}[htbp]
+      \centering
+      \small
+      \renewcommand{\arraystretch}{1.15}
+      \begin{tabular}{p{4.2cm} p{4.8cm} p{4.8cm}}
+      \toprule
+      \textbf{Aspect}
+      & \textbf{Discrete Uncertainty}
+      & \textbf{Budgeted Uncertainty} \\
+      \midrule
+      Uncertainty representation
+      & Explicit finite scenarios
+      & Nominal values with bounded deviations \\
+
+      Robust constraints
+      & One per scenario
+      & One per edge \\
+
+      Extra variables
+      & One epigraph variable ($z$)
+      & One global variable ($\pi$) and $|E|$ auxiliary variables ($\rho_e$) \\
+
+      Model size scaling
+      & $O(|E| + |V| + |\Omega|)$
+      & $O(|E| + |V|)$ \\
+
+      Theoretical complexity
+      & NP--hard in general \cite{yu1998,aissi2009}
+      & Polynomial (continuous relaxation) \cite{bertsimas2004} \\
+
+      Worst-case modeling
+      & Exact over scenarios
+      & Aggregated worst-case envelope \\
+      \bottomrule
+      \end{tabular}
+      \caption{Comparison of computational properties of discrete scenario-based and budgeted
+      uncertainty min--max shortest-path models.}
+      \label{tab:computational-comparison}
+      \end{table}
+
+
       This section established the theoretical foundation for ex-ante shortest-path
       planning under uncertainty.
       Robust combinatorial optimization models uncertainty explicitly at planning time
@@ -1070,208 +1104,297 @@ deviation across edges is limited by the budget parameter $\Gamma$.
       path-planning algorithms that address uncertainty ex post through adaptive
       replanning during execution.
 
+
+
 \section{Incremental Search-Based Path-Planning}
 \label{sec:incremental-search-based-path-planning}
-    Incremental search-based path-planning algorithms constitute the canonical
-    \emph{ex-post} response to uncertainty in shortest-path problems.
-    Rather than committing to a fully specified path under assumed cost realizations,
-    these methods maintain and update shortest-path information during execution as
-    new cost information becomes available.
+  We introduced heuristic search methods for the nominal shortest-path problem
+  in Section~\ref{sec:shortest-path-planning-under-uncertainty}, where traversal
+  costs are assumed to be static and fully known.
+  Incremental search methods can be understood as extensions of heuristic
+  search—most notably A*—to settings in which costs may change during execution.
+  We refer mainly to \cite{koenig2002} for this sections details about D* Lite.
 
-    This execution-centric perspective is particularly well suited to environments
-    in which traversal costs are revealed incrementally or change over time.
-    Instead of modeling uncertainty explicitly at planning time, incremental search
-    algorithms treat uncertainty as an information process and adapt decisions as
-    costs are observed.
-    As a result, they emphasize responsiveness, reuse of prior computation, and
-    real-time feasibility under partial observability.
+  While A* recomputes a shortest path from scratch when edge costs change,
+  incremental search-based methods instead repair their internal search state.
+  Rather than discarding previous results, they exploit the optimal substructure
+  of shortest paths to reuse prior search effort \cite{koenig2004,stentz1994}.
+  These methods maintain lower-bound estimates on the remaining cost-to-go and
+  update only those parts of the search space that are affected by newly revealed
+  information.
+  In this sense, incremental search constitutes a minimal relaxation of the
+  nominal heuristic search framework: the underlying graph structure remains
+  unchanged, Bellman-style optimality is preserved locally, and global optimality
+  is recovered incrementally as traversal costs evolve during execution.
 
-    In contrast to robust combinatorial optimization, which selects a single path
-    before execution and evaluates it against worst-case cost realizations,
-    incremental search-based methods interleave planning and execution.
-    Paths are repaired locally when costs change, allowing the planner to react
-    to evolving conditions without recomputing solutions from scratch.
-    This fundamental difference makes incremental search a natural ex-post
-    counterpart to ex-ante robust optimization in the context of spatio-temporal
-    cost uncertainty.
-
-
-    \paragraph{Incremental Heuristic Search as an Execution Model}
-      Building on the A* baseline introduced above, incremental search algorithms
-      reuse heuristic search structure to enable efficient replanning under changing
-      information.
-      At their core, these methods maintain lower-bound estimates on remaining
-      cost-to-go and exploit structural properties of shortest paths to reuse
-      previous computation when costs are updated.
-
-      For incremental search methods such as D*~Lite, a stronger and more general
-      consistency condition is required.
-      Rather than relating heuristic values across individual edges, D*~Lite employs
-      a heuristic of the form $h(s_1,s_2)$ that estimates the cost of a shortest path
-      between two arbitrary vertices.
-      Koenig and Likhachev express the corresponding consistency requirement as a
-      triangle inequality with respect to true shortest-path costs:
-      \[
-        h(s,s'') \le c^*(s,s') + h(s',s'') \quad \forall s,s',s'' \in V,
-      \]
-      where $c^*(s,s')$ denotes the optimal cost of a path from $s$ to $s'$.
-
-      This formulation generalizes the classical edge-based consistency condition used
-      by A* and directly supports D*~Lite’s backward search and moving-start execution
-      model.
-      In grid-based graphs, the condition is typically satisfied by metric distance
-      heuristics such as Manhattan or Euclidean distance.
-
-      Incremental heuristic search methods extend this framework by maintaining
-      local consistency conditions between stored cost estimates and one-step
-      lookahead values.
-      Rather than discarding prior results when costs change, these methods repair
-      only those parts of the search space that are affected by new information.
-      Lifelong Planning A* (LPA*) formalizes this idea by introducing explicit
-      consistency conditions that enable efficient reuse of previous search effort.
-
-
-    \paragraph{D* Lite as a Canonical Incremental Planner}
-      Dynamic A* (D*), originally introduced by Stentz, extends incremental search to
-      navigation scenarios in which an agent moves through an initially unknown or
-      changing environment.
-      D* Lite preserves the execution model and optimality guarantees of D* while
-      recasting its algorithmic structure within the simpler and more transparent
-      framework of LPA*.
-
-      Rather than introducing new planning concepts, D* Lite unifies heuristic search,
-      incremental repair, and execution-time adaptation into a single coherent
-      algorithm.
-      It eliminates specialized state classifications in favor of a consistent
-      incremental shortest-path formulation, significantly reducing implementation
-      complexity while retaining theoretical guarantees.
-      As a result, D* Lite has become the preferred incremental search algorithm in
-      both theory and practice.
-
-      In this thesis, D* Lite is used as the representative incremental search-based
-      planner for the \emph{ex-post} planning paradigm.
-      The following paragraphs describe its internal state representation, consistency
-      mechanism, and execution model, which together enable efficient replanning under
-      spatio-temporal cost uncertainty.
+    \paragraph{Conceptual View: Backward Search and Forward Execution}
+    D*~Lite maintains a backward shortest-path tree rooted at the goal and incrementally
+    updates this structure as traversal costs change.
+    All search operations are performed backward from the goal, whereas execution
+    proceeds forward from the agent’s current position.
+    Consequently, the agent does not plan forward directly but selects actions by
+    querying the maintained backward cost-to-go information (see Figure~\ref{fig:dstar-internals} for visualization).
 
     \paragraph{State Representation and Local Consistency}
-      Let $G=(S,E)$ be a directed graph with nonnegative edge costs.
-      We consider a fixed goal $s_{\text{goal}}$ and a start vertex $s_{\text{start}}$ that changes as the agent moves.
-      For each vertex $s \in V$, D* Lite maintains a cost-to-go estimate $g(s)$ and a
-      one-step lookahead value
-      \[
-      \mathrm{rhs}(s) =
-      \begin{cases}
-      0, & \text{if } s = s_{\text{goal}}, \\
-      \min_{s' \in \mathrm{Succ}(s)} \bigl(c(s,s') + g(s')\bigr), & \text{otherwise}.
-      \end{cases}
-      \]
+    Let $G=(S,E)$ be a directed graph with nonnegative edge costs.
+    We consider a fixed goal vertex $s_{\text{goal}}$ and an initial start vertex
+    $s_{\text{init}}$.
+    The vertex $s_{\text{start}}$ denotes the current position of the mobile agent
+    and changes as the agent moves during execution.
+    For each vertex $s \in S$, D*~Lite maintains a cost-to-go estimate $g(s)$ and a
+    one-step lookahead value
+    \[
+    \mathrm{rhs}(s) =
+    \begin{cases}
+    0, & \text{if } s = s_{\text{goal}}, \\
+    \min_{s' \in \mathrm{Succ}(s)} \bigl(c(s,s') + g(s')\bigr), & \text{otherwise}.
+    \end{cases}
+    \]
+    The value $g(s)$ represents the currently stored estimate of the shortest-path
+    cost from $s$ to $s_{\text{goal}}$.
+    It can be interpreted as a previously committed $\mathrm{rhs}(s)$ value and may
+    therefore become outdated when edge costs change or when the start vertex
+    moves.
 
-      A vertex is \emph{locally consistent} if $g(s)=\mathrm{rhs}(s)$.
-      Inconsistencies arise when edge costs change or when the agent moves, indicating
-      that stored path information must be repaired.
-      D* Lite restores optimality by incrementally re-establishing local consistency
-      only where necessary.
-
+    A vertex is said to be \emph{locally consistent} if $g(s)=\mathrm{rhs}(s)$.
+    Inconsistencies indicate that the stored cost-to-go information at $s$ no longer
+    reflects the current environment.
+    D*~Lite restores optimality by incrementally re-establishing local consistency
+    only for affected vertices.
 
     \paragraph{Priority Queue and Lexicographic Keys}
-      All locally inconsistent vertices are stored in a priority queue.
-      Each vertex is assigned a lexicographically ordered key
-      \[
-      k(s)= 
-      \begin{bmatrix}
-        k_1 \\
-        k_2
-      \end{bmatrix}
-      =
-      \begin{bmatrix}
-      \min\{g(s),\mathrm{rhs}(s)\} + h(s_{\text{start}},s) + k_m \\
-      \min\{g(s),\mathrm{rhs}(s)\}
-      \end{bmatrix},
-      \]
-      where the second component acts as a tie-breaker.
-      This key structure generalizes the $f$- and $g$-value ordering of A* while enabling
-      incremental updates without loss of correctness.
+    All locally inconsistent vertices are stored in a priority queue $U$.
+    The next vertex to expand ($u$) is the one with the smallest lexicographic key.
+    Each vertex in $U$ is assigned a key
+    \[
+    k(s)=
+    \begin{bmatrix}
+      k_1 \\
+      k_2
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+    \min\{g(s),\mathrm{rhs}(s)\} + h(s_{\text{start}},s) + k_m \\
+    \min\{g(s),\mathrm{rhs}(s)\}
+    \end{bmatrix},
+    \]
+    where the second component acts as a tie-breaker and the first component orders
+    vertices by the best current estimate of total cost-to-go.
+    The use of $\min\{g(s),\mathrm{rhs}(s)\}$ ensures that both over- and
+    under-consistent vertices are prioritized by their most reliable estimate,
+    generalizing the $f$- and $g$-value ordering of A*.
 
-      \vspace{0.5cm}
-      \begin{figure}[htbp]
-        \centering
-        \includegraphics[width=\textwidth]{figs/DStar_internal.png}
-        \caption{Visualization of D* Lite internals, illustrating backward search,
-        heuristic guidance, and forward path execution. $s = u$ being the corresponding
-        top node in $U$ at this point.}
-        \label{fig:dstar-internals}
-      \end{figure}
+    \paragraph{Heuristic Shift under Start-Vertex Movement}
+    When the agent moves, the start vertex changes and the heuristic term appearing in
+    each priority key changes accordingly, which would normally require reordering the
+    entire priority queue.
+    D*~Lite avoids this overhead by introducing a heuristic shift variable $k_m$, which
+    accumulates the heuristic change between successive start positions and preserves
+    the relative ordering of keys in the queue.
+    This mechanism enables efficient incremental replanning without recomputing
+    priorities from scratch.
+    Koenig and Likhachev~\cite{koenig2002} also present a variant of D*~Lite that operates
+    without this heuristic shift; in this thesis, we focus on the optimized formulation
+    that incorporates $k_m$.
+
+    Admissibility requires the heuristic to never overestimate true shortest-path costs.
+    Consistency strengthens this condition by additionally enforcing a triangle
+    inequality with respect to true shortest-path costs,
+    \[
+      h(s,s'') \le c^*(s,s') + h(s',s'') \quad \forall s,s',s'' \in V,
+    \]
+    which ensures monotonic behavior along optimal paths.
+    In D*~Lite, consistency is crucial because heuristic values are reused across
+    incremental repairs and start-vertex shifts; without it, the correctness of the
+    priority queue ordering could not be guaranteed.
 
 
-    \paragraph{Heuristic Shift and Moving Start}
-      As the agent moves, the start vertex changes and heuristic values become outdated.
-      D* Lite avoids reordering the entire priority queue by introducing a heuristic
-      shift variable $k_m$, which accumulates heuristic differences between successive
-      start positions.
-      This mechanism preserves lower-bound properties while maintaining relative queue
-      ordering, enabling efficient replanning during execution.
+      \paragraph{Computational Effort}
+    Incremental search methods trade full re-planning for localized updates. In the
+    worst case, when cost changes are widespread, D*~Lite may revisit a large portion
+    of the graph and its work approaches that of a full A* search for the current
+    start--goal pair. When changes are sparse, only a small set of vertices becomes
+    locally inconsistent, so updates are confined to affected regions and prior search
+    effort is reused. As a result, computational effort depends on graph size, heuristic
+    quality, and the magnitude and frequency of cost updates.
+
+    \paragraph{Algorithmic Overview}
+    Figure~\ref{fig:dstar-internals} summarizes the algorithmic flow: backward
+    propagation from $s_{\text{goal}}$ maintains a consistent search tree,
+    the agent executes forward from $s_{\text{start}}$, and any newly revealed costs
+    trigger local inconsistency and subsequent repair through renewed backward
+    propagation.
+    \begin{figure}[htbp]
+      \centering
+      \includegraphics[width=\textwidth]{figs/DStar_internal.png}
+      \caption{Visualization of D* Lite internals, illustrating backward search,
+      heuristic guidance, and forward path execution.}
+      \label{fig:dstar-internals}
+    \end{figure}
+    \clearpage
+    \paragraph{Procedural Realization}
+    We now describe how the above invariants are enforced algorithmically in D*~Lite,
+    following the original pseudocode by Koenig and Likhachev~\cite{koenig2002}:
 
 
-    \paragraph{Greedy Path Execution}
-      Once all relevant vertices are locally consistent, the stored cost-to-go values
-      define a greedy execution policy.
-      The agent follows successors that minimize $c(s,s') + g(s')$, yielding an optimal
-      path under the current cost realization.
+\vspace{0.8cm}
+
+\noindent
+\begin{minipage}[t]{0.47\textwidth}
+\textbf{Priority Key Computation}
+
+\textit{CalculateKey} ties the invariant definitions to the queue ordering by
+combining $\min\{g(s),\mathrm{rhs}(s)\}$ with the heuristic estimate and the
+shift variable $k_m$.
+The heuristic appears only in this step, ensuring admissible guidance without
+violating correctness.
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.47\textwidth}
+\vspace{1cm}
+\centering
+\includegraphics[width=\linewidth]{figs/CalculateKeys.png}
+\captionof{figure}{Priority key computation in \textit{CalculateKey} \cite{koenig2002}.}
+\label{fig:dstarlite-calculatekey}
+\end{minipage}
 
 
-    \paragraph{Role Within the Experimental Framework}
-      In this thesis, D* Lite serves as a representative ex-post planning approach.
-      It processes cost information sequentially and adapts paths during execution,
-      but does not provide worst-case guarantees.
-      This contrasts directly with the ex-ante robust optimization models, enabling a
-      controlled comparison between adaptivity and worst-case protection under
-      spatio-temporal uncertainty.
-      We include further details regarding implementation and consistency to Koenig and
-      Likhachev´s \cite{koenig2002} pseudocode in chapter 4.
+
+\vspace{0.8cm}
+\noindent
+\begin{minipage}[t]{0.47\textwidth}
+\textbf{Initialization}
+All $g$- and $\mathrm{rhs}$-values are initialized to infinity.
+The goal vertex is assigned $\mathrm{rhs}(s_{\text{goal}})=0$ and inserted as the
+only element in the priority queue.
+This initialization seeds the backward search from the goal and establishes the
+initial locally consistent state from which cost-to-go information is propagated.
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.47\textwidth}
+\vspace{0.2cm} % ← adjust freely
+\centering
+\includegraphics[width=\linewidth]{figs/Initialize.png}
+\captionof{figure}{D* Lite initialization procedure \cite{koenig2002}.}
+\label{fig:dstarlite-initialize}
+\end{minipage}
+
+
+\vspace{0.8cm}
+
+\noindent
+\begin{minipage}[t]{0.47\textwidth}
+\textbf{Local Consistency Maintenance}
+
+\textit{UpdateVertex} recomputes the one-step lookahead value $\mathrm{rhs}(s)$ and
+updates the membership of $s$ in the priority queue $U$.
+Vertices that are locally inconsistent are inserted into or updated within $U$,
+while locally consistent vertices are removed.
+This procedure constitutes the fundamental mechanism by which D*~Lite restores
+local consistency after changes in edge costs or state values.
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.47\textwidth}
+\vspace{1.7cm}
+\centering
+\includegraphics[width=\linewidth]{figs/UpdateVertex.png}
+\captionof{figure}{Local consistency maintenance via \textit{UpdateVertex} \cite{koenig2002}.}
+\label{fig:dstarlite-updatevertex}
+\end{minipage}
+
+
+\vspace{0.8cm}
+
+\noindent
+\begin{minipage}[t]{0.47\textwidth}
+\textbf{Backward Search and Consistency Repair}
+
+\textit{ComputeShortestPath} repeatedly expands the smallest key in $U$ until the
+current start vertex is locally consistent and no better key remains.
+Because changes propagate through predecessor relationships, the repair step is
+a backward search from $s_{\text{goal}}$.
+This procedure is re-entered whenever cost changes introduce new inconsistencies.
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.47\textwidth}
+\vspace{-0.1cm}
+\centering
+\includegraphics[width=\linewidth]{figs/ComputeShortestPath.png}
+\captionof{figure}{Backward consistency repair in \textit{ComputeShortestPath} \cite{koenig2002}.}
+\label{fig:dstarlite-computeshortestpath}
+\end{minipage}
+
+
+
+
+
+
+\vspace{0.8cm}
+
+\noindent
+\begin{minipage}[t]{0.47\textwidth}
+\textbf{Interleaving Planning and Execution}
+
+The main loop alternates between greedy forward execution and incremental repair.
+At each step, the agent selects the successor that minimizes $c(s,s')+g(s')$,
+detects changes in traversal costs, updates affected vertices, and invokes
+\textit{ComputeShortestPath} as needed to re-establish local consistency.
+This interleaving of execution and replanning constitutes the core mechanism of
+D*~Lite and provides a natural integration point for the hybrid extensions
+considered in this thesis.
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.47\textwidth}
+\vspace{+0.50cm}
+\centering
+\includegraphics[width=\linewidth]{figs/Main.png}
+\captionof{figure}{Interleaved planning and execution in \textit{Main} \cite{koenig2002}.}
+\label{fig:dstarlite-main}
+\end{minipage}
+
+
 
 
 
 
 \chapter{IMPLEMENTATION DETAILS}
+      We discuss our experimental framework implementation in this chapter.
+      For details about the programming environment see Chapter 6.
+
+    \section{Decision Support Interface}
+      The experimental pipeline is implemented as a lightweight, model- and data-driven decision support system (DSS) 
+      that orchestrates data generation, model execution, and result visualization. 
+      It provides a unified control interface for executing all experiments under identical parameter settings 
+      and for producing directly comparable outputs (Figure~\ref{fig:topdown-architecture-DSS}). 
+      The DSS is implemented as a \texttt{Streamlit} application, which eliminates the need for a dedicated backend 
+      framework and facilitates rapid prototyping. While the system is primarily intended to be run locally, a deployed 
+      instance is also provided to demonstrate portability, albeit with restricted access due to licensing restrictions.
 
 
-    \section{Decision Support Systems}
-    The experimental pipeline is implemented as a lightweight model- and data-driven DSS
-    that orchestrates data generation, model execution, and result visualization. It
-    provides a single control interface for running all experiments under identical
-    parameter settings and producing comparable outputs
-    (Figure~\ref{fig:topdown-architecture-DSS}). The DSS is implemented as a local
-    Streamlit application; randomness is controlled through fixed seeds and explicit
-    configuration parameters to ensure reproducibility.
-
-
-
-
-    \section{Geostatistical Data Generation for Spatio-Temporal Cost Fields}
+    \section{Data and Graph Generation}
     \label{sec:geostatistical_formulation}
+      This section links the implementation in the STGRF generator to the
+      formulations in the appendix (Chapter~\ref{chap:appendix}). Each step below states the code
+      action and its mathematical counterpart.
+      We use the \texttt{GSTools} and \texttt{NetworkX} libraries.
 
+      \paragraph{Step 1: Covariance model and kernel selection}
+        A kernel from \texttt{GSTools} (e.g., Gaussian, Mat\'ern, Stable) (see Table~\ref{tab:gstools-covariance-models}) is selected and
+        parameterized by variance $\sigma^2$, length scale $\ell$, anisotropy ratios $a_i$,
+        and (if applicable) kernel-specific parameters $\nu$ or $\alpha$.
+        In the implementation this corresponds to
 
-    This section links the implementation in the \texttt{STGRF} generator to the
-    formulations in the appendix (Chapter~\ref{chap:appendix}). Each step below states the code
-    action and its mathematical counterpart.
+        \noindent
+        \texttt{Kernel(spatial\_dim=3, temporal=False, var=\dots, len\_scale=\dots, anis=\dots)}.
 
-    \paragraph{Step 1: Covariance model and kernel selection.}
-    A kernel from \texttt{GSTools} (e.g., Gaussian, Mat\'ern, Stable) (see Table~\ref{tab:gstools-covariance-models}) is selected and
-    parameterized by variance $\sigma^2$, length scale $\ell$, anisotropy ratios $a_i$,
-    and (if applicable) kernel-specific parameters $\nu$ or $\alpha$.
-    In the implementation this corresponds to
-    
-    \texttt{Kernel(spatial\_dim=3, temporal=False, var=\dots, len\_scale=\dots, anis=\dots)}.
-
-    This instantiates the covariance model $C(r)$ in \eqref{eq:covariance} with
-    $\operatorname{cor}(\cdot)$ from \eqref{eq:correlation}.
-    The anisotropy ratios define effective correlation lengths
-    $\ell_i = \ell a_i$ and enter the metric distance in
-    \eqref{eq:metric_xyz}, which in turn defines the spatio-temporal covariance in
-    \eqref{eq:metric_spatiotemporal}. Time is treated as a third spatial dimension
-    (spatial dimension $d=3$), consistent with
-    $\mathbf{x}=(x,y,\tau)$.
+        This instantiates the covariance model $C(r)$ in \eqref{eq:covariance} with
+        $\operatorname{cor}(\cdot)$ from \eqref{eq:correlation}.
+        The anisotropy ratios define effective correlation lengths
+        $\ell_i = \ell a_i$ and enter the metric distance in
+        \eqref{eq:metric_xyz}, which in turn defines the spatio-temporal covariance in
+        \eqref{eq:metric_spatiotemporal}. Time is treated as a third spatial dimension
+        (spatial dimension $d=3$), consistent with
+        $\mathbf{x}=(x,y,\tau)$.
 
     \paragraph{Step 2: Structured space--time grid.}
     The implementation constructs the coordinate arrays
@@ -1299,17 +1422,20 @@ deviation across edges is limited by the budget parameter $\Gamma$.
     \eqref{eq:srf_generation} for the covariance in \eqref{eq:metric_spatiotemporal}.
 
     \paragraph{Step 4: Global normalization.}
-    To ensure nonnegative and comparable costs across scenarios, the sampled 3D field is
-    optionally rescaled as
+      To ensure nonnegative and comparable costs across scenarios, the sampled three-dimensional field is 
+      rescaled according to
     \[
     \tilde{Z} = \frac{Z - \min Z}{\max Z - \min Z},
     \]
-    where the extrema are taken over the entire space--time grid.
+    where the minimum and maximum are taken over the entire space–time grid. 
+    This transformation maps all costs to the unit interval [0,1]. 
+    The implications of this normalization for experimental results are discussed in Chapter~\ref{chap:experiments}.
+    
 
     \paragraph{Step 5: Scenario slices and graph mapping.}
     For each scenario index $\tau$, the 2D slice
     $f_{\tau}(x,y) := Z(x,y,\tau)$ is extracted as the spatial cost surface.
-    The routing graph is a directed 4-connected grid; each grid point $(x,y)$ is mapped
+    The routing graph is generated as a directed 4-connected grid using \texttt{NetworkX}; each grid point $(x,y)$ is mapped
     to a node id $i = xN + y$. Each directed edge $(i,j)$ receives the mean of its
     incident node values,
     \[
@@ -1317,59 +1443,33 @@ deviation across edges is limited by the budget parameter $\Gamma$.
     \]
     yielding a scenario-specific edge-cost graph derived directly from the realization
     $Z(\mathbf{x})$.
-    We use \texttt{NetworkX} to generate our 4-connected graph.
 
     \paragraph{Step 6: Export for downstream models.}
     The implementation writes a global node file and one edge file per scenario, as well
     as the per-scenario field slices, enabling downstream shortest-path and robust
     optimization models to consume the same spatio-temporal realizations.
 
-
-
     \section{Discrete Uncertainty Min--Max Model}
-      The sets $V$ and $E$ are instantiated from the data files ($V$ from \texttt{nodes.csv}, $E$ from \texttt{edges.csv} in scenario 000), and each scenario cost vector $\mathbf{c}^{\omega}$ is read from the corresponding \texttt{scenario\_$\omega$/edges.csv}.
+      This section instantiates the discrete scenario-based min--max formulation introduced in
+      Section~\ref{sec:robust-combinatorial-optimization}.
 
-      \begin{table}[htbp]
-      \centering
-      \caption{Notation for the discrete-scenario min--max shortest-path model}
-      \label{tab:notation-discrete-minmax}
-      \begin{tabular}{ll}
-      \toprule
-      \textbf{Symbol} & \textbf{Description} \\
-      \midrule
-      $G = (V,E)$ 
-      & Directed graph representing the routing environment \\
+      The directed graph $G=(V,E)$ is constructed from \texttt{nodes.csv} and \newline
+      \texttt{scenario\_000/edges.csv}, which fixes a consistent edge index set shared across all
+      scenarios (Section~\ref{sec:data-component}).
 
-      $V$ 
-      & Set of nodes (vertices), indexed by node IDs \\
+      For each scenario $\omega \in \Omega$, the corresponding edge-cost vector
+      $\mathbf{c}^{\omega}$ is read from \texttt{scenario\_$\omega$/edges.csv} and aligned to this
+      common indexing.
 
-      $E \subseteq V \times V$ 
-      & Set of directed edges (arcs) \\
-
-      $s,\,t \in V$ 
-      & Fixed start node $s$ and target node $t$ \\
-
-      $\Omega = \{0,1,\dots,|\Omega|-1\}$ 
-      & Index set of cost scenarios \\
-
-      $c_e^{\omega}$ 
-      & Cost of edge $e \in E$ in scenario $\omega \in \Omega$ \\
-
-      $\delta^+(v)$ 
-      & Set of outgoing edges of node $v \in V$ \\
-
-      $\delta^-(v)$ 
-      & Set of incoming edges of node $v \in V$ \\
-
-      $x_e \in \{0,1\}$ 
-      & Binary decision variable indicating whether edge $e$ is used \\
-
-      $z \in \mathbb{R}$ 
-      & Auxiliary variable representing the worst-case path cost \\
-
-      \bottomrule
-      \end{tabular}
-      \end{table}
+      The mixed-integer linear program is formulated using binary edge-selection variables $x_e$
+      and a continuous epigraph variable $z$.
+      Path feasibility is enforced via the flow-balance constraints
+      (\ref{eq:flow-balance-constraint}), while robustness with respect to discrete uncertainty
+      is captured through the scenario-wise constraints
+      $z \ge \sum_{e\in E} c_e^{\omega} x_e$ for all $\omega \in \Omega$.
+      No additional modeling assumptions are introduced at the implementation level.
+      The resulting MILP is solved using Gurobi with the solver configuration described in
+      Section~\ref{sec:solver-settings}.
 
       \vspace{0.4cm}
       \begin{mdframed}[
@@ -1400,71 +1500,66 @@ deviation across edges is limited by the budget parameter $\Gamma$.
       \end{empheq}
       \end{mdframed}
 
-
-      The solution represents a path that is feasible for all scenarios and optimal with
-      respect to the worst-case cost realization.
-      While this formulation provides strong robustness guarantees, its size grows
-      linearly with the number of scenarios and can become computationally demanding.
+      The solution represents an $s$--$t$ path that is feasible across all scenarios and minimizes
+      the worst-case realized traversal cost.
+      Theoretical complexity and model-size properties of the discrete min--max formulation are
+      discussed in Section~\ref{subsec:computational-efficiency-robust-models}.
 
 
     \newpage
+  
     \section{Budgeted Uncertainty Min--Max Model}
-      \begin{table}[htbp]
-      \centering
-      \caption{Notation for the budgeted-uncertainty min--max shortest-path model}
-      \label{tab:notation-budgeted-minmax}
-      \begin{tabular}{ll}
-      \toprule
-      \textbf{Symbol} & \textbf{Description} \\
-      \midrule
-      $G = (V,E)$ 
-      & Directed graph representing the routing environment \\
+      This section instantiates the budgeted uncertainty formulation introduced in
+      Section~\ref{sec:robust-combinatorial-optimization}.
+      In contrast to the discrete scenario-based model, scenario-dependent edge costs
+      are first aggregated in a preprocessing step to obtain a nominal cost and an
+      associated maximum deviation for each edge.
+      Let $\Omega$ denote the set of cost scenarios and let $c_e^{\omega}$ be the cost
+      of edge $e$ under scenario $\omega \in \Omega$.
 
-      $V$ 
-      & Set of nodes (vertices), indexed by node IDs \\
+      Scenario costs are aggregated using
+      (\ref{eq:nominal-avg})--(\ref{eq:deviation}), while preserving the same edge
+      indexing as in the discrete uncertainty model.
+      The resulting nominal costs $\underline{c}_e$ and deviations $d_e$ are treated
+      as fixed parameters in the robust optimization model.
+      The robust counterpart is formulated using binary edge-selection variables $x_e$,
+      a global deviation variable $\pi$, and auxiliary variables $\rho_e$.
+      Path feasibility is enforced via the flow-balance constraints
+      (\ref{eq:flow-balance-constraint}), while robustness is captured by the
+      budgeted constraints $\pi + \rho_e \ge d_e x_e$ for all $e \in E$.
+      The uncertainty budget $\Gamma$ is treated as an experimental parameter, and
+      solver limits and integrality settings follow
+      Section~\ref{sec:solver-settings}.
 
-      $E \subseteq V \times V$ 
-      & Set of directed edges (arcs) \\
+      The nominal cost $\underline{c}_e$ is defined either as the minimum observed cost
+      (\ref{eq:nominal-min}) or as the average cost across all scenarios
+      (\ref{eq:nominal-avg}).
+      The deviation $d_e$ captures the maximum adverse deviation from the nominal value
+      and is computed as (\ref{eq:deviation}).
+      \begin{align}
+      \underline{c}_e^{\min} 
+      &= \min_{\omega \in \Omega} c_e^{\omega}, 
+      \label{eq:nominal-min}
+      \\[0.5em]
+      \underline{c}_e^{\text{avg}} 
+      &= \frac{1}{|\Omega|} \sum_{\omega \in \Omega} c_e^{\omega},
+      \label{eq:nominal-avg}
+      \\[0.5em]
+      d_e 
+      &= \max_{\omega \in \Omega} c_e^{\omega} - \underline{c}_e.
+      \label{eq:deviation}
+      \end{align}
 
-      $s,\,t \in V$ 
-      & Fixed start node $s$ and target node $t$ \\
+      These quantities define a budgeted uncertainty representation in which the
+      realized cost of each edge may increase from its nominal value by at most $d_e$,
+      subject to a global uncertainty budget.
+      In preliminary experiments, using the minimum-based nominal cost
+      (\ref{eq:nominal-min}) resulted in an overly optimistic abstraction of the
+      underlying cost field when compared to the remaining planning paradigms.
+      Therefore, all subsequent experiments employ the average-based nominal cost
+      (\ref{eq:nominal-avg}) in combination with the deviation definition in
+      (\ref{eq:deviation}).
 
-      $\Omega = \{0,1,\dots,|\Omega|-1\}$ 
-      & Index set of scenarios used to construct the uncertainty set \\
-
-      $c_e^{\omega}$ 
-      & Cost of edge $e \in E$ in scenario $\omega \in \Omega$ \\
-
-      $\underline{c}_e$
-      & Nominal (average) cost of edge $e$, defined as
-      $\underline{c}_e = \frac{1}{|\Omega|}\sum_{\omega\in\Omega} c_e^{\omega}$ \\
-
-
-      $d_e$ 
-      & Maximum deviation of edge $e$ from nominal cost,
-      $ d_e = \max_{\omega\in\Omega} c_e^{\omega} - \underline{c}_e$ \\
-
-      $\Gamma$ 
-      & Budget of uncertainty \\
-
-      $\delta^+(v)$ 
-      & Set of outgoing edges of node $v \in V$ \\
-
-      $\delta^-(v)$ 
-      & Set of incoming edges of node $v \in V$ \\
-
-      $x_e \in \{0,1\}$ 
-      & Binary decision variable indicating whether edge $e$ is used \\
-
-      $\pi \in \mathbb{R}_+$ 
-      & Dual variable associated with the uncertainty budget $\Gamma$ \\
-
-      $\rho_e \in \mathbb{R}_+$ 
-      & Auxiliary variable capturing edge-specific deviation cost \\
-
-      \bottomrule
-      \end{tabular}
-      \end{table}
 
       \vspace{0.4cm}
       \begin{mdframed}[
@@ -1475,12 +1570,14 @@ deviation across edges is limited by the budget parameter $\Gamma$.
         innertopmargin=10pt,
         innerbottommargin=10pt
       ]
-      \textbf{Budgeted-Uncertainty Min--Max Shortest-Path Model}
+      \textbf{Budgeted-Uncertainty Min--Max Robust Shortest-Path}
       \begin{empheq}{align}
       \min_{x,\,\pi,\,\rho}\quad
       & \sum_{e\in E} \underline{c}_e\,x_e
         \;+\; \Gamma\,\pi
-        \;+\; \sum_{e\in E} \rho_e \\[0.3em]
+        \;+\; \sum_{e\in E} \rho_e 
+        \label{eq:budgeted-robust-objective-function}
+        \\[0.3em]
       \text{s.t.}\quad
       & \pi + \rho_e \;\ge\; d_e\,x_e
       && \forall e\in E, \\[0.3em]
@@ -1496,162 +1593,163 @@ deviation across edges is limited by the budget parameter $\Gamma$.
       && \forall e\in E, \\[0.3em]
       & \pi \ge 0,\;\rho_e \ge 0
       && \forall e\in E.
+      \label{eq:budgeted-robust-last}
       \end{empheq}
       \end{mdframed}
+
+      This formulation yields an $s$--$t$ path that is robust with respect to the
+      budgeted uncertainty set.
+      Theoretical complexity results are summarized in
+      Section~\ref{subsec:computational-efficiency-robust-models}, while solver
+      settings and integrality enforcement are described in
+      Section~\ref{sec:solver-settings}.
+
+    \section{Solver Settings}
+    \label{sec:solver-settings}
+    Both robust models are implemented as mixed-integer linear programs and solved using
+    the \texttt{Gurobi} optimizer via its Python interface. Unless stated otherwise, all
+    runs use a wall-clock time limit of 60 seconds and a relative MIP optimality gap of
+    2\%, with presolve routines, cutting planes, and branching strategies left at solver
+    defaults. Binary edge-selection variables enforce path integrality; the budgeted
+    deviation constraints do not preserve total unimodularity in general, so the linear
+    relaxation can be fractional. Gurobi solves the MILPs via branch-and-bound; reported
+    runtimes correspond to solver wall-clock time measured on identical hardware.
+
     \newpage
-    \section{D* Lite}
-      
-      \begin{table}[htbp]
-      \centering
-      \caption{Notation for the D* Lite incremental shortest-path algorithm}
-      \label{tab:notation-dstar-lite}
-      \begin{tabular}{ll}
-      \toprule
-      \textbf{Symbol} & \textbf{Description} \\
-      \midrule
-      $G = (S,E)$ 
-      & Directed graph representing the planning environment \\
-
-      $S$ 
-      & Set of vertices (grid cells) \\
-
-      $E \subseteq S \times S$ 
-      & Set of directed edges between adjacent vertices \\
-
-      $s_{\text{start}} \in S$ 
-      & Current start vertex (robot position) \\
-
-      $s_{\text{goal}} \in S$ 
-      & Goal vertex (temporary or final destination) \\
-
-      $\delta^+(s)$ 
-      & Set of successor vertices of $s \in S$ \\
-
-      $\delta^-(s)$ 
-      & Set of predecessor vertices of $s \in S$ \\
-
-      $c(i,j)$ 
-      & Traversal cost of directed edge $(i,j) \in E$, where $i,j \in S$ \\
-
-      $g(s)$ 
-      & Current estimate of the shortest-path cost from $s$ to $s_{\text{goal}}$ \\
-
-      $\mathrm{rhs}(s)$ 
-      & One-step lookahead estimate of the cost-to-go from $s$ \\
-
-      $h(i,j)$ 
-      & Admissible and consistent heuristic estimate between vertices $i,j \in S$ \\
-
-      $k(s) = (k_1(s), k_2(s))$ 
-      & Lexicographic priority key associated with vertex $s$ \\
-
-      $k_m$ 
-      & Heuristic shift variable accounting for movement of the start vertex \\
-
-      $U$ 
-      & Priority queue of locally inconsistent vertices $s \in S$ \\
-
-      $u \in S$ 
-      & Temporary vertex selected from the priority queue $U$ for expansion \\
-
-      $\Omega = \{0,\dots,|\Omega|-1\}$ 
-      & Index set of spatio-temporal cost scenarios \\
-
-      $c^{\omega}(i,j)$ 
-      & Cost of edge $(i,j) \in E$ in scenario $\omega \in \Omega$ \\
-
-      $\textit{ComputeShortestPath}()$ 
-      & Procedure that incrementally restores local consistency \\
-
-      $\textit{UpdateVertex}(s)$ 
-      & Procedure that updates $\mathrm{rhs}(s)$ and queue membership \\
-
-      \bottomrule
-      \end{tabular}
-      \end{table}
-
-
-
-
+    
+\section{D* Lite}
 \label{app:dstar_lite}
+We implement D*~Lite in accordance with the reference pseudocode as described in
+Chapter~\ref{chap:conceptual-foundations},
+Section~\ref{sec:incremental-search-based-path-planning}.
 All theoretical properties and correctness guarantees of D*~Lite are discussed in
 Chapter~2.
 
 \paragraph{Modeling Differences.}
-Compared to the reference formulation by Koenig and \\
-Likhachev~\cite{koenig2002},
-the following modeling assumptions are adopted:
+Compared to the reference formulation by Koenig and
+Likhachev \cite{koenig2002}, the following modeling and implementation choices are
+adopted:
 \begin{itemize}
-  \item a 4-connected grid graph instead of 8-connectivity,
-  \item initial edge costs are given by the first STRF realization rather than
+  \item a 4-connected grid graph instead of 8-connectivity; consequently, an
+        admissible Manhattan-distance heuristic is used rather than a Euclidean
+        heuristic,
+  \item initial edge costs are derived from the first STRF realization rather than
         uniform default values,
   \item edges are never blocked; unfavorable regions are modeled exclusively via
-        increased traversal costs.
+        increased traversal costs,
+  \item the priority queue is implemented using the \texttt{heapq} library.
+        Queue updates rely on lazy deletion, i.e., outdated entries are discarded
+        upon extraction rather than removed explicitly.
+        This implementation choice preserves the algorithmic behavior and
+        correctness of D*~Lite while simplifying queue management.
 \end{itemize}
 These choices ensure structural consistency with the robust optimization models
 and isolate uncertainty effects to edge costs.
 
-\paragraph{Scenario-Based Cost Evolution.}
-The original D*~Lite algorithm assumes static edge costs that may be revealed
-incrementally.
-To model spatio-temporal cost uncertainty, the implementation is extended to
-operate on a sequence of time-indexed cost maps derived from spatio-temporal
-random field (STRF) realizations.
+\paragraph{Preprocessing and Graph Construction.}
+Prior to executing D*~Lite, the graph structure and associated cost data are
+constructed from the CSV inputs.
+Vertices are loaded from \texttt{nodes.csv} and mapped to planar coordinates
+$\texttt{node\_id} \mapsto (x,y)$.
+Directed edges and their initial traversal costs are read from
+\texttt{scenario\_000/edges.csv}, from which adjacency lists of successors and
+predecessors are constructed.
+All vertices are included in the graph, including those without outgoing edges.
 
-During execution, the agent advances greedily according to locally consistent
-$g$-values.
-After a fixed number of movement steps, the active scenario index is advanced.
-Only those edges whose costs differ between consecutive scenarios are updated,
-and the standard D*~Lite update rules are applied.
-Local consistency is restored incrementally via \textit{ComputeShortestPath()},
-thereby repairing the existing backward search rather than recomputing paths
-from scratch.
+For each subsequent scenario directory \texttt{scenario\_$\omega$} with
+$\omega \ge 1$, the corresponding \texttt{edges.csv} file is parsed and stored as
+a complete list of edge--cost triples $(u,v,c)$.
+Scenario files are stored as complete edge--cost lists and are processed on
+demand during execution as part of the scenario-based cost evolution mechanism.
+
+If a robust offline path is provided, it is loaded as an ordered sequence of node
+identifiers and used to construct guidance beacons as described above.
+Otherwise, the algorithm proceeds without global guidance.
+
+
+
+\paragraph{Scenario-Based Cost Evolution.}
+The original D*~Lite algorithm assumes static edge costs, while allowing cost
+changes to be revealed during execution.
+However, the reference pseudocode by Koenig and Likhachev~\cite{koenig2002}
+(lines~\{37--38\} in the \textit{Main()} procedure) does not prescribe a concrete
+mechanism for detecting or generating edge-cost updates; such changes are treated
+as exogenous events.
+This mechanism is referred to as \emph{scenario-based cost evolution} in the
+remainder of this section.
+
+To operationalize this assumption under spatio-temporal uncertainty, traversal
+costs are modeled as a sequence of time-indexed cost maps derived from
+spatio-temporal random field (STRF) realizations.
+Each realization defines a complete edge-cost assignment that remains fixed over
+a finite execution interval.
+
+The base graph is initialized using the first realization
+(\texttt{scenario\_000}).
+A deterministic update schedule controls when subsequent cost maps become active.
+Let
+\[
+\texttt{steps\_per\_layer}
+=
+\left\lceil
+\frac{|x_s - x_t| + |y_s - y_t|}{|\Omega|}
+\right\rceil,
+\]
+where $|x_s - x_t| + |y_s - y_t|$ denotes the Manhattan distance between start and
+goal, and $|\Omega|$ is the number of available scenarios.
+After each forward move, a step counter is incremented; when it reaches
+\texttt{steps\_per\_layer}, the active scenario index is advanced (capped at the
+final scenario) and the counter is reset.
+Because the graph is initialized with \texttt{scenario\_000} while the active
+scenario index starts at~1, the updates corresponding to
+\texttt{scenario\_001} are applied immediately after the first movement step;
+subsequent scenario changes occur every
+\texttt{steps\_per\_layer} forward moves.
+Thus, the initial backward search is computed on \texttt{scenario\_000}, 
+but the first update step switches to \texttt{scenario\_001} immediately after the 
+first forward move, so the initial search primarily guides that first action and 
+seeds the subsequent incremental replanning.
 
 \paragraph{Coupling Robust Planning and Incremental Execution.}
-To investigate the interaction between ex-ante robustness and ex-post
-adaptivity, D*~Lite can optionally be guided by a robust offline shortest path.
-The robust path is reduced to a coarse sequence of intermediate waypoints,
-referred to as \emph{beacons}, obtained by uniformly subsampling interior nodes.
+When a robust offline path is available, it is used exclusively as coarse
+guidance for incremental execution.
+Let the robust path be given as an ordered sequence of nodes.
+Removing the start and goal yields an interior node list of length $n$.
+A maximum number of guidance points (beacons) is specified as an experimental
+parameter.
+We set
+\[
+c = \min\{\texttt{beacon\_cap},\, n\},
+\]
+partition the interior list into $c$ contiguous segments, and select the midpoint
+node of each segment.
+The selected nodes form the beacon sequence, with at most $c$ beacons.
 
-Beacons act as temporary goals and are activated according to a
-scenario-based schedule or once reached.
-Whenever a new beacon becomes active, the D*~Lite search state is fully
-reinitialized, deliberately discarding cross-goal reuse.
-This design enforces a clear separation between global guidance and local
-adaptation and serves as an experimental control mechanism rather than a new
-planning algorithm.
+If at least one beacon is present, the first beacon is used as the initial goal;
+otherwise, the final destination node is used.
+At any time, exactly one beacon is active.
+Whenever a new beacon becomes active—either by schedule or upon reaching the
+current beacon—the D*~Lite search state is fully reinitialized: all $g$- and
+$\mathrm{rhs}$-values are reset, the priority queue is cleared, and the new goal
+vertex is inserted before invoking \textit{ComputeShortestPath()}.
+This design intentionally discards cross-goal reuse in order to isolate the
+effect of global guidance from local replanning.
 
-\paragraph{Algorithmic Structure and Pseudocode Mapping.}
-The implementation follows the original D*~Lite pseudocode by Koenig and
-Likhachev~\cite{koenig2002}.
-Core procedures are implemented without modification, while application-specific
-extensions are inserted at well-defined points in the control flow.
+Beacon activation follows two rules.
+First, when the agent reaches the currently active beacon, the next beacon in the
+sequence is activated immediately.
+Second, beacons may be activated periodically in response to scenario changes.
+Let $L = \texttt{max\_scenario} + 1$ denote the total number of scenario layers
+and let $B$ be the number of beacons.
+The activation interval is defined as $\lceil L / B \rceil$, and a beacon is
+activated when
+\[
+(\texttt{current\_scenario} - 1) \bmod \lceil L / B \rceil = 0,
+\]
+with at most one activation per scenario layer.
+Once all beacons have been exhausted, the final goal is restored and the
+algorithm proceeds without further global guidance.
 
-\begin{itemize}
-  \item \textbf{Initialize()} (\{01--06\}): initializes all $g$-values and
-        $\mathrm{rhs}$-values to infinity, sets the goal’s $\mathrm{rhs}$ to zero,
-        and seeds the priority queue for backward search.
-  \item \textbf{CalculateKey()} (\{12--13\}): computes the lexicographic priority
-        key used to order vertices in the queue, incorporating the heuristic
-        shift variable.
-  \item \textbf{UpdateVertex()} (\{07--09\}): maintains queue consistency by
-        inserting, updating, or removing vertices based on local consistency.
-  \item \textbf{ComputeShortestPath()} (\{10--28\}): incrementally restores local
-        consistency by propagating cost changes backward until the current start
-        vertex is locally consistent.
-  \item \textbf{Main()} (\{29--48\}): executes greedy forward motion, detects edge
-        cost changes, applies updates, and triggers replanning as required.
-\end{itemize}
-
-The two application-specific extensions are embedded into the original control flow:
-(i) \textit{ScenarioUpdate()}, which applies STRF-induced edge-cost changes
-incrementally during execution, and
-(ii) \textit{ActivateNextBeacon()}, which implements milestone-based goal
-switching using robust offline paths.
-
-Both extensions preserve the theoretical guarantees of D*~Lite within each
-fixed-goal phase and are included solely to support controlled empirical
-comparison under spatio-temporal uncertainty.
 
 
 
@@ -1695,9 +1793,11 @@ comparison under spatio-temporal uncertainty.
       in isolation?
     \end{itemize}
 
-
-
-
+    \paragraph{Computational Effort}
+    In line with Section~\ref{subsec:computational-efficiency-robust-models}, runtime is
+    analyzed with respect to the scenario count $|\Omega|$ for discrete uncertainty and
+    the uncertainty budget $\Gamma$ for budgeted uncertainty. We report median solver
+    runtimes alongside cost statistics in the results below.
 
 
 
@@ -2069,6 +2169,7 @@ comparison under spatio-temporal uncertainty.
     \end{table}
 
 
+Although the budgeted uncertainty model admits a polynomial-size reformulation, its LP relaxation is significantly weaker than that of the discrete min–max formulation. The global uncertainty budget introduces coupling across all edges, allowing the relaxation to distribute deviations fractionally over many arcs. As a result, the solver faces substantially more fractional variables at the root node, leading to slower convergence in practice. In contrast, the discrete uncertainty model yields tighter relaxations despite its theoretical NP-hardness, explaining its superior empirical runtime.
 
 
 
