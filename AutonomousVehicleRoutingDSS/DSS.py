@@ -1838,7 +1838,7 @@ def render_metrics_table() -> None:
     for col in ("Cost", "Nominal Cost", "Deviation Cost", "Edges", "Run Time", "Replans"):
         if col in df.columns:
             df[col] = df[col].astype(str)
-    st.dataframe(df, width="stretch", hide_index=True)
+    st.dataframe(df, use_container_width=True, hide_index=True)
 
 
 def render_metrics_summary(cfg: Dict[str, Any]) -> None:
