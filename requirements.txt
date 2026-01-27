@@ -7,4 +7,5 @@ numpy
 pandas
 Pillow
 scipy
+altair==4.2.2
 streamlit
