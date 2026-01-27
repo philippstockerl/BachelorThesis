@@ -1217,12 +1217,12 @@ def path_selector(cfg: Dict[str, Any]) -> None:
             label_visibility="collapsed",
         )
     with cols[1]:
-        if st.button("📁", help="Pick folder", width="stretch"):
+        if st.button("📁", help="Pick folder", use_container_width=True):
             selection = pick_directory(st.session_state["path_input"])
             if selection:
                 st.session_state["path_input"] = selection
     with cols[2]:
-        if st.button("Update Path", width="stretch"):
+        if st.button("Update Path", use_container_width=True):
             new_path = st.session_state["path_input"].strip().rstrip("/")
 
             if new_path:
