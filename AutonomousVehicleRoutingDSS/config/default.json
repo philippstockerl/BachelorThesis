@@ -1,7 +1,7 @@
 {
     "seed": 1,
     "paths": {
-        "data_root": "/AutonomousVehicleRoutingDSS/Data/StreamlitShowcase",
+        "data_root": "AutonomousVehicleRoutingDSS/Data/StreamlitShowcase",
         "dstar_edges_scenario": 0,
         "dstar_robust_path": "/path/to/robust/path.csv"
     },
