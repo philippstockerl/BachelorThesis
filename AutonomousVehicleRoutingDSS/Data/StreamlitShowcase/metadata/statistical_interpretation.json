@@ -1,0 +1,80 @@
+{
+  "strf_parameters": {
+    "metrics": {
+      "variance": 1.0,
+      "length_scale": [
+        25.0,
+        25.0,
+        3.0
+      ],
+      "anis": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "smoothness_ratio": 0.25,
+      "anisotropy_ratio": 1.0,
+      "temporal_ratio": 0.3,
+      "hotspot_estimate": 5
+    },
+    "interpretation": "Spatial scales (25.00, 25.00) on a 100\u00d7100 grid imply moderately smooth surfaces with medium blobs. Variance \u03c3\u22481.000 yields high-variance fluctuations. Anisotropy (1.00, 1.00) gives a isotropic footprint, while temporal scale 3.00 over 10 scenarios points to short-lived costs. Correlation footprint suggests roughly 5 distinguishable hotspots at any time."
+  },
+  "cost_surface_gif": {
+    "metrics": {
+      "mean_gradient_vs_std": 0.06940486649200288,
+      "gradient_balance_x_over_y": 1.2106541479954944,
+      "peak_count_avg": 1.0,
+      "peak_prominence_mean": 0.1343014736483599,
+      "hotspot_area_share": 0.05,
+      "hotspot_overlap": 0.49129720226261625,
+      "peak_drift_per_step": 29.605755731288397
+    },
+    "interpretation": "Average gradient intensity is 0.07\u00d7 the field's own scale, indicating very smooth surfaces. High-cost peaks average 1.0 per scenario with prominence \u22480.134. Hotspots cover 5.0% of the grid and show intermittent overlap. Peak locations shift by ~29.61 cells per step (fast-moving peaks), and gradients exhibit directional slope bias."
+  },
+  "heatmap_gif": {
+    "metrics": {
+      "global_min": 0.0,
+      "global_max": 1.0,
+      "global_mean": 0.46315805421610645,
+      "spatial_variance_mean": 0.01635042474720427,
+      "hotspot_area_share": 0.05,
+      "hotspot_jaccard": 0.49129720226261625,
+      "hotspot_drift_cells": 11.386391262503501
+    },
+    "interpretation": "Intensity spans [0.000, 1.000] with mean 0.463. Spatial variance averages 0.0164. Hotspots (95th percentile) occupy ~5.0% of cells and are semi-stable over time. Centroid drift of 11.39 cells per step indicates moderate drift of dominant regions."
+  },
+  "histogram_gif": {
+    "metrics": {
+      "mean": 0.4631580542161064,
+      "median": 0.4681407499715301,
+      "std": 0.020604144531028157,
+      "coefficient_of_variation": 0.04448620582859259,
+      "skewness": -0.612231525802168,
+      "kurtosis_excess": -0.9619508373791481,
+      "outlier_rate": 0.0,
+      "late_minus_early_shift": 0.0084314212361295
+    },
+    "interpretation": "Scenario costs average 0.463 (median 0.468) with \u03c3=0.021 (CV=0.04). Distribution is left-skewed (skew=-0.61) with light tails (kurtosis=-0.96). Outliers beyond 3\u03c3 occur in 0.0% of scenarios. Later scenarios shift by 0.008 relative to early ones, signalling upward drift."
+  },
+  "kde_gif": {
+    "metrics": {
+      "mode_count": 1,
+      "mode_locations": [
+        0.4756752339671548
+      ],
+      "tail_mass_outside_1sigma": 0.9378741233916349
+    },
+    "interpretation": "KDE is unimodal with modes at 0.476. Density concentrates between 0.420 and 0.491, with tail mass of 93.8% outside \u00b11\u03c3 of the mean. Mode locations drift slightly as indicated by the GIF."
+  },
+  "violin_gif": {
+    "metrics": {
+      "median_min": 0.4138322664982629,
+      "median_max": 0.5060494285825805,
+      "iqr_mean": 0.25690963015417306,
+      "iqr_std": 0.05372009955562838,
+      "symmetry_score_mean": 0.0956841936487737,
+      "upper_tail_mass_share": 0.5099121783879002
+    },
+    "interpretation": "Medians range from 0.414 to 0.506. IQR averages 0.257 (\u03c3=0.054), indicating moderate spread with consistent spread across scenarios. Shape symmetry score 0.10 denotes mostly symmetric. Upper tails hold 51.0% of total tail mass, signalling balanced tails."
+  }
+}

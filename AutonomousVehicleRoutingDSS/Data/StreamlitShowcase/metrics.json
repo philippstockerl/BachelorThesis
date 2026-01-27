@@ -1,0 +1,56 @@
+[
+  {
+    "Model": "STRF Generator",
+    "Cost": "-",
+    "Edges": "-",
+    "Run Time": "-",
+    "Replans": "-",
+    "Nominal Cost": "-",
+    "Deviation Cost": "-"
+  },
+  {
+    "Model": "Discrete Uncertainty",
+    "Cost": "79.443",
+    "Edges": 198,
+    "Run Time": "6.61s",
+    "Replans": "-",
+    "Nominal Cost": "-",
+    "Deviation Cost": "-"
+  },
+  {
+    "Model": "Budgeted Uncertainty",
+    "Cost": "75.515",
+    "Edges": 198,
+    "Run Time": "60.04s",
+    "Replans": "-",
+    "Nominal Cost": "69.986",
+    "Deviation Cost": "5.530"
+  },
+  {
+    "Model": "DStar Lite",
+    "Cost": "96.235",
+    "Edges": 198,
+    "Run Time": "0.74s",
+    "Replans": 8,
+    "Nominal Cost": "-",
+    "Deviation Cost": "-"
+  },
+  {
+    "Model": "DStar Lite Discrete Uncertainty",
+    "Cost": "96.977",
+    "Edges": 198,
+    "Run Time": "0.74s",
+    "Replans": 8,
+    "Nominal Cost": "-",
+    "Deviation Cost": "-"
+  },
+  {
+    "Model": "DStar Lite Budgeted Uncertainty",
+    "Cost": "89.895",
+    "Edges": 198,
+    "Run Time": "0.75s",
+    "Replans": 8,
+    "Nominal Cost": "-",
+    "Deviation Cost": "-"
+  }
+]

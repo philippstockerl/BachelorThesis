@@ -1,18 +1,18 @@
 {
     "seed": 1,
     "paths": {
-        "data_root": "BachelorThesis/AutonomousVehicleRoutingDSS/Data/KernelGaussian",
+        "data_root": "/AutonomousVehicleRoutingDSS/Data/StreamlitShowcase",
         "dstar_edges_scenario": 0,
         "dstar_robust_path": "/path/to/robust/path.csv"
     },
     "srf": {
-        "grid_size": 20,
+        "grid_size": 100,
         "cell_size": 1,
         "kernel": "Gaussian",
         "variance": 1.0,
         "length_scale": [
-            5.0,
-            5.0,
+            25.0,
+            25.0,
             3.0
         ],
         "anis": [
@@ -38,10 +38,10 @@
         "goal_node": "auto"
     },
     "budgeted_model": {
-        "gamma": 3.8,
+        "gamma": 19.8,
         "K": 1,
-        "gamma_input": "3.8",
-        "gamma_value": 3.8,
+        "gamma_input": "19.8",
+        "gamma_value": 19.8,
         "gamma_list": null,
         "nominal_rule": "avg"
     },
