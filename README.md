@@ -1,6 +1,10 @@
 # BachelorThesis
 This is the corresponding code for my bachelor thesis titled: "Robust and Adaptive Path Planning for Autonomous Vehicles in Spatio-Temporal Cost Fields".
 
+You can find my finalized project implemented as a Streamlit web application following the hyperlink in the description!
+It is a conceptual user interface that acts as a control surface to generate data, run my models, and visualize solutions.
+(Note: due to license restrictions running the robust models is limited, D* Lite will work though.)
+
 My research objective was to evaluate different shortest-path algorithms on the same graph and cost structure.
 For that I have implemented a directed graph generator using the Python library GSTools to simulate weather cells that resemble cost fields.
 In my thesis I took a closer look at robust combinatorial optimization and incremental search methods.
