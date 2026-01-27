@@ -22,12 +22,6 @@ ALGORITHM_REGISTRY: Dict[str, Dict[str, Any]] = {
     "discrete": {
         "label": "Discrete Uncertainty",
         "runner": run_discrete_pipeline,
-        "discrete_mode": "classic",
-    },
-    "discrete_adaptive": {
-        "label": "Discrete Uncertainty Adaptive",
-        "runner": run_discrete_pipeline,
-        "discrete_mode": "adaptive",
     },
     "budgeted": {
         "label": "Budgeted Uncertainty",
@@ -42,11 +36,6 @@ ALGORITHM_REGISTRY: Dict[str, Dict[str, Any]] = {
         "label": "DStar Lite (Discrete)",
         "runner": run_dstar_pipeline,
         "warmstart_mode": "discrete",
-    },
-    "dstar_discrete_adaptive": {
-        "label": "DStar Lite (Discrete Adaptive)",
-        "runner": run_dstar_pipeline,
-        "warmstart_mode": "discrete_adaptive",
     },
     "dstar_budgeted": {
         "label": "DStar Lite (Budgeted)",
@@ -271,8 +260,6 @@ def _apply_batch_overrides(base_cfg: Dict[str, Any], batch_cfg: Dict[str, Any]) 
 def _build_algorithm_cfg(base_cfg: Dict[str, Any], algorithm: str) -> Dict[str, Any]:
     cfg = copy.deepcopy(base_cfg)
     spec = ALGORITHM_REGISTRY.get(algorithm, {})
-    if "discrete_mode" in spec:
-        cfg.setdefault("robust_model", {})["discrete_mode"] = spec["discrete_mode"]
     if "warmstart_mode" in spec:
         cfg.setdefault("dstar_lite", {})["warmstart_mode"] = spec["warmstart_mode"]
     return cfg

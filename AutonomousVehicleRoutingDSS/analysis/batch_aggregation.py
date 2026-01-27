@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-
 import json
 import os
 import sys
@@ -13,10 +12,14 @@ import pandas as pd
 import hashlib
 
 
+# -----------------------------------------------------------------------------
+# Module setup: resolve project root and make local imports available.
+# -----------------------------------------------------------------------------
 APP_ROOT = Path(__file__).resolve().parents[1]
 if str(APP_ROOT) not in sys.path:
     sys.path.insert(0, str(APP_ROOT))
 
+# Defaults for batch pipeline configs (used in the secondary section).
 DEFAULT_BASE_CONFIG_PATH = Path(
     os.environ.get("DRDSS_CONFIG", APP_ROOT / "config" / "default.json")
 )
@@ -25,6 +28,14 @@ DEFAULT_BATCH_CONFIG_PATH = Path(
 )
 
 
+# =============================================================================
+# PRIMARY USE: Generate summary.csv (and optional time_resolved.csv)
+# =============================================================================
+# Entry point: run_aggregation(...)
+# Everything below the secondary box contains plotting or batch utilities.
+# =============================================================================
+
+# Required columns expected after standardization.
 REQUIRED_COLUMNS = [
     "config_id",
     "seed",
@@ -35,8 +46,11 @@ REQUIRED_COLUMNS = [
     "runtime_ms",
 ]
 
+# Status values considered successful.
 DEFAULT_OK_STATUSES = {"ok", "success"}
 
+# Metadata fields that may be carried into outputs by callers.
+# Note: These are not used directly in the current aggregation logic.
 DEFAULT_META_COLUMNS = [
     "grid_size",
     "cell_size",
@@ -59,6 +73,7 @@ DEFAULT_META_COLUMNS = [
     "warmstart_mode",
 ]
 
+# Column name aliases for incoming CSVs.
 DEFAULT_COLUMN_MAP = {
     "configuration_id": "config_id",
     "config": "config_id",
@@ -74,8 +89,11 @@ DEFAULT_COLUMN_MAP = {
 
 def _seed_from_key(*parts: str, modulus: int = 2**32) -> int:
     """Derive a stable seed from string parts."""
+    # Build a deterministic byte string from the input parts.
     raw = "|".join(parts).encode("utf-8", errors="ignore")
+    # Hash to a fixed size so seeds are stable across runs.
     digest = hashlib.blake2b(raw, digest_size=8).digest()
+    # Map the hash into the requested integer range for RNGs.
     return int.from_bytes(digest, byteorder="big") % modulus
 
 
@@ -85,6 +103,7 @@ def collect_csv_files(
     exclude_prefixes: Sequence[str] = ("summary_", "time_resolved_"),
 ) -> List[Path]:
     """Collect CSV files from files or directories."""
+    # Resolve each input and walk directories when requested.
     files: List[Path] = []
     for raw in paths:
         path = Path(raw).expanduser()
@@ -94,9 +113,11 @@ def collect_csv_files(
         if path.is_dir():
             pattern = "**/*.csv" if recursive else "*.csv"
             for fp in path.glob(pattern):
+                # Skip files that look like aggregation outputs.
                 if fp.name.startswith(tuple(exclude_prefixes)):
                     continue
                 files.append(fp)
+    # Deduplicate and sort for deterministic ordering.
     return sorted(set(files))
 
 
@@ -106,15 +127,18 @@ def load_results(
     add_source_column: bool = False,
 ) -> pd.DataFrame:
     """Load one or more CSV files into a single DataFrame."""
+    # Find all CSVs first; fail fast if nothing matches.
     files = collect_csv_files(paths)
     if not files:
         raise FileNotFoundError("No CSV files found for aggregation.")
     frames: List[pd.DataFrame] = []
     for fp in files:
+        # Read each CSV and optionally capture its source path.
         df = pd.read_csv(fp)
         if add_source_column:
             df["source_file"] = str(fp)
         frames.append(df)
+    # Concatenate and normalize column names.
     data = pd.concat(frames, ignore_index=True)
     return standardize_columns(data, column_map or {})
 
@@ -124,13 +148,17 @@ def standardize_columns(
     column_map: Dict[str, str],
 ) -> pd.DataFrame:
     """Rename columns using a provided mapping and known defaults."""
+    # Merge caller mapping with defaults; caller values win.
     mapping = dict(DEFAULT_COLUMN_MAP)
     mapping.update(column_map)
+    # Rename only columns we recognize.
     columns = {col: mapping[col] for col in df.columns if col in mapping}
     return df.rename(columns=columns)
 
 
 def validate_required_columns(df: pd.DataFrame, required: Sequence[str]) -> None:
+    """Raise a clear error if required columns are missing."""
+    # Confirm all required columns exist before cleaning.
     missing = [col for col in required if col not in df.columns]
     if missing:
         raise ValueError(f"Missing required columns: {', '.join(missing)}")
@@ -142,16 +170,19 @@ def expand_extra_metrics(
     prefix: str = "metric_",
 ) -> pd.DataFrame:
     """Expand a JSON column of extra metrics into prefixed columns."""
+    # Exit early if the column is not present.
     if column not in df.columns:
         return df
     parsed: List[Dict[str, Any]] = []
     for raw in df[column].fillna(""):
+        # Handle already-parsed dicts and empty strings.
         if isinstance(raw, dict):
             parsed.append(raw)
             continue
         if not raw:
             parsed.append({})
             continue
+        # Parse JSON strings; fall back to empty on errors.
         try:
             parsed.append(json.loads(raw))
         except Exception:
@@ -160,6 +191,7 @@ def expand_extra_metrics(
     if metrics.empty:
         return df
     metrics = metrics.add_prefix(prefix)
+    # Concatenate expanded metrics alongside the original data.
     return pd.concat([df.reset_index(drop=True), metrics.reset_index(drop=True)], axis=1)
 
 
@@ -169,16 +201,20 @@ def clean_results(
     status_column: str = "status",
 ) -> pd.DataFrame:
     """Drop rows with malformed required fields and coerce numeric columns."""
+    # Ensure required fields exist before any cleaning.
     validate_required_columns(df, required_columns)
     cleaned = df.copy()
 
+    # Coerce key numeric fields to floats; invalid values become NaN.
     for col in ("seed", "realized_cost", "path_length", "runtime_ms"):
         cleaned[col] = pd.to_numeric(cleaned[col], errors="coerce")
 
+    # Normalize string fields to avoid mixed types downstream.
     cleaned[status_column] = cleaned[status_column].astype(str)
     cleaned["algorithm"] = cleaned["algorithm"].astype(str)
     cleaned["config_id"] = cleaned["config_id"].astype(str)
 
+    # Drop rows that are missing any required data.
     cleaned = cleaned.dropna(subset=required_columns)
     cleaned = cleaned[cleaned["algorithm"].str.strip() != ""]
     cleaned = cleaned[cleaned["config_id"].str.strip() != ""]
@@ -192,6 +228,7 @@ def filter_paired_seeds(
     seed_column: str = "seed",
 ) -> Tuple[pd.DataFrame, Dict[str, Dict[str, Any]]]:
     """Keep only seeds that contain all algorithms within each configuration."""
+    # Group by config and keep only seeds present across all algorithms.
     keep_frames: List[pd.DataFrame] = []
     stats: Dict[str, Dict[str, Any]] = {}
     for config_id, group in df.groupby(config_column):
@@ -201,6 +238,7 @@ def filter_paired_seeds(
         counts = group.groupby(seed_column)[algorithm_column].nunique()
         keep_seeds = counts[counts == len(algos)].index
         filtered = group[group[seed_column].isin(keep_seeds)]
+        # Record how many seeds were available vs used.
         stats[str(config_id)] = {
             "algorithms": algos,
             "seeds_total": int(counts.size),
@@ -220,10 +258,12 @@ def bootstrap_ci(
     rng: Optional[np.random.Generator] = None,
 ) -> Tuple[float, float]:
     """Non-parametric bootstrap confidence interval for a statistic."""
+    # Coerce input to a numeric array and drop non-finite values.
     data = np.asarray(values, dtype=float)
     data = data[np.isfinite(data)]
     if data.size < 2:
         return float("nan"), float("nan")
+    # Sample with replacement and compute the statistic for each resample.
     rng = rng or np.random.default_rng(12345)
     idx = rng.integers(0, data.size, size=(n_boot, data.size))
     samples = data[idx]
@@ -231,12 +271,14 @@ def bootstrap_ci(
         stats = stat_func(samples, axis=1)
     except Exception:
         stats = np.array([stat_func(sample) for sample in samples], dtype=float)
+    # Report the central (1 - alpha) interval.
     lower = float(np.quantile(stats, alpha / 2))
     upper = float(np.quantile(stats, 1 - alpha / 2))
     return lower, upper
 
 
 def _safe_numeric(series: pd.Series) -> pd.Series:
+    """Coerce a Series to numeric, yielding NaN on errors."""
     return pd.to_numeric(series, errors="coerce")
 
 
@@ -262,12 +304,17 @@ def aggregate_summary(
     metric_columns: Optional[Sequence[str]] = None,
 ) -> pd.DataFrame:
     """Aggregate median cost/runtime/path length and cost CI per configuration and algorithm."""
+    # NOTE: runtime_quantile, include_log_runtime, cost_quantile, meta_columns, and
+    # metric_columns are currently unused; they are reserved for future extensions.
     df = df.copy()
+
+    # Normalize status values and filter to OK runs for aggregation stats.
     df[status_column] = df[status_column].astype(str).str.lower()
     ok_set = {s.lower() for s in ok_statuses}
     ok_mask = df[status_column].isin(ok_set)
     ok_df = df[ok_mask].copy()
 
+    # Optionally enforce paired seeds across algorithms for each config.
     paired_df = ok_df
     pairing_stats = {}
     if require_paired:
@@ -277,13 +324,16 @@ def aggregate_summary(
             algorithm_column=algorithm_column,
             seed_column=seed_column,
         )
+        # pairing_stats is retained for diagnostics, but not returned right now.
 
     summary_rows: List[Dict[str, Any]] = []
 
+    # Iterate over all configs (using full data for failure rates).
     configs = sorted(df[config_column].dropna().unique())
     for config_id in configs:
         config_df = df[df[config_column] == config_id]
         algos = list(config_df[algorithm_column].dropna().unique())
+        # Honor user-specified algorithm ordering when provided.
         if algorithm_order:
             ordered_algos = [a for a in algorithm_order if a in algos]
             ordered_algos += [a for a in algos if a not in ordered_algos]
@@ -295,11 +345,13 @@ def aggregate_summary(
             total_runs = int(len(group))
             ok_group = group[group[status_column].isin(ok_set)]
             failed_runs = int(total_runs - len(ok_group))
+            # Compute run-level rates for optional reporting.
             failure_rate = float(failed_runs / total_runs) if total_runs else float("nan")
             timeout_runs = int((group[status_column] == "timeout").sum())
             success_rate = float(len(ok_group) / total_runs) if total_runs else float("nan")
             timeout_rate = float(timeout_runs / total_runs) if total_runs else float("nan")
 
+            # Choose paired runs when required; otherwise fall back to OK runs.
             used_group = paired_df[
                 (paired_df[config_column] == config_id)
                 & (paired_df[algorithm_column] == algorithm)
@@ -307,10 +359,12 @@ def aggregate_summary(
             if used_group.empty:
                 used_group = ok_group if not require_paired else used_group
 
+            # Pull numeric arrays for summary statistics.
             cost_values = _safe_numeric(used_group.get(cost_column, pd.Series(dtype=float))).dropna()
             path_values = _safe_numeric(used_group.get(path_column, pd.Series(dtype=float))).dropna()
             runtime_values = _safe_numeric(used_group.get(runtime_column, pd.Series(dtype=float))).dropna()
 
+            # Bootstrap a median cost CI using a deterministic seed.
             seed = _seed_from_key(str(config_id), str(algorithm))
             rng = np.random.default_rng(seed)
             cost_ci_low, cost_ci_high = bootstrap_ci(
@@ -332,6 +386,7 @@ def aggregate_summary(
                 "path_length_median": float(path_values.median()) if not path_values.empty else float("nan"),
             }
 
+            # NOTE: failure_rate/success_rate/timeout_rate are computed but not stored.
             summary_rows.append(row)
 
     return pd.DataFrame(summary_rows)
@@ -352,14 +407,17 @@ def aggregate_time_resolved(
     algorithm_order: Optional[Sequence[str]] = None,
 ) -> pd.DataFrame:
     """Aggregate per-time-step metrics if a time column is present."""
+    # If the time column is missing, we cannot build a time-resolved table.
     if time_column not in df.columns:
         return pd.DataFrame()
 
     data = df.copy()
+    # Keep only OK rows for time-resolved aggregation.
     data[status_column] = data[status_column].astype(str).str.lower()
     ok_set = {s.lower() for s in ok_statuses}
     ok_df = data[data[status_column].isin(ok_set)].copy()
 
+    # Optionally enforce paired seeds across algorithms.
     if require_paired:
         ok_df, _ = filter_paired_seeds(
             ok_df,
@@ -368,6 +426,7 @@ def aggregate_time_resolved(
             seed_column=seed_column,
         )
 
+    # Coerce time and cost to numeric and drop invalid rows.
     ok_df[time_column] = pd.to_numeric(ok_df[time_column], errors="coerce")
     ok_df[cost_column] = pd.to_numeric(ok_df[cost_column], errors="coerce")
     ok_df = ok_df.dropna(subset=[time_column, cost_column])
@@ -377,6 +436,7 @@ def aggregate_time_resolved(
     for config_id in configs:
         config_df = ok_df[ok_df[config_column] == config_id]
         algos = list(config_df[algorithm_column].dropna().unique())
+        # Respect preferred algorithm ordering if provided.
         if algorithm_order:
             ordered_algos = [a for a in algorithm_order if a in algos]
             ordered_algos += [a for a in algos if a not in ordered_algos]
@@ -386,6 +446,7 @@ def aggregate_time_resolved(
             algo_df = config_df[config_df[algorithm_column] == algorithm]
             for time_step, group in algo_df.groupby(time_column):
                 values = group[cost_column].values
+                # Seed RNG deterministically for CI computation per config/algorithm/time.
                 seed = _seed_from_key(str(config_id), str(algorithm), str(time_step))
                 rng = np.random.default_rng(seed)
                 ci_low, ci_high = bootstrap_ci(
@@ -428,10 +489,12 @@ def run_aggregation(
     Load, clean, aggregate, and optionally export summary/time-resolved CSVs.
     Returns (summary_df, time_df).
     """
+    # Load raw CSVs, expand any extra metrics, and clean required fields.
     df = load_results(paths)
     df = expand_extra_metrics(df)
     df = clean_results(df)
 
+    # Aggregate the main summary table (summary.csv).
     summary_df = aggregate_summary(
         df,
         ok_statuses=ok_statuses,
@@ -443,6 +506,7 @@ def run_aggregation(
         include_log_runtime=include_log_runtime,
     )
 
+    # Optionally compute a time-resolved table when time_column is provided.
     time_df = None
     if time_column:
         time_df = aggregate_time_resolved(
@@ -455,6 +519,7 @@ def run_aggregation(
             algorithm_order=algorithm_order,
         )
 
+    # Persist CSV outputs if an output directory is supplied.
     if output_dir:
         out_dir = Path(output_dir).expanduser()
         out_dir.mkdir(parents=True, exist_ok=True)
@@ -465,7 +530,12 @@ def run_aggregation(
     return summary_df, time_df
 
 
+# =============================================================================
+# SECONDARY UTILITIES: plotting, batch pipeline, JSON helpers
+# =============================================================================
+
 def _require_matplotlib():
+    """Import matplotlib lazily to keep the core aggregation dependency-light."""
     try:
         import matplotlib.pyplot as plt
     except Exception as exc:  # pragma: no cover - optional dependency
@@ -474,6 +544,7 @@ def _require_matplotlib():
 
 
 def _ensure_output_dir(path: Optional[str | Path], summary_path: Path) -> Path:
+    """Resolve the output directory for plots, creating it if needed."""
     if path:
         out_dir = Path(path).expanduser()
     else:
@@ -483,6 +554,7 @@ def _ensure_output_dir(path: Optional[str | Path], summary_path: Path) -> Path:
 
 
 def _algorithm_order(df: pd.DataFrame, preferred: Optional[Sequence[str]]) -> List[str]:
+    """Return algorithms in preferred order, falling back to sorted unique values."""
     algos = list(df["algorithm"].dropna().astype(str).unique())
     if preferred:
         order = [a for a in preferred if a in algos]
@@ -492,6 +564,7 @@ def _algorithm_order(df: pd.DataFrame, preferred: Optional[Sequence[str]]) -> Li
 
 
 def _numeric(series: pd.Series) -> np.ndarray:
+    """Coerce a pandas Series to a numeric numpy array."""
     return pd.to_numeric(series, errors="coerce").to_numpy()
 
 
@@ -505,6 +578,7 @@ def _plot_bar_with_ci(
     output_path: Path,
     algorithm_order: Optional[Sequence[str]] = None,
 ) -> None:
+    """Render a bar chart with optional asymmetric CI error bars."""
     if group.empty:
         return
     plt = _require_matplotlib()
@@ -519,6 +593,7 @@ def _plot_bar_with_ci(
         highs = _numeric(plot_df[ci_high_col])
         err_low = values - lows
         err_high = highs - values
+        # Replace invalid error bars with zeros so matplotlib stays happy.
         err_low = np.where(np.isfinite(err_low), err_low, 0.0)
         err_high = np.where(np.isfinite(err_high), err_high, 0.0)
         yerr = np.vstack([err_low, err_high])
@@ -544,6 +619,7 @@ def _plot_bar(
     output_path: Path,
     algorithm_order: Optional[Sequence[str]] = None,
 ) -> None:
+    """Render a basic bar chart for a single metric."""
     if group.empty:
         return
     plt = _require_matplotlib()
@@ -573,11 +649,13 @@ def plot_summary(
     runtime_stat: str = "q",
     file_ext: str = "png",
 ) -> None:
+    """Generate standard bar plots from a summary DataFrame."""
     df = summary_df.copy()
     if config_filter:
         df = df[df["config_id"] == config_filter]
 
     for config_id, group in df.groupby("config_id"):
+        # Choose runtime column based on requested statistic.
         runtime_map = {
             "mean": "runtime_mean_ms",
             "median": "runtime_median_ms",
@@ -609,6 +687,7 @@ def plot_summary(
         )
 
         if "failure_rate" in group.columns:
+            # Convert failure rate to percent for plotting if available.
             failure = group.copy()
             failure["failure_rate_pct"] = _numeric(failure["failure_rate"]) * 100.0
             _plot_bar(
@@ -630,6 +709,7 @@ def plot_paired_deltas(
     ok_statuses: Sequence[str] = ("success", "ok"),
     file_ext: str = "png",
 ) -> None:
+    """Plot paired per-seed deltas against a baseline algorithm."""
     df = load_results(raw_paths)
     df = clean_results(df)
     df["status"] = df["status"].astype(str).str.lower()
@@ -639,6 +719,7 @@ def plot_paired_deltas(
     if config_filter:
         df = df[df["config_id"] == config_filter]
 
+    # Keep only seeds where all algorithms are present.
     df, _ = filter_paired_seeds(df)
 
     if metric not in df.columns:
@@ -654,6 +735,7 @@ def plot_paired_deltas(
         )
         if baseline_algorithm not in pivot.columns:
             continue
+        # Subtract baseline costs to get per-seed deltas.
         deltas = pivot.subtract(pivot[baseline_algorithm], axis=0)
         deltas = deltas.drop(columns=[baseline_algorithm], errors="ignore")
         if deltas.empty:
@@ -676,11 +758,13 @@ def plot_paired_deltas(
 
 
 def load_json(path: str | Path) -> Dict[str, Any]:
+    """Read a JSON file into a dictionary."""
     with Path(path).expanduser().open("r", encoding="utf-8") as fh:
         return json.load(fh)
 
 
 def write_json(path: str | Path, payload: Dict[str, Any]) -> None:
+    """Write a dictionary to a JSON file (pretty-printed)."""
     out = Path(path).expanduser()
     out.parent.mkdir(parents=True, exist_ok=True)
     with out.open("w", encoding="utf-8") as fh:
@@ -691,6 +775,7 @@ def _load_json_or_dict(
     value: Dict[str, Any] | str | Path | None,
     default_path: Path,
 ) -> Dict[str, Any]:
+    """Load JSON from a path or return a dict directly."""
     if value is None:
         return load_json(default_path)
     if isinstance(value, (str, Path)):
@@ -701,12 +786,14 @@ def _load_json_or_dict(
 
 
 def default_summary_path(batch_cfg: Dict[str, Any]) -> Path:
+    """Compute the default JSON summary path for a batch config."""
     root = Path(batch_cfg.get("experiments_root", APP_ROOT / "experiments")).expanduser().resolve()
     config_id = str(batch_cfg.get("config_id", "batch_default")).strip() or "batch_default"
     return root / config_id / "batch_summary.json"
 
 
 def default_summary_dir(batch_cfg: Dict[str, Any], results_csv: str | None) -> Path:
+    """Resolve the summary output directory for a batch run."""
     cfg_dir = batch_cfg.get("summary_dir")
     if cfg_dir:
         return Path(cfg_dir).expanduser()
@@ -718,17 +805,22 @@ def default_summary_dir(batch_cfg: Dict[str, Any], results_csv: str | None) -> P
 
 
 class _LogWriter:
+    """Simple file logger used by batch experiments."""
+
     def __init__(self, path: Path) -> None:
+        # Open the log file in append mode to keep prior entries.
         self.path = path
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self._fh = self.path.open("a", encoding="utf-8")
 
     def __call__(self, msg: str) -> None:
+        # Prefix each line with a UTC timestamp for traceability.
         stamp = datetime.now(timezone.utc).isoformat()
         self._fh.write(f"[{stamp}] {msg}\n")
         self._fh.flush()
 
     def close(self) -> None:
+        # Explicit close so callers can release the file handle.
         self._fh.close()
 
 
@@ -746,12 +838,14 @@ def run_batch_pipeline(
     """
     from Models.DSSRunners.Batch_runner import run_batch_experiments
 
+    # Load config objects from provided inputs or defaults.
     base_cfg_obj = _load_json_or_dict(base_cfg, DEFAULT_BASE_CONFIG_PATH)
     batch_cfg_obj = _load_json_or_dict(batch_cfg, DEFAULT_BATCH_CONFIG_PATH)
 
     logger = _LogWriter(Path(log_path).expanduser()) if log_path else None
     summary: Dict[str, Any] = {}
     try:
+        # Execute batch experiments and capture the output summary.
         summary = run_batch_experiments(base_cfg_obj, batch_cfg_obj, log_fn=logger)
         results_csv = summary.get("results_csv")
         algo_order = [str(a) for a in batch_cfg_obj.get("algorithms", []) if str(a)]
@@ -762,6 +856,7 @@ def run_batch_pipeline(
 
         if results_csv and Path(results_csv).expanduser().exists():
             try:
+                # Aggregate batch results into summary/time-resolved tables.
                 summary_df, time_df = run_aggregation(
                     [results_csv],
                     output_dir=summary_dir,
@@ -775,6 +870,7 @@ def run_batch_pipeline(
                     if time_csv.exists():
                         summary["time_csv"] = str(time_csv)
                 if plot:
+                    # Render plots next to the raw CSV output when requested.
                     plot_output_dir = Path(results_csv).expanduser().resolve().parent
                     try:
                         summary_csv = summary_dir / "summary.csv"
@@ -806,6 +902,7 @@ def run_batch_pipeline(
         if logger:
             logger.close()
 
+    # Persist the summary JSON for downstream tooling.
     summary_path = Path(summary_out).expanduser() if summary_out else default_summary_path(batch_cfg_obj)
     write_json(summary_path, summary)
     return summary

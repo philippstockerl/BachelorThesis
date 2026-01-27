@@ -1,3 +1,5 @@
+"""Discrete robust shortest path (min-max) model and I/O helpers."""
+
 import gurobipy as gp
 from gurobipy import GRB
 import pandas as pd
@@ -11,6 +13,7 @@ import json
 
 
 def Preprocessing(nodes_path, edges_path, base_folder):
+    """Load graph data and scenario costs from a scenario folder tree."""
 
     def load_nodes(path):
         """
@@ -79,9 +82,11 @@ def Preprocessing(nodes_path, edges_path, base_folder):
             }
         }
         """
+        # Each scenario folder contributes a full edge-cost dictionary.
         costs = {}
         graph_paths = {}
 
+        # `base_folder` is expected to contain scenario_### subfolders.
         scenario_folders = sorted(
             f for f in os.listdir(base_folder)
             if f.startswith("scenario_")
@@ -100,6 +105,7 @@ def Preprocessing(nodes_path, edges_path, base_folder):
 
                 costs[scen][(u, v)] = c
             
+            # Optional per-scenario cost field for visualization overlays.
             npy_path = os.path.join(base_folder, folder, "field.npy")
             graph_paths[scen] = npy_path if os.path.exists(npy_path) else None
 
@@ -108,6 +114,7 @@ def Preprocessing(nodes_path, edges_path, base_folder):
 
 
 
+    # Build node/edge structures and scenario cost dictionaries.
     coords, node_ids = load_nodes(nodes_path)
     edges = load_edges(edges_path)
     costs, graph_paths = load_scenarios(base_folder)
@@ -119,6 +126,7 @@ def Preprocessing(nodes_path, edges_path, base_folder):
 
 
 class DiscreteUncertainty:
+    """Solve a min-max robust shortest path over discrete cost scenarios."""
 
     def __init__(self, coords, node_ids, edges, costs, graph_paths):
         self.coords = coords
@@ -132,9 +140,10 @@ class DiscreteUncertainty:
         self.start = min(coords.keys())
         self.goal = max(coords.keys())
         
+        # Solution storage (filled after optimization).
         self.path = None
 
-        # Solution metrics
+        # Solution metrics.
         self.arcs = []
         self.scenario_costs = {}
         self.scenario_per_step = []
@@ -155,6 +164,7 @@ class DiscreteUncertainty:
 
 
     def _reset_solution(self):
+        """Clear any previously stored solution outputs. Used for batch mode."""
         self.path = None
         self.arcs = []
         self.scenario_costs = {}
@@ -163,6 +173,7 @@ class DiscreteUncertainty:
 
 
     def OptimizationModel(self, costs=None, start_node=None, goal_node=None, log_to_console=1):
+        """Build and solve the min-max robust model; returns the Gurobi model."""
         costs = costs if costs is not None else self.costs
         self.last_model_start = self.start if start_node is None else start_node
         self.last_model_goal = self.goal if goal_node is None else goal_node
@@ -171,19 +182,22 @@ class DiscreteUncertainty:
 
         model.Params.LogToConsole = log_to_console
         model.setParam("TimeLimit", 60)
-        model.setParam("MIPGap", 0.02)
 
+        # x[u,v] = 1 if edge (u,v) is selected in the path.
         x = model.addVars(self.edges, vtype=GRB.BINARY, name="x")
+        # z upper-bounds the path cost in every scenario.
         z = model.addVar(vtype=GRB.CONTINUOUS, name="z")
 
         model.setObjective(z, GRB.MINIMIZE)
 
+        # Robust min-max constraints: z >= cost of chosen path per scenario.
         for k in costs.keys():
             model.addConstr(
                 z >= gp.quicksum(costs[k][e] * x[e] for e in self.edges),
                 name=f"robust_{k}"
             )
         
+        # Flow conservation to enforce a single path from start to goal.
         for v in self.node_ids:
             outgoing = gp.quicksum(x[e] for e in self.edges if e[0] == v)
             incoming = gp.quicksum(x[e] for e in self.edges if e[1] == v)
@@ -214,6 +228,7 @@ class DiscreteUncertainty:
 
 
     def _extract_path_from_model(self, model):
+        """Recover an ordered node path from the selected edges."""
         selected = [(u, v) for (u, v) in self.edges
             if model.getVarByName(f"x[{u},{v}]").X > 0.5]
 
@@ -223,6 +238,7 @@ class DiscreteUncertainty:
         curr = self.last_model_start
         visited = set()
 
+        # Follow successor pointers until goal or a detected loop.
         while curr != self.last_model_goal and curr not in visited:
             visited.add(curr)
             if curr not in nxt:
@@ -234,23 +250,28 @@ class DiscreteUncertainty:
 
 
     def GetResultData(self, model):
+        """Extract path/cost metrics from the solved model into result dicts."""
         self._reset_solution()
 
         self.path = self._extract_path_from_model(model)
 
+        # Base-scenario arc list for quick inspection.
         self.arcs = []
         for u, v in zip(self.path[:-1], self.path[1:]):
             cost_0 = self.costs[0][(u, v)]
             self.arcs.append({"u": u, "v": v, "cost": cost_0})
 
 
+        # Total path cost per scenario.
         self.scenario_costs = {
             k: sum(self.costs[k][(u, v)] for u, v in zip(self.path[:-1], self.path[1:]))
             for k in self.costs
         }
 
+        # Placeholder for per-step scenario data (used by consumers).
         self.scenario_per_step = [0] * len(self.arcs)
 
+        # Per-arc, per-scenario costs for downstream plotting/analysis.
         for (u, v) in zip(self.path[:-1], self.path[1:]):
             entry = {"u": u, "v": v, "scenarios": {}}
             for scen in self.costs.keys():
@@ -258,6 +279,7 @@ class DiscreteUncertainty:
             self.arc_costs_per_scenario.append(entry)
 
 
+        # Final result payload for JSON export and dashboard use.
         self.result = {
             "cost": float(self.objective_value),
             "node_path": self.path,
@@ -273,122 +295,9 @@ class DiscreteUncertainty:
             "animated_overlay": self.animated_overlay
         }
 
-    def run_adaptive(self, window_size, commit_length=None, start_node=None, goal_node=None, log_to_console=0):
-        """
-        Rolling-window robust planning. Uses a sliding subset of scenario slices,
-        commits only the first `commit_length` arcs of each subproblem, then
-        advances the time index and repeats.
-        """
-        self._reset_solution()
-        self.model_type = "DiscreteRobustAdaptive"
-        self.output_folder = "DiscreteUncertaintyAdaptive"
-
-        start_node = self.start if start_node is None else start_node
-        goal_node = self.goal if goal_node is None else goal_node
-
-        current = start_node
-        current_time_idx = 0
-        steps_taken_in_slice = 0
-
-        # Estimate steps per slice similar to D* Lite: Manhattan distance / #scenarios
-        sx, sy = self.coords[start_node]
-        gx, gy = self.coords[goal_node]
-        manhattan = abs(sx - gx) + abs(sy - gy)
-        steps_per_slice = max(1, int(np.ceil(manhattan / max(1, len(self.scenario_ids)))))
-
-        # Default commit length: take an entire slice-worth of steps per solve
-        if commit_length is None:
-            commit_length = steps_per_slice
-        else:
-            commit_length = max(1, int(commit_length))
-
-        stitched_path = [current]
-        scenario_per_step = []
-        arc_costs_per_scenario = []
-        arcs = []
-
-        self.start_time = time.time()
-
-        while current != goal_node:
-            window_ids = self.scenario_ids[current_time_idx: current_time_idx + window_size]
-            if not window_ids:
-                # Reuse the last slice when we run out
-                window_ids = [self.scenario_ids[-1]]
-
-            costs_window = {sid: self.costs[sid] for sid in window_ids}
-
-            model = self.OptimizationModel(
-                costs=costs_window,
-                start_node=current,
-                goal_node=goal_node,
-                log_to_console=log_to_console
-            )
-
-            sub_path = self._extract_path_from_model(model)
-            if len(sub_path) < 2:
-                break
-
-            steps = []
-            for nxt in sub_path[1:]:
-                steps.append(nxt)
-                if len(steps) >= commit_length or nxt == goal_node:
-                    break
-
-            for nxt in steps:
-                prev = current
-                scenario_idx = self.scenario_ids[min(current_time_idx, len(self.scenario_ids)-1)]
-                scenario_per_step.append(scenario_idx)
-
-                arc_entry = {"u": prev, "v": nxt, "scenarios": {}}
-                for scen in self.costs.keys():
-                    arc_entry["scenarios"][scen] = self.costs[scen][(prev, nxt)]
-                arc_costs_per_scenario.append(arc_entry)
-
-                arcs.append({"u": prev, "v": nxt, "cost": self.costs[self.scenario_ids[0]][(prev, nxt)]})
-
-                stitched_path.append(nxt)
-                current = nxt
-                steps_taken_in_slice += 1
-                if steps_taken_in_slice >= steps_per_slice:
-                    current_time_idx = min(current_time_idx + 1, len(self.scenario_ids) - 1)
-                    steps_taken_in_slice = 0
-                if current == goal_node:
-                    break
-
-        self.end_time = time.time()
-        self.runtime = self.end_time - self.start_time
-
-        self.path = stitched_path
-        self.arcs = arcs
-        self.scenario_per_step = scenario_per_step
-        self.arc_costs_per_scenario = arc_costs_per_scenario
-
-        # Aggregate realized costs using the time-indexed scenario slice that was active when the arc was taken
-        self.scenario_costs = {sid: 0.0 for sid in self.scenario_ids}
-        for (u, v), scen in zip(zip(self.path[:-1], self.path[1:]), scenario_per_step):
-            self.scenario_costs[scen] += self.costs[scen][(u, v)]
-
-        realized_total = sum(self.costs[scen][(u, v)] for (u, v), scen in zip(zip(self.path[:-1], self.path[1:]), scenario_per_step))
-        self.objective_value = realized_total
-
-        self.result = {
-            "cost": float(realized_total),
-            "node_path": self.path,
-            "runtime": self.runtime,
-            "arcs": self.arcs,
-            "total_cost": float(realized_total),
-            "scenario_costs": self.scenario_costs,
-            "scenario_per_step": self.scenario_per_step,
-            "coords": self.coords,
-            "data_root": self.data_root,
-            "model_type": self.model_type,
-            "arc_costs_per_scenario": self.arc_costs_per_scenario,
-            "animated_overlay": self.animated_overlay
-        }
-
-
     def ExportPathOverlay(self, base_dir):
-        gif_name = "discrete_uncertainty_path_overlay.gif" if self.output_folder == "DiscreteUncertainty" else "discrete_uncertainty_adaptive_path_overlay.gif"
+        """Render a GIF of the chosen path over scenario field frames."""
+        gif_name = "discrete_uncertainty_path_overlay.gif"
         out_dir = Path(base_dir) / self.output_folder / "overlays"
         out_dir.mkdir(parents=True, exist_ok=True)
         gif_path = out_dir / gif_name
@@ -430,7 +339,8 @@ class DiscreteUncertainty:
 
     
     def ExportRobustPathCSV(self, base_dir):
-        csv_name = "discrete_uncertainty_path.csv" if self.output_folder == "DiscreteUncertainty" else "discrete_uncertainty_adaptive_path.csv"
+        """Export the node path as a CSV for warm-starting other models."""
+        csv_name = "discrete_uncertainty_path.csv"
         out_dir = Path(base_dir) / self.output_folder
         out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -440,11 +350,12 @@ class DiscreteUncertainty:
 
     
     def ExportResultsJSON(self, base_dir):
+        """Write the result dictionary to JSON for downstream analysis."""
         self.result["animated_overlay"] = str(self.animated_overlay)
         out_dir = Path(base_dir) / "ComparisonData"
         out_dir.mkdir(parents=True, exist_ok=True)
 
-        json_name = "DiscreteUncertainty_result.json" if self.output_folder == "DiscreteUncertainty" else "DiscreteUncertaintyAdaptive_result.json"
+        json_name = "DiscreteUncertainty_result.json"
         json_path = out_dir / json_name
         with open(json_path, "w") as jf:
             json.dump(self.result, jf, indent=2)

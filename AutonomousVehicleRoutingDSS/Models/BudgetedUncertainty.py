@@ -12,14 +12,13 @@ from gurobipy import GRB
 
 
 class BudgetedUncertainty:
-    def __init__(self, data_root, gamma=5, nominal_rule="min", time_limit=None):
-        """
-        Classic budgeted uncertainty using a single global gamma.
-        nominal_rule: "min" or "avg" for nominal cost aggregation across scenarios.
-        """
+    """Budgeted-uncertainty shortest path model over scenario-based edge costs."""
+
+    def __init__(self, data_root, gamma=0, nominal_rule="avg", time_limit=None):
+
         self.data_root = Path(data_root)
         self.gamma = gamma
-        self.nominal_rule = nominal_rule  # "min" or "avg"
+        self.nominal_rule = nominal_rule  # "min" or "avg", we use avg
         self.time_limit = time_limit
 
         self.coords = {}
@@ -27,7 +26,6 @@ class BudgetedUncertainty:
         self.edges = {}
         self.cost_nominal = {}
         self.deviation = {}
-        self.edge_list = []
         self.out_edges = {}
         self.in_edges = {}
 
@@ -51,19 +49,14 @@ class BudgetedUncertainty:
         - deviation[i]
         - adjacency lists
         """
-        from time import perf_counter
-
-        t0 = perf_counter()
-        print(f"[BudgetedUncertainty] Preprocessing start | data_root={self.data_root}", flush=True)
-        # Load nodes with coordinates
+        # Load nodes and coordinates used for visualization and path export.
         nodes_df = pd.read_csv(self.data_root / "nodes.csv")
         self.nodes = list(nodes_df["node_id"])
         self.coords = {
             int(r.node_id): (float(r.x), float(r.y)) for _, r in nodes_df.iterrows()
         }
-        print(f"[BudgetedUncertainty] Loaded nodes.csv with {len(self.nodes)} nodes", flush=True)
 
-        # Load all scenario edges
+        # Load all scenario edges; each scenario provides a full edge-cost table.
         scen_dirs = sorted(self.data_root.glob("scenario_*"))
         if not scen_dirs:
             raise RuntimeError("No scenario folders found under data_root.")
@@ -76,21 +69,15 @@ class BudgetedUncertainty:
             df = pd.read_csv(path_edges)
             df["scenario"] = scen.name
             merged.append(df)
-            if len(merged) <= 3:
-                print(f"[BudgetedUncertainty] Loaded {scen.name} edges: {len(df)} rows", flush=True)
 
         edges_all = pd.concat(merged, ignore_index=True)
-        print(f"[BudgetedUncertainty] Concatenated edges: {len(edges_all)} rows across {len(scen_dirs)} scenarios", flush=True)
 
-        # Build a stable edge index
+        # Build a stable edge index so edge IDs map consistently across scenarios.
         edges_all["key"] = list(zip(edges_all["u"], edges_all["v"]))
         unique_edges = edges_all["key"].unique().tolist()
-        self.edge_list = list(range(len(unique_edges)))
         key_to_id = {key: i for i, key in enumerate(unique_edges)}
-        print(f"[BudgetedUncertainty] Unique edges: {len(unique_edges)}", flush=True)
 
-        # Compute nominal and deviation costs
-        print("[BudgetedUncertainty] Aggregating costs (groupby)...", flush=True)
+        # Compute nominal cost and max deviation per edge across scenarios.
         grouped = edges_all.groupby("key")["cost"]
         if self.nominal_rule == "avg":
             nom_series = grouped.mean()
@@ -101,7 +88,6 @@ class BudgetedUncertainty:
         stats.columns = ["nom", "max"]
 
         stats = stats.reindex(unique_edges)  # keep deterministic order
-        print("[BudgetedUncertainty] Aggregation done, building deviation series...", flush=True)
         dev_series = (stats["max"] - stats["nom"]).clip(lower=0.0)
 
         cost_nom = {key_to_id[key]: float(val) for key, val in zip(unique_edges, stats["nom"].tolist())}
@@ -110,27 +96,13 @@ class BudgetedUncertainty:
         self.cost_nominal = cost_nom
         self.deviation = dev
         self.edges = {eid: key for eid, key in enumerate(unique_edges)}
-        print(
-            f"[BudgetedUncertainty] Cost/deviation computed for {len(unique_edges)} edges "
-            f"(nom_rule={self.nominal_rule})",
-            flush=True,
-        )
 
-        # Build adjacency lists for flow and path reconstruction
+        # Build adjacency lists for flow constraints and path reconstruction.
         self.out_edges = {v: [] for v in self.nodes}
         self.in_edges = {v: [] for v in self.nodes}
         for e, (u, v) in self.edges.items():
             self.out_edges[u].append(e)
             self.in_edges[v].append(e)
-
-        print(
-            f"[BudgetedUncertainty] Loaded {len(self.nodes)} nodes, "
-            f"{len(scen_dirs)} scenarios, {len(self.edges)} unique edges."
-        )
-        print(
-            f"[BudgetedUncertainty] Preprocessing finished in {perf_counter() - t0:.2f}s",
-            flush=True,
-        )
 
     # ------------------------------------------------------------------
     # MODEL
@@ -141,32 +113,23 @@ class BudgetedUncertainty:
 
         log_dir = self.data_root / "BudgetedUncertainty"
         log_dir.mkdir(parents=True, exist_ok=True)
-        print(f"[BudgetedUncertainty] Gurobi log dir: {log_dir}", flush=True)
         model = gp.Model("ClassicBudgetedOptimization")
 
+        # Gurobi solver configuration and log output.
         model.Params.OutputFlag = 1
         model.Params.LogToConsole = 1
         model.Params.LogFile = str(log_dir / "gurobi.log")
         model.Params.DisplayInterval = 1
         model.setParam("TimeLimit", 60)
-        model.setParam("MIPGap", 0.02)
 
         E = len(self.edges)
 
-        print(
-            f"[BudgetedUncertainty] Building model: edges={E}, nodes={len(self.nodes)}, "
-            f"gamma={self.gamma}, start={self.start}, goal={self.goal}, "
-            f"time_limit={model.Params.TimeLimit}, mip_gap={model.Params.MIPGap}, "
-            f"log_file={model.Params.LogFile}",
-            flush=True,
-        )
-
-        # Decision variables
+        # Decision variables: x selects edges; pi/rho capture budgeted deviations.
         x = model.addVars(E, vtype=GRB.BINARY, name="x")
         pi = model.addVar(lb=0.0, vtype=GRB.CONTINUOUS, name="pi")
         rho = model.addVars(E, lb=0.0, vtype=GRB.CONTINUOUS, name="rho")
 
-        # Objective
+        # Objective: nominal cost plus budgeted uncertainty penalty.
         model.setObjective(
             gp.quicksum(self.cost_nominal[e] * x[e] for e in range(E))
             + self.gamma * pi
@@ -174,11 +137,11 @@ class BudgetedUncertainty:
             GRB.MINIMIZE,
         )
 
-        # Robust constraints
+        # Robust constraints link deviations to the chosen edges.
         for e in range(E):
             model.addConstr(pi + rho[e] >= self.deviation[e] * x[e])
 
-        # Flow balance
+        # Flow balance enforces a single path from start to goal.
         for v in self.nodes:
             if v == self.start:
                 rhs = 1
@@ -194,11 +157,6 @@ class BudgetedUncertainty:
             )
 
         model.optimize()
-        print(
-            f"[BudgetedUncertainty] Optimize finished: status={model.Status}, "
-            f"solcount={model.SolCount}, runtime={model.Runtime:.2f}s, nodes={getattr(model, 'NodeCount', '-')}",
-            flush=True,
-        )
         if model.SolCount == 0:
             raise RuntimeError(f"Gurobi did not return a feasible solution (status={model.Status}).")
 
@@ -209,12 +167,13 @@ class BudgetedUncertainty:
         return model
 
     def _reconstruct_path(self):
+        # Rebuild a node path from the optimized edge decisions.
         chosen = {e for e in self.edges if self.x[e].X > 0.5}
         path = [self.start]
         current = self.start
         visited = set()
 
-        # Follow chosen outgoing edges until goal or dead-end; guard loops
+        # Follow chosen outgoing edges until goal or dead-end; guard loops.
         while current != self.goal and current not in visited:
             visited.add(current)
             outgoing = [e for e in self.out_edges.get(current, []) if e in chosen]
@@ -222,7 +181,7 @@ class BudgetedUncertainty:
                 raise RuntimeError(
                     f"Path reconstruction stopped early at node {current} (no chosen outgoing edges)."
                 )
-            # pick first deterministic edge
+            # Pick a deterministic edge if multiple choices exist.
             e = sorted(outgoing)[0]
             _, nxt = self.edges[e]
             path.append(nxt)
@@ -239,8 +198,10 @@ class BudgetedUncertainty:
             raise RuntimeError("Model not solved yet.")
         model = self.model
 
+        # Build the node sequence implied by the chosen edges.
         self._reconstruct_path()
 
+        # Report nominal, robust, and total objective components.
         nominal_cost = sum(self.cost_nominal[e] * self.x[e].X for e in self.edges)
         robust_cost = float(self.gamma * self.pi.X + sum(self.rho[e].X for e in self.edges))
         total_cost = model.ObjVal
@@ -258,7 +219,7 @@ class BudgetedUncertainty:
             "data_root": str(self.data_root),
         }
 
-        # optional: include chosen edges with costs
+        # Optional: include chosen edges with costs for analysis/plots.
         chosen_edges = [
             {
                 "edge_id": e,
@@ -273,11 +234,6 @@ class BudgetedUncertainty:
         result["chosen_edges"] = chosen_edges
 
         self.result = result
-        print(
-            f"[BudgetedUncertainty] Result: path_len={len(self.path)}, "
-            f"cost={total_cost:.3f}, nominal={nominal_cost:.3f}, robust={robust_cost:.3f}",
-            flush=True,
-        )
 
     def ExportPathOverlay(self, out_folder):
         out_dir = Path(out_folder) / "BudgetedUncertainty" / "overlays"
@@ -286,6 +242,7 @@ class BudgetedUncertainty:
         self.animated_overlay = gif_path
         stgrf_folder = Path(out_folder)
 
+        # Load cost-field frames for each scenario (if present) and render overlays.
         frame_paths = sorted(glob.glob(os.path.join(stgrf_folder, "scenario_*", "field.npy")))
         if not frame_paths:
             fallback = stgrf_folder / "scenario_000" / "field.npy"
@@ -300,6 +257,7 @@ class BudgetedUncertainty:
         ys = [self.coords[n][1] for n in self.path if n in self.coords]
 
         for i, frame in enumerate(frames):
+            # Draw the field and overlay the chosen path.
             plt.figure(figsize=(6, 6))
             plt.imshow(frame, cmap="viridis", origin="lower")
             if xs and ys:
@@ -322,17 +280,18 @@ class BudgetedUncertainty:
             duration=500,
             loop=0,
         )
-        print(f"[BudgetedUncertainty] Overlay saved to {gif_path} ({len(images)} frames).")
 
     def ExportRobustPathCSV(self, base_dir):
         out_dir = Path(base_dir) / "BudgetedUncertainty"
         out_dir.mkdir(parents=True, exist_ok=True)
 
+        # Export node sequence for downstream planners (e.g., D* Lite).
         out_file = out_dir / "budgeted_uncertainty_path.csv"
         df = pd.DataFrame({"node_id": self.path})
         df.to_csv(out_file, index=False, header=False)
 
     def ExportResultsJSON(self, base_dir):
+        # Persist results under ComparisonData for plotting/analysis scripts.
         self.result["animated_overlay"] = str(self.animated_overlay)
         out_dir = Path(base_dir) / "ComparisonData"
         out_dir.mkdir(parents=True, exist_ok=True)

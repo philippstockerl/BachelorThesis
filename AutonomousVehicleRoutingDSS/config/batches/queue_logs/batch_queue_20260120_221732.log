@@ -1,0 +1,2817 @@
+[Queue] Running /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/config/batches/BASELINE_20260120_214610.json
+[Batch] Starting batch run | config_id=BASELINE | seeds=100 | algos=5
+[Batch] Generating STRF | seed=1 | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0001
+[t=0] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0001/scenario_000
+[t=1] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0001/scenario_001
+[t=2] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0001/scenario_002
+[t=3] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0001/scenario_003
+[t=4] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0001/scenario_004
+[t=5] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0001/scenario_005
+[t=6] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0001/scenario_006
+[t=7] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0001/scenario_007
+[t=8] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0001/scenario_008
+[t=9] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0001/scenario_009
+Saved → statistical_interpretation.json
+
+ STRF Generation Complete
+
+[Batch] Running discrete | seed=1
+Set parameter Username
+Set parameter LicenseID to value 2739317
+Academic license - for non-commercial use only - expires 2026-11-15
+Set parameter LogToConsole to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+
+Optimize a model with 410 rows, 1521 columns and 18250 nonzeros (Min)
+Model fingerprint: 0x27fc6d73
+Model has 1 linear objective coefficients
+Variable types: 1 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [5e-03, 1e+00]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 133.2058005
+Presolve removed 2 rows and 6 columns
+Presolve time: 0.02s
+Presolved: 408 rows, 1515 columns, 12702 nonzeros
+Variable types: 1 continuous, 1514 integer (1514 binary)
+
+Root relaxation: objective 1.593397e+01, 545 iterations, 0.01 seconds (0.02 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   15.93397    0   53  133.20580   15.93397  88.0%     -    0s
+H    0     0                      16.0025279   15.93397  0.43%     -    0s
+H    0     0                      15.9590491   15.93397  0.16%     -    0s
+     0     0   15.93569    0   50   15.95905   15.93569  0.15%     -    0s
+     0     0   15.94146    0   16   15.95905   15.94146  0.11%     -    0s
+
+Cutting planes:
+  Gomory: 2
+  MIR: 2
+
+Explored 1 nodes (581 simplex iterations) in 0.07 seconds (0.06 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 3: 15.959 16.0025 133.206 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.595904908298e+01, best bound 1.595904908298e+01, gap 0.0000%
+[Batch] Running budgeted | seed=1
+[BudgetedRunner] Starting Budgeted Uncertainty | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0001 | gamma=3.8 | nominal_rule=avg | start=0 | goal=max | time_limit=180.0
+[BudgetedRunner] Preprocessing finished.
+Set parameter OutputFlag to value 1
+Set parameter LogToConsole to value 1
+Set parameter LogFile to value "/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0001/BudgetedUncertainty/gurobi.log"
+Set parameter DisplayInterval to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+DisplayInterval  1
+
+Optimize a model with 1920 rows, 3041 columns and 7600 nonzeros (Min)
+Model fingerprint: 0xaf9dff73
+Model has 3041 linear objective coefficients
+Variable types: 1521 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [2e-02, 1e+00]
+  Objective range  [3e-01, 4e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 44.4473367
+Presolve removed 6 rows and 10 columns
+Presolve time: 0.01s
+Presolved: 1914 rows, 3031 columns, 7576 nonzeros
+Variable types: 1517 continuous, 1514 integer (1514 binary)
+
+Root relaxation: objective 1.448532e+01, 385 iterations, 0.00 seconds (0.01 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   14.48532    0   89   44.44734   14.48532  67.4%     -    0s
+H    0     0                      14.9918959   14.48532  3.38%     -    0s
+H    0     0                      14.9901399   14.48532  3.37%     -    0s
+     0     0   14.64167    0   85   14.99014   14.64167  2.32%     -    0s
+     0     0   14.64167    0   73   14.99014   14.64167  2.32%     -    0s
+     0     0   14.69758    0   69   14.99014   14.69758  1.95%     -    0s
+     0     0   14.69852    0   71   14.99014   14.69852  1.95%     -    0s
+H    0     0                      14.9783216   14.69852  1.87%     -    0s
+     0     0   14.77075    0   69   14.97832   14.77075  1.39%     -    0s
+     0     0   14.77646    0   68   14.97832   14.77646  1.35%     -    0s
+     0     0   14.84621    0   73   14.97832   14.84621  0.88%     -    0s
+     0     0   14.84621    0   56   14.97832   14.84621  0.88%     -    0s
+     0     0   14.84621    0   63   14.97832   14.84621  0.88%     -    0s
+     0     0   14.84621    0   59   14.97832   14.84621  0.88%     -    0s
+     0     0   14.84621    0   58   14.97832   14.84621  0.88%     -    0s
+     0     0   14.84621    0   60   14.97832   14.84621  0.88%     -    0s
+     0     0   14.84621    0   58   14.97832   14.84621  0.88%     -    0s
+     0     0   14.84621    0   56   14.97832   14.84621  0.88%     -    0s
+     0     0   14.84621    0   56   14.97832   14.84621  0.88%     -    0s
+     0     0   14.84621    0   56   14.97832   14.84621  0.88%     -    0s
+     0     0   14.84621    0   54   14.97832   14.84621  0.88%     -    0s
+     0     0   14.84621    0   61   14.97832   14.84621  0.88%     -    0s
+     0     0   14.84621    0   63   14.97832   14.84621  0.88%     -    0s
+     0     0   14.84621    0   63   14.97832   14.84621  0.88%     -    0s
+     0     0   14.84621    0   61   14.97832   14.84621  0.88%     -    0s
+     0     0   14.84621    0   62   14.97832   14.84621  0.88%     -    0s
+     0     0   14.84621    0   62   14.97832   14.84621  0.88%     -    0s
+     0     0   14.84621    0   62   14.97832   14.84621  0.88%     -    0s
+     0     0   14.84621    0   60   14.97832   14.84621  0.88%     -    0s
+     0     0   14.84621    0   62   14.97832   14.84621  0.88%     -    0s
+     0     0   14.84621    0   62   14.97832   14.84621  0.88%     -    0s
+     0     0   14.84621    0   62   14.97832   14.84621  0.88%     -    0s
+     0     0   14.84621    0   62   14.97832   14.84621  0.88%     -    0s
+     0     0   14.84621    0   62   14.97832   14.84621  0.88%     -    0s
+     0     0   14.84621    0   62   14.97832   14.84621  0.88%     -    0s
+     0     2   14.84621    0   62   14.97832   14.84621  0.88%     -    0s
+
+Cutting planes:
+  Gomory: 7
+  MIR: 51
+  Flow cover: 25
+  RLT: 1
+
+Explored 102 nodes (2582 simplex iterations) in 0.18 seconds (0.18 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 3: 14.9783 14.9901 44.4473 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.497832163185e+01, best bound 1.497832163185e+01, gap 0.0000%
+[BudgetedRunner] Optimization complete, extracting results...
+[BudgetedRunner] Finished exports.
+[Batch] Running dstar | seed=1
+No robust path provided — running without restricted mode.
+[Batch] dstar failed for seed=1: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_discrete | seed=1
+Loaded robust path with 39 nodes.
+[Batch] dstar_discrete failed for seed=1: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_budgeted | seed=1
+Loaded robust path with 39 nodes.
+[Batch] dstar_budgeted failed for seed=1: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Generating STRF | seed=2 | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0002
+[t=0] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0002/scenario_000
+[t=1] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0002/scenario_001
+[t=2] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0002/scenario_002
+[t=3] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0002/scenario_003
+[t=4] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0002/scenario_004
+[t=5] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0002/scenario_005
+[t=6] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0002/scenario_006
+[t=7] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0002/scenario_007
+[t=8] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0002/scenario_008
+[t=9] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0002/scenario_009
+Saved → statistical_interpretation.json
+
+ STRF Generation Complete
+
+[Batch] Running discrete | seed=2
+Set parameter LogToConsole to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+
+Optimize a model with 410 rows, 1521 columns and 18250 nonzeros (Min)
+Model fingerprint: 0xa2a77aba
+Model has 1 linear objective coefficients
+Variable types: 1 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [1e-03, 1e+00]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 139.7462560
+Presolve removed 2 rows and 6 columns
+Presolve time: 0.01s
+Presolved: 408 rows, 1515 columns, 13661 nonzeros
+Variable types: 1 continuous, 1514 integer (1514 binary)
+
+Root relaxation: objective 1.773934e+01, 500 iterations, 0.01 seconds (0.01 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   17.73934    0   76  139.74626   17.73934  87.3%     -    0s
+H    0     0                      19.5595613   17.73934  9.31%     -    0s
+H    0     0                      18.2746097   17.73934  2.93%     -    0s
+H    0     0                      18.1824024   17.73934  2.44%     -    0s
+     0     0   17.88245    0   78   18.18240   17.88245  1.65%     -    0s
+     0     0   17.88245    0   58   18.18240   17.88245  1.65%     -    0s
+H    0     0                      18.0875933   17.88245  1.13%     -    0s
+     0     0   18.06662    0   53   18.08759   18.06662  0.12%     -    0s
+
+Cutting planes:
+  Gomory: 2
+  RLT: 1
+
+Explored 1 nodes (884 simplex iterations) in 0.10 seconds (0.11 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 5: 18.0876 18.1824 18.2746 ... 139.746
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.808759329711e+01, best bound 1.808759329711e+01, gap 0.0000%
+[Batch] Running budgeted | seed=2
+[BudgetedRunner] Starting Budgeted Uncertainty | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0002 | gamma=3.8 | nominal_rule=avg | start=0 | goal=max | time_limit=180.0
+[BudgetedRunner] Preprocessing finished.
+Set parameter OutputFlag to value 1
+Set parameter LogToConsole to value 1
+Set parameter LogFile to value "/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0002/BudgetedUncertainty/gurobi.log"
+Set parameter DisplayInterval to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+DisplayInterval  1
+
+Optimize a model with 1920 rows, 3041 columns and 7600 nonzeros (Min)
+Model fingerprint: 0x4a20bed8
+Model has 3041 linear objective coefficients
+Variable types: 1521 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [2e-02, 1e+00]
+  Objective range  [3e-01, 4e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 56.4700066
+Presolve removed 6 rows and 10 columns
+Presolve time: 0.01s
+Presolved: 1914 rows, 3031 columns, 7576 nonzeros
+Variable types: 1517 continuous, 1514 integer (1514 binary)
+
+Root relaxation: objective 1.627112e+01, 453 iterations, 0.01 seconds (0.02 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   16.27112    0  194   56.47001   16.27112  71.2%     -    0s
+H    0     0                      17.7400043   16.27112  8.28%     -    0s
+H    0     0                      17.6836718   16.27112  7.99%     -    0s
+     0     0   16.47153    0  154   17.68367   16.47153  6.85%     -    0s
+H    0     0                      17.5988408   16.47153  6.41%     -    0s
+     0     0   16.52713    0  152   17.59884   16.52713  6.09%     -    0s
+     0     0   16.71253    0  168   17.59884   16.71253  5.04%     -    0s
+     0     0   16.73279    0  167   17.59884   16.73279  4.92%     -    0s
+     0     0   16.85131    0  192   17.59884   16.85131  4.25%     -    0s
+     0     0   16.85688    0  184   17.59884   16.85688  4.22%     -    0s
+     0     0   16.92521    0  189   17.59884   16.92521  3.83%     -    0s
+     0     0   16.92765    0  189   17.59884   16.92765  3.81%     -    0s
+     0     0   16.92765    0  189   17.59884   16.92765  3.81%     -    0s
+H    0     0                      17.5899702   16.92765  3.77%     -    0s
+H    0     0                      17.5844759   16.92765  3.74%     -    0s
+H    0     0                      17.5400984   16.92765  3.49%     -    0s
+     0     0   16.92765    0  194   17.54010   16.92765  3.49%     -    0s
+     0     0   16.92765    0  170   17.54010   16.92765  3.49%     -    0s
+     0     0   16.92765    0  183   17.54010   16.92765  3.49%     -    0s
+     0     0   16.92765    0  183   17.54010   16.92765  3.49%     -    0s
+     0     0   16.92765    0  188   17.54010   16.92765  3.49%     -    0s
+     0     0   16.92765    0  194   17.54010   16.92765  3.49%     -    0s
+     0     0   16.92765    0  192   17.54010   16.92765  3.49%     -    0s
+     0     0   16.92765    0  194   17.54010   16.92765  3.49%     -    0s
+     0     0   16.92765    0  179   17.54010   16.92765  3.49%     -    0s
+     0     0   16.92765    0  188   17.54010   16.92765  3.49%     -    0s
+H    0     0                      17.5317799   16.92765  3.45%     -    0s
+     0     0   16.92765    0  190   17.53178   16.92765  3.45%     -    0s
+     0     0   16.92765    0  190   17.53178   16.92765  3.45%     -    0s
+     0     0   16.92765    0  190   17.53178   16.92765  3.45%     -    0s
+H    0     0                      17.5307897   16.92765  3.44%     -    0s
+     0     0   16.92765    0  192   17.53079   16.92765  3.44%     -    0s
+     0     0   16.92765    0  161   17.53079   16.92765  3.44%     -    0s
+     0     0   16.92765    0  177   17.53079   16.92765  3.44%     -    0s
+     0     0   16.92765    0  185   17.53079   16.92765  3.44%     -    0s
+     0     0   16.92765    0  180   17.53079   16.92765  3.44%     -    0s
+     0     0   16.92765    0  187   17.53079   16.92765  3.44%     -    0s
+     0     0   16.92765    0  192   17.53079   16.92765  3.44%     -    0s
+     0     0   16.92765    0  194   17.53079   16.92765  3.44%     -    0s
+     0     0   16.92765    0  193   17.53079   16.92765  3.44%     -    0s
+     0     0   16.92765    0  193   17.53079   16.92765  3.44%     -    0s
+     0     0   16.92765    0  170   17.53079   16.92765  3.44%     -    0s
+     0     0   16.92765    0  170   17.53079   16.92765  3.44%     -    0s
+     0     0   16.92765    0  170   17.53079   16.92765  3.44%     -    0s
+H    0     0                      17.5271869   16.92765  3.42%     -    0s
+     0     2   16.92765    0  170   17.52719   16.92765  3.42%     -    0s
+*  323   207              21      17.4868695   16.92765  3.20%  16.2    0s
+H  403   249                      17.4756151   16.92765  3.14%  15.5    0s
+H  407   280                      17.4730649   16.92765  3.12%  15.4    0s
+*  958   423              15      17.4697311   17.03970  2.46%  12.6    0s
+H 1509   498                      17.4338498   17.13432  1.72%  11.7    0s
+  1863   455     cutoff   14        17.43385   17.18343  1.44%  11.4    1s
+
+Cutting planes:
+  Gomory: 2
+  MIR: 55
+  Flow cover: 88
+  RLT: 41
+
+Explored 2993 nodes (34948 simplex iterations) in 1.10 seconds (1.40 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 10: 17.4338 17.4697 17.4731 ... 17.59
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.743384983988e+01, best bound 1.743384983988e+01, gap 0.0000%
+[BudgetedRunner] Optimization complete, extracting results...
+[BudgetedRunner] Finished exports.
+[Batch] Running dstar | seed=2
+No robust path provided — running without restricted mode.
+[Batch] dstar failed for seed=2: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_discrete | seed=2
+Loaded robust path with 39 nodes.
+[Batch] dstar_discrete failed for seed=2: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_budgeted | seed=2
+Loaded robust path with 39 nodes.
+[Batch] dstar_budgeted failed for seed=2: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Generating STRF | seed=3 | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0003
+[t=0] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0003/scenario_000
+[t=1] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0003/scenario_001
+[t=2] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0003/scenario_002
+[t=3] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0003/scenario_003
+[t=4] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0003/scenario_004
+[t=5] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0003/scenario_005
+[t=6] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0003/scenario_006
+[t=7] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0003/scenario_007
+[t=8] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0003/scenario_008
+[t=9] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0003/scenario_009
+Saved → statistical_interpretation.json
+
+ STRF Generation Complete
+
+[Batch] Running discrete | seed=3
+Set parameter LogToConsole to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+
+Optimize a model with 410 rows, 1521 columns and 18250 nonzeros (Min)
+Model fingerprint: 0xcbccbe49
+Model has 1 linear objective coefficients
+Variable types: 1 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [1e-02, 1e+00]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 162.9642857
+Presolve removed 2 rows and 6 columns
+Presolve time: 0.02s
+Presolved: 408 rows, 1515 columns, 14465 nonzeros
+Variable types: 1 continuous, 1514 integer (1514 binary)
+
+Root relaxation: objective 1.897080e+01, 608 iterations, 0.01 seconds (0.02 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   18.97080    0   93  162.96429   18.97080  88.4%     -    0s
+H    0     0                      20.2551421   18.97080  6.34%     -    0s
+H    0     0                      20.1689750   18.97080  5.94%     -    0s
+H    0     0                      20.1638357   18.97080  5.92%     -    0s
+H    0     0                      19.9720809   18.97080  5.01%     -    0s
+H    0     0                      19.9559705   18.97080  4.94%     -    0s
+H    0     0                      19.9032908   18.97080  4.69%     -    0s
+H    0     0                      19.8418934   18.97080  4.39%     -    0s
+     0     0   19.11390    0  117   19.84189   19.11390  3.67%     -    0s
+     0     0   19.11390    0   72   19.84189   19.11390  3.67%     -    0s
+     0     0   19.11390    0   96   19.84189   19.11390  3.67%     -    0s
+H    0     0                      19.8063470   19.11390  3.50%     -    0s
+     0     0   19.16940    0   96   19.80635   19.16940  3.22%     -    0s
+     0     0   19.16940    0   96   19.80635   19.16940  3.22%     -    0s
+     0     0   19.16940    0   72   19.80635   19.16940  3.22%     -    0s
+     0     0   19.16940    0  101   19.80635   19.16940  3.22%     -    0s
+H    0     0                      19.7754803   19.16940  3.06%     -    0s
+     0     0   19.23406    0  101   19.77548   19.23406  2.74%     -    0s
+     0     0   19.23406    0  101   19.77548   19.23406  2.74%     -    0s
+     0     2   19.23406    0  101   19.77548   19.23406  2.74%     -    0s
+*   46     0              14      19.7336296   19.68926  0.22%  19.3    0s
+
+Cutting planes:
+  Gomory: 9
+
+Explored 58 nodes (2640 simplex iterations) in 0.24 seconds (0.31 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 10: 19.7336 19.7755 19.8063 ... 20.2551
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.973362955545e+01, best bound 1.973362955545e+01, gap 0.0000%
+[Batch] Running budgeted | seed=3
+[BudgetedRunner] Starting Budgeted Uncertainty | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0003 | gamma=3.8 | nominal_rule=avg | start=0 | goal=max | time_limit=180.0
+[BudgetedRunner] Preprocessing finished.
+Set parameter OutputFlag to value 1
+Set parameter LogToConsole to value 1
+Set parameter LogFile to value "/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0003/BudgetedUncertainty/gurobi.log"
+Set parameter DisplayInterval to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+DisplayInterval  1
+
+Optimize a model with 1920 rows, 3041 columns and 7600 nonzeros (Min)
+Model fingerprint: 0x25aaa1d4
+Model has 3041 linear objective coefficients
+Variable types: 1521 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [5e-02, 1e+00]
+  Objective range  [3e-01, 4e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 62.7364588
+Presolve removed 6 rows and 10 columns
+Presolve time: 0.01s
+Presolved: 1914 rows, 3031 columns, 7576 nonzeros
+Variable types: 1517 continuous, 1514 integer (1514 binary)
+
+Root relaxation: objective 1.899587e+01, 428 iterations, 0.01 seconds (0.01 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   18.99587    0  127   62.73646   18.99587  69.7%     -    0s
+H    0     0                      19.6907996   18.99587  3.53%     -    0s
+H    0     0                      19.6653031   18.99587  3.40%     -    0s
+H    0     0                      19.6650715   18.99587  3.40%     -    0s
+H    0     0                      19.6638125   18.99587  3.40%     -    0s
+     0     0   19.41521    0  114   19.66381   19.41521  1.26%     -    0s
+     0     0   19.41521    0   92   19.66381   19.41521  1.26%     -    0s
+     0     0   19.41788    0   78   19.66381   19.41788  1.25%     -    0s
+     0     0   19.45591    0  102   19.66381   19.45591  1.06%     -    0s
+     0     0   19.46453    0   95   19.66381   19.46453  1.01%     -    0s
+     0     0   19.49389    0  100   19.66381   19.49389  0.86%     -    0s
+     0     0   19.53692    0   99   19.66381   19.53692  0.65%     -    0s
+     0     0   19.60760    0   90   19.66381   19.60760  0.29%     -    0s
+     0     0   19.60962    0   88   19.66381   19.60962  0.28%     -    0s
+     0     0   19.61521    0   98   19.66381   19.61521  0.25%     -    0s
+     0     0   19.61763    0  101   19.66381   19.61763  0.23%     -    0s
+     0     0   19.62913    0  100   19.66381   19.62913  0.18%     -    0s
+     0     0   19.63510    0  101   19.66381   19.63510  0.15%     -    0s
+     0     0   19.65008    0  101   19.66381   19.65008  0.07%     -    0s
+     0     0   19.65114    0  101   19.66381   19.65114  0.06%     -    0s
+     0     0   19.65114    0  101   19.66381   19.65114  0.06%     -    0s
+     0     0   19.65114    0   70   19.66381   19.65114  0.06%     -    0s
+     0     0   19.65114    0   77   19.66381   19.65114  0.06%     -    0s
+     0     0   19.65114    0   94   19.66381   19.65114  0.06%     -    0s
+     0     0   19.65114    0   86   19.66381   19.65114  0.06%     -    0s
+     0     0   19.65114    0   86   19.66381   19.65114  0.06%     -    0s
+     0     0   19.65114    0   85   19.66381   19.65114  0.06%     -    0s
+     0     0   19.65114    0   94   19.66381   19.65114  0.06%     -    0s
+
+Cutting planes:
+  Gomory: 2
+  MIR: 28
+  RLT: 2
+  Relax-and-lift: 2
+
+Explored 1 nodes (1118 simplex iterations) in 0.27 seconds (0.31 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 2: 19.6638 62.7365 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.966381253477e+01, best bound 1.966381253477e+01, gap 0.0000%
+[BudgetedRunner] Optimization complete, extracting results...
+[BudgetedRunner] Finished exports.
+[Batch] Running dstar | seed=3
+No robust path provided — running without restricted mode.
+[Batch] dstar failed for seed=3: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_discrete | seed=3
+Loaded robust path with 39 nodes.
+[Batch] dstar_discrete failed for seed=3: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_budgeted | seed=3
+Loaded robust path with 39 nodes.
+[Batch] dstar_budgeted failed for seed=3: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Generating STRF | seed=4 | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0004
+[t=0] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0004/scenario_000
+[t=1] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0004/scenario_001
+[t=2] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0004/scenario_002
+[t=3] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0004/scenario_003
+[t=4] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0004/scenario_004
+[t=5] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0004/scenario_005
+[t=6] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0004/scenario_006
+[t=7] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0004/scenario_007
+[t=8] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0004/scenario_008
+[t=9] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0004/scenario_009
+Saved → statistical_interpretation.json
+
+ STRF Generation Complete
+
+[Batch] Running discrete | seed=4
+Set parameter LogToConsole to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+
+Optimize a model with 410 rows, 1521 columns and 18250 nonzeros (Min)
+Model fingerprint: 0x2978c87e
+Model has 1 linear objective coefficients
+Variable types: 1 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [5e-03, 1e+00]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 169.3584847
+Presolve removed 0 rows and 4 columns
+Presolve time: 0.01s
+Presolved: 410 rows, 1517 columns, 13090 nonzeros
+Variable types: 1 continuous, 1516 integer (1514 binary)
+
+Root relaxation: objective 1.888305e+01, 520 iterations, 0.01 seconds (0.01 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   18.88305    0   74  169.35848   18.88305  88.9%     -    0s
+H    0     0                      21.3708450   18.88305  11.6%     -    0s
+     0     0   19.61150    0   77   21.37085   19.61150  8.23%     -    0s
+     0     0   20.26676    0   97   21.37085   20.26676  5.17%     -    0s
+     0     0   20.26676    0   97   21.37085   20.26676  5.17%     -    0s
+     0     0   20.26676    0   97   21.37085   20.26676  5.17%     -    0s
+     0     2   20.26676    0   97   21.37085   20.26676  5.17%     -    0s
+
+Cutting planes:
+  Gomory: 2
+  Lift-and-project: 11
+
+Explored 35 nodes (1857 simplex iterations) in 0.18 seconds (0.22 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 2: 21.3708 169.358 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 2.137084504742e+01, best bound 2.137084504742e+01, gap 0.0000%
+[Batch] Running budgeted | seed=4
+[BudgetedRunner] Starting Budgeted Uncertainty | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0004 | gamma=3.8 | nominal_rule=avg | start=0 | goal=max | time_limit=180.0
+[BudgetedRunner] Preprocessing finished.
+Set parameter OutputFlag to value 1
+Set parameter LogToConsole to value 1
+Set parameter LogFile to value "/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0004/BudgetedUncertainty/gurobi.log"
+Set parameter DisplayInterval to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+DisplayInterval  1
+
+Optimize a model with 1920 rows, 3041 columns and 7600 nonzeros (Min)
+Model fingerprint: 0x87f125b6
+Model has 3041 linear objective coefficients
+Variable types: 1521 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [3e-02, 1e+00]
+  Objective range  [1e-01, 4e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 63.5781356
+Presolve removed 6 rows and 10 columns
+Presolve time: 0.01s
+Presolved: 1914 rows, 3031 columns, 7576 nonzeros
+Variable types: 1517 continuous, 1514 integer (1514 binary)
+
+Root relaxation: objective 1.817190e+01, 373 iterations, 0.01 seconds (0.02 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   18.17190    0   41   63.57814   18.17190  71.4%     -    0s
+H    0     0                      18.2490982   18.17190  0.42%     -    0s
+H    0     0                      18.2172536   18.17190  0.25%     -    0s
+     0     0     cutoff    0        18.21725   18.21725  0.00%     -    0s
+
+Cutting planes:
+  MIR: 7
+  Flow cover: 3
+  RLT: 2
+
+Explored 1 nodes (379 simplex iterations) in 0.04 seconds (0.07 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 2: 18.2173 63.5781 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.821725355076e+01, best bound 1.821725355076e+01, gap 0.0000%
+[BudgetedRunner] Optimization complete, extracting results...
+[BudgetedRunner] Finished exports.
+[Batch] Running dstar | seed=4
+No robust path provided — running without restricted mode.
+[Batch] dstar failed for seed=4: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_discrete | seed=4
+Loaded robust path with 39 nodes.
+[Batch] dstar_discrete failed for seed=4: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_budgeted | seed=4
+Loaded robust path with 39 nodes.
+[Batch] dstar_budgeted failed for seed=4: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Generating STRF | seed=5 | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0005
+[t=0] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0005/scenario_000
+[t=1] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0005/scenario_001
+[t=2] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0005/scenario_002
+[t=3] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0005/scenario_003
+[t=4] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0005/scenario_004
+[t=5] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0005/scenario_005
+[t=6] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0005/scenario_006
+[t=7] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0005/scenario_007
+[t=8] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0005/scenario_008
+[t=9] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0005/scenario_009
+Saved → statistical_interpretation.json
+
+ STRF Generation Complete
+
+[Batch] Running discrete | seed=5
+Set parameter LogToConsole to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+
+Optimize a model with 410 rows, 1521 columns and 18250 nonzeros (Min)
+Model fingerprint: 0xd474abac
+Model has 1 linear objective coefficients
+Variable types: 1 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [3e-03, 1e+00]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 127.4299149
+Presolve removed 2 rows and 6 columns
+Presolve time: 0.02s
+Presolved: 408 rows, 1515 columns, 13574 nonzeros
+Variable types: 1 continuous, 1514 integer (1514 binary)
+
+Root relaxation: objective 1.541786e+01, 538 iterations, 0.01 seconds (0.02 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   15.41786    0   25  127.42991   15.41786  87.9%     -    0s
+H    0     0                      15.4573370   15.41786  0.26%     -    0s
+H    0     0                      15.4283141   15.41786  0.07%     -    0s
+
+Cutting planes:
+  Gomory: 1
+  GUB cover: 1
+  RLT: 3
+
+Explored 1 nodes (538 simplex iterations) in 0.04 seconds (0.05 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 3: 15.4283 15.4573 127.43 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.542831412639e+01, best bound 1.542831412639e+01, gap 0.0000%
+[Batch] Running budgeted | seed=5
+[BudgetedRunner] Starting Budgeted Uncertainty | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0005 | gamma=3.8 | nominal_rule=avg | start=0 | goal=max | time_limit=180.0
+[BudgetedRunner] Preprocessing finished.
+Set parameter OutputFlag to value 1
+Set parameter LogToConsole to value 1
+Set parameter LogFile to value "/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0005/BudgetedUncertainty/gurobi.log"
+Set parameter DisplayInterval to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+DisplayInterval  1
+
+Optimize a model with 1920 rows, 3041 columns and 7600 nonzeros (Min)
+Model fingerprint: 0xddccebbb
+Model has 3041 linear objective coefficients
+Variable types: 1521 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [1e-02, 1e+00]
+  Objective range  [1e-01, 4e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 41.0608192
+Presolve removed 6 rows and 10 columns
+Presolve time: 0.01s
+Presolved: 1914 rows, 3031 columns, 7576 nonzeros
+Variable types: 1517 continuous, 1514 integer (1514 binary)
+
+Root relaxation: objective 1.462292e+01, 389 iterations, 0.00 seconds (0.01 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   14.62292    0   89   41.06082   14.62292  64.4%     -    0s
+H    0     0                      15.0546307   14.62292  2.87%     -    0s
+H    0     0                      15.0256321   14.62292  2.68%     -    0s
+H    0     0                      14.9988262   14.62292  2.51%     -    0s
+     0     0   14.79581    0   88   14.99883   14.79581  1.35%     -    0s
+     0     0   14.79581    0   63   14.99883   14.79581  1.35%     -    0s
+     0     0   14.83398    0   81   14.99883   14.83398  1.10%     -    0s
+H    0     0                      14.9961011   14.84478  1.01%     -    0s
+
+Cutting planes:
+  Gomory: 4
+  MIR: 33
+  Flow cover: 6
+  RLT: 12
+  BQP: 1
+
+Explored 1 nodes (673 simplex iterations) in 0.09 seconds (0.10 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 4: 14.9961 14.9988 15.0546 41.0608 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.499610106453e+01, best bound 1.499610106453e+01, gap 0.0000%
+[BudgetedRunner] Optimization complete, extracting results...
+[BudgetedRunner] Finished exports.
+[Batch] Running dstar | seed=5
+No robust path provided — running without restricted mode.
+[Batch] dstar failed for seed=5: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_discrete | seed=5
+Loaded robust path with 39 nodes.
+[Batch] dstar_discrete failed for seed=5: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_budgeted | seed=5
+Loaded robust path with 39 nodes.
+[Batch] dstar_budgeted failed for seed=5: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Generating STRF | seed=6 | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0006
+[t=0] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0006/scenario_000
+[t=1] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0006/scenario_001
+[t=2] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0006/scenario_002
+[t=3] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0006/scenario_003
+[t=4] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0006/scenario_004
+[t=5] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0006/scenario_005
+[t=6] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0006/scenario_006
+[t=7] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0006/scenario_007
+[t=8] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0006/scenario_008
+[t=9] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0006/scenario_009
+Saved → statistical_interpretation.json
+
+ STRF Generation Complete
+
+[Batch] Running discrete | seed=6
+Set parameter LogToConsole to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+
+Optimize a model with 410 rows, 1521 columns and 18250 nonzeros (Min)
+Model fingerprint: 0x1275099f
+Model has 1 linear objective coefficients
+Variable types: 1 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [8e-03, 1e+00]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 167.1253928
+Presolve removed 2 rows and 6 columns
+Presolve time: 0.02s
+Presolved: 408 rows, 1515 columns, 13188 nonzeros
+Variable types: 1 continuous, 1514 integer (1514 binary)
+
+Root relaxation: objective 2.067405e+01, 808 iterations, 0.01 seconds (0.03 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   20.67405    0   90  167.12539   20.67405  87.6%     -    0s
+H    0     0                      20.8877764   20.67405  1.02%     -    0s
+H    0     0                      20.8131368   20.67405  0.67%     -    0s
+H    0     0                      20.8034270   20.67405  0.62%     -    0s
+H    0     0                      20.7894746   20.67405  0.56%     -    0s
+     0     0   20.70774    0   41   20.78947   20.70774  0.39%     -    0s
+     0     0   20.70774    0   39   20.78947   20.70774  0.39%     -    0s
+H    0     0                      20.7583106   20.70774  0.24%     -    0s
+H    0     0                      20.7253948   20.70774  0.09%     -    0s
+     0     0   20.71280    0   37   20.72539   20.71280  0.06%     -    0s
+     0     0   20.71280    0   18   20.72539   20.71280  0.06%     -    0s
+H    0     0                      20.7221049   20.71280  0.04%     -    0s
+H    0     0                      20.7218360   20.71280  0.04%     -    0s
+     0     0   20.71473    0   13   20.72184   20.71473  0.03%     -    0s
+     0     0   20.72184    0   18   20.72184   20.72184  0.00%     -    0s
+
+Cutting planes:
+  Gomory: 4
+  MIR: 2
+  StrongCG: 2
+
+Explored 1 nodes (1082 simplex iterations) in 0.09 seconds (0.09 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 9: 20.7218 20.7221 20.7254 ... 167.125
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 2.072183600225e+01, best bound 2.072183600225e+01, gap 0.0000%
+[Batch] Running budgeted | seed=6
+[BudgetedRunner] Starting Budgeted Uncertainty | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0006 | gamma=3.8 | nominal_rule=avg | start=0 | goal=max | time_limit=180.0
+[BudgetedRunner] Preprocessing finished.
+Set parameter OutputFlag to value 1
+Set parameter LogToConsole to value 1
+Set parameter LogFile to value "/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0006/BudgetedUncertainty/gurobi.log"
+Set parameter DisplayInterval to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+DisplayInterval  1
+
+Optimize a model with 1920 rows, 3041 columns and 7600 nonzeros (Min)
+Model fingerprint: 0x7637e50d
+Model has 3041 linear objective coefficients
+Variable types: 1521 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [3e-02, 1e+00]
+  Objective range  [2e-01, 4e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 56.7594165
+Presolve removed 6 rows and 10 columns
+Presolve time: 0.01s
+Presolved: 1914 rows, 3031 columns, 7576 nonzeros
+Variable types: 1517 continuous, 1514 integer (1514 binary)
+
+Root relaxation: objective 1.886509e+01, 421 iterations, 0.01 seconds (0.01 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   18.86509    0   87   56.75942   18.86509  66.8%     -    0s
+H    0     0                      19.3377618   18.86509  2.44%     -    0s
+H    0     0                      19.3234773   18.86509  2.37%     -    0s
+     0     0   19.10249    0   88   19.32348   19.10249  1.14%     -    0s
+     0     0   19.10249    0   77   19.32348   19.10249  1.14%     -    0s
+     0     0   19.12561    0   80   19.32348   19.12561  1.02%     -    0s
+     0     0   19.21726    0   80   19.32348   19.21726  0.55%     -    0s
+     0     0   19.28912    0   86   19.32348   19.28912  0.18%     -    0s
+     0     0   19.30455    0   74   19.32348   19.30455  0.10%     -    0s
+
+Cutting planes:
+  Gomory: 1
+  MIR: 47
+  Flow cover: 9
+  RLT: 21
+  Relax-and-lift: 1
+
+Explored 1 nodes (731 simplex iterations) in 0.08 seconds (0.11 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 3: 19.3235 19.3378 56.7594 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.932347730943e+01, best bound 1.932347730943e+01, gap 0.0000%
+[BudgetedRunner] Optimization complete, extracting results...
+[BudgetedRunner] Finished exports.
+[Batch] Running dstar | seed=6
+No robust path provided — running without restricted mode.
+[Batch] dstar failed for seed=6: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_discrete | seed=6
+Loaded robust path with 39 nodes.
+[Batch] dstar_discrete failed for seed=6: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_budgeted | seed=6
+Loaded robust path with 39 nodes.
+[Batch] dstar_budgeted failed for seed=6: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Generating STRF | seed=7 | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0007
+[t=0] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0007/scenario_000
+[t=1] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0007/scenario_001
+[t=2] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0007/scenario_002
+[t=3] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0007/scenario_003
+[t=4] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0007/scenario_004
+[t=5] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0007/scenario_005
+[t=6] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0007/scenario_006
+[t=7] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0007/scenario_007
+[t=8] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0007/scenario_008
+[t=9] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0007/scenario_009
+Saved → statistical_interpretation.json
+
+ STRF Generation Complete
+
+[Batch] Running discrete | seed=7
+Set parameter LogToConsole to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+
+Optimize a model with 410 rows, 1521 columns and 18250 nonzeros (Min)
+Model fingerprint: 0x106e902e
+Model has 1 linear objective coefficients
+Variable types: 1 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [1e-03, 1e+00]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 138.7330312
+Presolve removed 1 rows and 5 columns
+Presolve time: 0.02s
+Presolved: 409 rows, 1516 columns, 12962 nonzeros
+Variable types: 1 continuous, 1515 integer (1514 binary)
+
+Root relaxation: objective 1.863998e+01, 576 iterations, 0.01 seconds (0.02 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   18.63998    0   84  138.73303   18.63998  86.6%     -    0s
+H    0     0                      19.6496818   18.63998  5.14%     -    0s
+H    0     0                      19.1196279   18.63998  2.51%     -    0s
+H    0     0                      18.9623061   18.63998  1.70%     -    0s
+H    0     0                      18.7838009   18.63998  0.77%     -    0s
+     0     0   18.72661    0   34   18.78380   18.72661  0.30%     -    0s
+     0     0   18.72661    0   21   18.78380   18.72661  0.30%     -    0s
+
+Cutting planes:
+  RLT: 2
+
+Explored 1 nodes (676 simplex iterations) in 0.08 seconds (0.07 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 5: 18.7838 18.9623 19.1196 ... 138.733
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.878380085785e+01, best bound 1.878380085785e+01, gap 0.0000%
+[Batch] Running budgeted | seed=7
+[BudgetedRunner] Starting Budgeted Uncertainty | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0007 | gamma=3.8 | nominal_rule=avg | start=0 | goal=max | time_limit=180.0
+[BudgetedRunner] Preprocessing finished.
+Set parameter OutputFlag to value 1
+Set parameter LogToConsole to value 1
+Set parameter LogFile to value "/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0007/BudgetedUncertainty/gurobi.log"
+Set parameter DisplayInterval to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+DisplayInterval  1
+
+Optimize a model with 1920 rows, 3041 columns and 7600 nonzeros (Min)
+Model fingerprint: 0x222451c5
+Model has 3041 linear objective coefficients
+Variable types: 1521 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [3e-02, 1e+00]
+  Objective range  [2e-01, 4e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 53.5661125
+Presolve removed 6 rows and 10 columns
+Presolve time: 0.01s
+Presolved: 1914 rows, 3031 columns, 7576 nonzeros
+Variable types: 1517 continuous, 1514 integer (1514 binary)
+
+Root relaxation: objective 1.694607e+01, 405 iterations, 0.01 seconds (0.02 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   16.94607    0  102   53.56611   16.94607  68.4%     -    0s
+H    0     0                      17.3290563   16.94607  2.21%     -    0s
+H    0     0                      17.3180278   16.94607  2.15%     -    0s
+     0     0   17.14447    0   80   17.31803   17.14447  1.00%     -    0s
+     0     0   17.14447    0   68   17.31803   17.14447  1.00%     -    0s
+     0     0   17.18626    0   61   17.31803   17.18626  0.76%     -    0s
+     0     0   17.22443    0   68   17.31803   17.22443  0.54%     -    0s
+     0     0   17.31729    0   67   17.31803   17.31729  0.00%     -    0s
+
+Cutting planes:
+  Gomory: 5
+  MIR: 25
+  Flow cover: 1
+  RLT: 6
+
+Explored 1 nodes (674 simplex iterations) in 0.07 seconds (0.11 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 2: 17.318 53.5661 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.731802777381e+01, best bound 1.731728924768e+01, gap 0.0043%
+[BudgetedRunner] Optimization complete, extracting results...
+[BudgetedRunner] Finished exports.
+[Batch] Running dstar | seed=7
+No robust path provided — running without restricted mode.
+[Batch] dstar failed for seed=7: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_discrete | seed=7
+Loaded robust path with 39 nodes.
+[Batch] dstar_discrete failed for seed=7: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_budgeted | seed=7
+Loaded robust path with 39 nodes.
+[Batch] dstar_budgeted failed for seed=7: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Generating STRF | seed=8 | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0008
+[t=0] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0008/scenario_000
+[t=1] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0008/scenario_001
+[t=2] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0008/scenario_002
+[t=3] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0008/scenario_003
+[t=4] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0008/scenario_004
+[t=5] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0008/scenario_005
+[t=6] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0008/scenario_006
+[t=7] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0008/scenario_007
+[t=8] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0008/scenario_008
+[t=9] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0008/scenario_009
+Saved → statistical_interpretation.json
+
+ STRF Generation Complete
+
+[Batch] Running discrete | seed=8
+Set parameter LogToConsole to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+
+Optimize a model with 410 rows, 1521 columns and 18250 nonzeros (Min)
+Model fingerprint: 0x9a1c29c1
+Model has 1 linear objective coefficients
+Variable types: 1 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [4e-03, 1e+00]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 176.9262376
+Presolve removed 2 rows and 6 columns
+Presolve time: 0.01s
+Presolved: 408 rows, 1515 columns, 11581 nonzeros
+Variable types: 1 continuous, 1514 integer (1514 binary)
+
+Root relaxation: objective 2.070159e+01, 571 iterations, 0.01 seconds (0.01 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   20.70159    0    4  176.92624   20.70159  88.3%     -    0s
+H    0     0                      20.7121890   20.70159  0.05%     -    0s
+     0     0          -    0        20.71219   20.71202  0.00%     -    0s
+
+Cutting planes:
+  Gomory: 1
+  Cover: 1
+  MIR: 1
+
+Explored 1 nodes (577 simplex iterations) in 0.03 seconds (0.04 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 2: 20.7122 176.926 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 2.071218895986e+01, best bound 2.071202485031e+01, gap 0.0008%
+[Batch] Running budgeted | seed=8
+[BudgetedRunner] Starting Budgeted Uncertainty | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0008 | gamma=3.8 | nominal_rule=avg | start=0 | goal=max | time_limit=180.0
+[BudgetedRunner] Preprocessing finished.
+Set parameter OutputFlag to value 1
+Set parameter LogToConsole to value 1
+Set parameter LogFile to value "/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0008/BudgetedUncertainty/gurobi.log"
+Set parameter DisplayInterval to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+DisplayInterval  1
+
+Optimize a model with 1920 rows, 3041 columns and 7600 nonzeros (Min)
+Model fingerprint: 0xea55e576
+Model has 3041 linear objective coefficients
+Variable types: 1521 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [4e-02, 1e+00]
+  Objective range  [3e-01, 4e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 59.3194859
+Presolve removed 6 rows and 10 columns
+Presolve time: 0.01s
+Presolved: 1914 rows, 3031 columns, 7576 nonzeros
+Variable types: 1517 continuous, 1514 integer (1514 binary)
+
+Root relaxation: objective 1.821676e+01, 394 iterations, 0.01 seconds (0.02 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   18.21676    0   80   59.31949   18.21676  69.3%     -    0s
+H    0     0                      18.4081324   18.21676  1.04%     -    0s
+     0     0   18.34513    0   77   18.40813   18.34513  0.34%     -    0s
+     0     0   18.38206    0    4   18.40813   18.38206  0.14%     -    0s
+*    0     0               0      18.3823203   18.38232  0.00%     -    0s
+
+Explored 1 nodes (444 simplex iterations) in 0.04 seconds (0.08 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 2: 18.3823 59.3195 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.838232026095e+01, best bound 1.838232026095e+01, gap 0.0000%
+[BudgetedRunner] Optimization complete, extracting results...
+[BudgetedRunner] Finished exports.
+[Batch] Running dstar | seed=8
+No robust path provided — running without restricted mode.
+[Batch] dstar failed for seed=8: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_discrete | seed=8
+Loaded robust path with 39 nodes.
+[Batch] dstar_discrete failed for seed=8: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_budgeted | seed=8
+Loaded robust path with 39 nodes.
+[Batch] dstar_budgeted failed for seed=8: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Generating STRF | seed=9 | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0009
+[t=0] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0009/scenario_000
+[t=1] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0009/scenario_001
+[t=2] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0009/scenario_002
+[t=3] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0009/scenario_003
+[t=4] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0009/scenario_004
+[t=5] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0009/scenario_005
+[t=6] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0009/scenario_006
+[t=7] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0009/scenario_007
+[t=8] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0009/scenario_008
+[t=9] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0009/scenario_009
+Saved → statistical_interpretation.json
+
+ STRF Generation Complete
+
+[Batch] Running discrete | seed=9
+Set parameter LogToConsole to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+
+Optimize a model with 410 rows, 1521 columns and 18250 nonzeros (Min)
+Model fingerprint: 0xb9dcb25a
+Model has 1 linear objective coefficients
+Variable types: 1 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [3e-04, 1e+00]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 151.1202093
+Presolve removed 2 rows and 6 columns
+Presolve time: 0.01s
+Presolved: 408 rows, 1515 columns, 12815 nonzeros
+Variable types: 1 continuous, 1514 integer (1514 binary)
+
+Root relaxation: objective 1.793148e+01, 457 iterations, 0.01 seconds (0.01 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   17.93148    0   40  151.12021   17.93148  88.1%     -    0s
+H    0     0                      18.2381905   17.93148  1.68%     -    0s
+H    0     0                      18.1508858   17.93148  1.21%     -    0s
+     0     0   18.07837    0   45   18.15089   18.07837  0.40%     -    0s
+
+Cutting planes:
+  Gomory: 1
+
+Explored 1 nodes (464 simplex iterations) in 0.05 seconds (0.06 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 3: 18.1509 18.2382 151.12 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.815088583290e+01, best bound 1.815088583290e+01, gap 0.0000%
+[Batch] Running budgeted | seed=9
+[BudgetedRunner] Starting Budgeted Uncertainty | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0009 | gamma=3.8 | nominal_rule=avg | start=0 | goal=max | time_limit=180.0
+[BudgetedRunner] Preprocessing finished.
+Set parameter OutputFlag to value 1
+Set parameter LogToConsole to value 1
+Set parameter LogFile to value "/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0009/BudgetedUncertainty/gurobi.log"
+Set parameter DisplayInterval to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+DisplayInterval  1
+
+Optimize a model with 1920 rows, 3041 columns and 7600 nonzeros (Min)
+Model fingerprint: 0x733a5506
+Model has 3041 linear objective coefficients
+Variable types: 1521 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [3e-02, 1e+00]
+  Objective range  [4e-01, 4e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 59.7950976
+Presolve removed 6 rows and 10 columns
+Presolve time: 0.01s
+Presolved: 1914 rows, 3031 columns, 7576 nonzeros
+Variable types: 1517 continuous, 1514 integer (1514 binary)
+
+Root relaxation: objective 1.696172e+01, 466 iterations, 0.01 seconds (0.02 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   16.96172    0   87   59.79510   16.96172  71.6%     -    0s
+H    0     0                      17.1252061   16.96172  0.95%     -    0s
+H    0     0                      17.1087541   16.96172  0.86%     -    0s
+     0     0   17.05322    0   48   17.10875   17.05322  0.32%     -    0s
+     0     0   17.08894    0   12   17.10875   17.08894  0.12%     -    0s
+     0     0   17.09182    0    5   17.10875   17.09182  0.10%     -    0s
+
+Cutting planes:
+  Gomory: 2
+  MIR: 2
+
+Explored 1 nodes (517 simplex iterations) in 0.05 seconds (0.08 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 4: 17.1088 17.1139 17.1252 59.7951 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.710875412170e+01, best bound 1.710875412170e+01, gap 0.0000%
+[BudgetedRunner] Optimization complete, extracting results...
+[BudgetedRunner] Finished exports.
+[Batch] Running dstar | seed=9
+No robust path provided — running without restricted mode.
+[Batch] dstar failed for seed=9: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_discrete | seed=9
+Loaded robust path with 39 nodes.
+[Batch] dstar_discrete failed for seed=9: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_budgeted | seed=9
+Loaded robust path with 39 nodes.
+[Batch] dstar_budgeted failed for seed=9: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Generating STRF | seed=10 | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0010
+[t=0] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0010/scenario_000
+[t=1] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0010/scenario_001
+[t=2] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0010/scenario_002
+[t=3] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0010/scenario_003
+[t=4] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0010/scenario_004
+[t=5] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0010/scenario_005
+[t=6] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0010/scenario_006
+[t=7] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0010/scenario_007
+[t=8] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0010/scenario_008
+[t=9] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0010/scenario_009
+Saved → statistical_interpretation.json
+
+ STRF Generation Complete
+
+[Batch] Running discrete | seed=10
+Set parameter LogToConsole to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+
+Optimize a model with 410 rows, 1521 columns and 18250 nonzeros (Min)
+Model fingerprint: 0x0ed8c091
+Model has 1 linear objective coefficients
+Variable types: 1 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [9e-04, 1e+00]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 187.5521958
+Presolve added 2 rows and 0 columns
+Presolve removed 0 rows and 2 columns
+Presolve time: 0.03s
+Presolved: 412 rows, 1519 columns, 12896 nonzeros
+Variable types: 1 continuous, 1518 integer (1514 binary)
+
+Root relaxation: objective 2.060869e+01, 489 iterations, 0.01 seconds (0.01 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   20.60869    0   45  187.55220   20.60869  89.0%     -    0s
+H    0     0                      20.6450197   20.60869  0.18%     -    0s
+
+Cutting planes:
+  RLT: 2
+
+Explored 1 nodes (489 simplex iterations) in 0.08 seconds (0.05 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 2: 20.645 187.552 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 2.064501971544e+01, best bound 2.064501971544e+01, gap 0.0000%
+[Batch] Running budgeted | seed=10
+[BudgetedRunner] Starting Budgeted Uncertainty | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0010 | gamma=3.8 | nominal_rule=avg | start=0 | goal=max | time_limit=180.0
+[BudgetedRunner] Preprocessing finished.
+Set parameter OutputFlag to value 1
+Set parameter LogToConsole to value 1
+Set parameter LogFile to value "/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0010/BudgetedUncertainty/gurobi.log"
+Set parameter DisplayInterval to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+DisplayInterval  1
+
+Optimize a model with 1920 rows, 3041 columns and 7600 nonzeros (Min)
+Model fingerprint: 0xd0187793
+Model has 3041 linear objective coefficients
+Variable types: 1521 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [3e-02, 1e+00]
+  Objective range  [2e-01, 4e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 64.9052697
+Presolve removed 6 rows and 10 columns
+Presolve time: 0.02s
+Presolved: 1914 rows, 3031 columns, 7576 nonzeros
+Variable types: 1517 continuous, 1514 integer (1514 binary)
+
+Root relaxation: objective 1.841526e+01, 456 iterations, 0.02 seconds (0.02 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   18.41526    0   93   64.90527   18.41526  71.6%     -    0s
+H    0     0                      18.7834748   18.41526  1.96%     -    0s
+H    0     0                      18.7277252   18.41526  1.67%     -    0s
+H    0     0                      18.7182764   18.41526  1.62%     -    0s
+     0     0   18.61587    0   81   18.71828   18.61587  0.55%     -    0s
+     0     0   18.61587    0   29   18.71828   18.61587  0.55%     -    0s
+     0     0   18.71828    0   37   18.71828   18.71828  0.00%     -    0s
+
+Cutting planes:
+  Gomory: 3
+  MIR: 34
+  Flow cover: 2
+  RLT: 4
+
+Explored 1 nodes (598 simplex iterations) in 0.25 seconds (0.09 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 3: 18.7183 18.7277 64.9053 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.871827638073e+01, best bound 1.871827638073e+01, gap 0.0000%
+[BudgetedRunner] Optimization complete, extracting results...
+[BudgetedRunner] Finished exports.
+[Batch] Running dstar | seed=10
+No robust path provided — running without restricted mode.
+[Batch] dstar failed for seed=10: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_discrete | seed=10
+Loaded robust path with 39 nodes.
+[Batch] dstar_discrete failed for seed=10: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_budgeted | seed=10
+Loaded robust path with 39 nodes.
+[Batch] dstar_budgeted failed for seed=10: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Generating STRF | seed=11 | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0011
+[t=0] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0011/scenario_000
+[t=1] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0011/scenario_001
+[t=2] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0011/scenario_002
+[t=3] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0011/scenario_003
+[t=4] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0011/scenario_004
+[t=5] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0011/scenario_005
+[t=6] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0011/scenario_006
+[t=7] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0011/scenario_007
+[t=8] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0011/scenario_008
+[t=9] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0011/scenario_009
+Saved → statistical_interpretation.json
+
+ STRF Generation Complete
+
+[Batch] Running discrete | seed=11
+Set parameter LogToConsole to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+
+Optimize a model with 410 rows, 1521 columns and 18250 nonzeros (Min)
+Model fingerprint: 0xa5a85a73
+Model has 1 linear objective coefficients
+Variable types: 1 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [2e-03, 1e+00]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 164.9446740
+Presolve removed 2 rows and 6 columns
+Presolve time: 0.02s
+Presolved: 408 rows, 1515 columns, 13517 nonzeros
+Variable types: 1 continuous, 1514 integer (1514 binary)
+
+Root relaxation: objective 1.545584e+01, 563 iterations, 0.01 seconds (0.02 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   15.45584    0   54  164.94467   15.45584  90.6%     -    0s
+H    0     0                      16.5533935   15.45584  6.63%     -    0s
+H    0     0                      16.5352698   15.45584  6.53%     -    0s
+H    0     0                      16.4006954   15.45584  5.76%     -    0s
+H    0     0                      16.2702364   15.45584  5.01%     -    0s
+H    0     0                      16.2521127   15.45584  4.90%     -    0s
+     0     0   15.71763    0   86   16.25211   15.71763  3.29%     -    0s
+     0     0   15.71763    0   48   16.25211   15.71763  3.29%     -    0s
+H    0     0                      16.2348285   15.71763  3.19%     -    0s
+H    0     0                      16.1921895   15.76938  2.61%     -    0s
+     0     0   15.92555    0   48   16.19219   15.92555  1.65%     -    0s
+     0     0   15.92555    0   16   16.19219   15.92555  1.65%     -    0s
+H    0     0                      15.9695688   15.92555  0.28%     -    0s
+H    0     0                      15.9689963   15.92555  0.27%     -    0s
+
+Cutting planes:
+  Gomory: 2
+
+Explored 1 nodes (1175 simplex iterations) in 0.13 seconds (0.12 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 10: 15.969 15.9696 16.1922 ... 164.945
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.596899628570e+01, best bound 1.596899628570e+01, gap 0.0000%
+[Batch] Running budgeted | seed=11
+[BudgetedRunner] Starting Budgeted Uncertainty | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0011 | gamma=3.8 | nominal_rule=avg | start=0 | goal=max | time_limit=180.0
+[BudgetedRunner] Preprocessing finished.
+Set parameter OutputFlag to value 1
+Set parameter LogToConsole to value 1
+Set parameter LogFile to value "/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0011/BudgetedUncertainty/gurobi.log"
+Set parameter DisplayInterval to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+DisplayInterval  1
+
+Optimize a model with 1920 rows, 3041 columns and 7600 nonzeros (Min)
+Model fingerprint: 0x1f65cf2e
+Model has 3041 linear objective coefficients
+Variable types: 1521 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [2e-02, 1e+00]
+  Objective range  [2e-01, 4e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 50.4723536
+Presolve removed 6 rows and 10 columns
+Presolve time: 0.01s
+Presolved: 1914 rows, 3031 columns, 7576 nonzeros
+Variable types: 1517 continuous, 1514 integer (1514 binary)
+
+Root relaxation: objective 1.476224e+01, 373 iterations, 0.01 seconds (0.02 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   14.76224    0   67   50.47235   14.76224  70.8%     -    0s
+H    0     0                      15.1722745   14.76224  2.70%     -    0s
+H    0     0                      15.1687436   14.76224  2.68%     -    0s
+H    0     0                      15.1677370   14.76224  2.67%     -    0s
+     0     0   14.90340    0  100   15.16774   14.90340  1.74%     -    0s
+     0     0   14.90340    0   28   15.16774   14.90340  1.74%     -    0s
+
+Cutting planes:
+  Gomory: 2
+  MIR: 37
+  Flow cover: 13
+  RLT: 5
+
+Explored 1 nodes (537 simplex iterations) in 0.05 seconds (0.09 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 3: 15.1677 15.1687 50.4724 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.516773697077e+01, best bound 1.516773697077e+01, gap 0.0000%
+[BudgetedRunner] Optimization complete, extracting results...
+[BudgetedRunner] Finished exports.
+[Batch] Running dstar | seed=11
+No robust path provided — running without restricted mode.
+[Batch] dstar failed for seed=11: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_discrete | seed=11
+Loaded robust path with 39 nodes.
+[Batch] dstar_discrete failed for seed=11: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_budgeted | seed=11
+Loaded robust path with 39 nodes.
+[Batch] dstar_budgeted failed for seed=11: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Generating STRF | seed=12 | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0012
+[t=0] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0012/scenario_000
+[t=1] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0012/scenario_001
+[t=2] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0012/scenario_002
+[t=3] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0012/scenario_003
+[t=4] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0012/scenario_004
+[t=5] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0012/scenario_005
+[t=6] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0012/scenario_006
+[t=7] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0012/scenario_007
+[t=8] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0012/scenario_008
+[t=9] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0012/scenario_009
+Saved → statistical_interpretation.json
+
+ STRF Generation Complete
+
+[Batch] Running discrete | seed=12
+Set parameter LogToConsole to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+
+Optimize a model with 410 rows, 1521 columns and 18250 nonzeros (Min)
+Model fingerprint: 0xbcf6089d
+Model has 1 linear objective coefficients
+Variable types: 1 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [4e-03, 1e+00]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 115.4190399
+Presolve added 1 rows and 0 columns
+Presolve removed 0 rows and 3 columns
+Presolve time: 0.01s
+Presolved: 411 rows, 1518 columns, 12507 nonzeros
+Variable types: 1 continuous, 1517 integer (1514 binary)
+
+Root relaxation: objective 1.509607e+01, 656 iterations, 0.01 seconds (0.02 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   15.09607    0   53  115.41904   15.09607  86.9%     -    0s
+H    0     0                      15.1876564   15.09607  0.60%     -    0s
+
+Cutting planes:
+  RLT: 2
+
+Explored 1 nodes (656 simplex iterations) in 0.04 seconds (0.06 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 2: 15.1877 115.419 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.518765635024e+01, best bound 1.518765635024e+01, gap 0.0000%
+[Batch] Running budgeted | seed=12
+[BudgetedRunner] Starting Budgeted Uncertainty | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0012 | gamma=3.8 | nominal_rule=avg | start=0 | goal=max | time_limit=180.0
+[BudgetedRunner] Preprocessing finished.
+Set parameter OutputFlag to value 1
+Set parameter LogToConsole to value 1
+Set parameter LogFile to value "/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0012/BudgetedUncertainty/gurobi.log"
+Set parameter DisplayInterval to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+DisplayInterval  1
+
+Optimize a model with 1920 rows, 3041 columns and 7600 nonzeros (Min)
+Model fingerprint: 0x0ad4498c
+Model has 3041 linear objective coefficients
+Variable types: 1521 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [2e-02, 1e+00]
+  Objective range  [2e-01, 4e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 46.8515953
+Presolve removed 6 rows and 10 columns
+Presolve time: 0.01s
+Presolved: 1914 rows, 3031 columns, 7576 nonzeros
+Variable types: 1517 continuous, 1514 integer (1514 binary)
+
+Root relaxation: objective 1.380389e+01, 358 iterations, 0.01 seconds (0.02 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   13.80389    0   99   46.85160   13.80389  70.5%     -    0s
+H    0     0                      14.3174870   13.80389  3.59%     -    0s
+H    0     0                      14.2818658   13.80389  3.35%     -    0s
+H    0     0                      14.2670252   13.80389  3.25%     -    0s
+H    0     0                      14.2571819   13.80389  3.18%     -    0s
+H    0     0                      14.2462720   13.80389  3.11%     -    0s
+H    0     0                      14.2412665   13.80389  3.07%     -    0s
+H    0     0                      14.2331011   13.80389  3.02%     -    0s
+     0     0   13.93963    0   92   14.23310   13.93963  2.06%     -    0s
+     0     0   13.93963    0   93   14.23310   13.93963  2.06%     -    0s
+     0     0   13.94070    0   86   14.23310   13.94070  2.05%     -    0s
+     0     0   13.94251    0   87   14.23310   13.94251  2.04%     -    0s
+     0     0   13.99711    0   93   14.23310   13.99711  1.66%     -    0s
+     0     0   13.99972    0   92   14.23310   13.99972  1.64%     -    0s
+     0     0   14.04823    0   91   14.23310   14.04823  1.30%     -    0s
+     0     0   14.04961    0   91   14.23310   14.04961  1.29%     -    0s
+     0     0   14.05624    0   83   14.23310   14.05624  1.24%     -    0s
+     0     0   14.05789    0   89   14.23310   14.05789  1.23%     -    0s
+     0     0   14.05986    0   87   14.23310   14.05986  1.22%     -    0s
+     0     0   14.06055    0   90   14.23310   14.06055  1.21%     -    0s
+     0     0   14.06308    0   89   14.23310   14.06308  1.19%     -    0s
+     0     0   14.06327    0   93   14.23310   14.06327  1.19%     -    0s
+     0     0   14.06420    0   91   14.23310   14.06420  1.19%     -    0s
+     0     0   14.06768    0   91   14.23310   14.06768  1.16%     -    0s
+     0     0   14.06888    0   88   14.23310   14.06888  1.15%     -    0s
+     0     0   14.06973    0   92   14.23310   14.06973  1.15%     -    0s
+     0     0   14.07104    0   95   14.23310   14.07104  1.14%     -    0s
+     0     0   14.07125    0   94   14.23310   14.07125  1.14%     -    0s
+     0     0   14.07133    0   94   14.23310   14.07133  1.14%     -    0s
+     0     0   14.07191    0   94   14.23310   14.07191  1.13%     -    0s
+     0     0   14.07205    0   90   14.23310   14.07205  1.13%     -    0s
+     0     0   14.07240    0   96   14.23310   14.07240  1.13%     -    0s
+     0     0   14.07267    0  100   14.23310   14.07267  1.13%     -    0s
+     0     0   14.07636    0  101   14.23310   14.07636  1.10%     -    0s
+     0     0   14.07713    0  101   14.23310   14.07713  1.10%     -    0s
+     0     0   14.07713    0  101   14.23310   14.07713  1.10%     -    0s
+     0     0   14.07713    0  101   14.23310   14.07713  1.10%     -    0s
+     0     0   14.07880    0   58   14.23310   14.07880  1.08%     -    0s
+     0     0   14.07880    0   80   14.23310   14.07880  1.08%     -    0s
+     0     0   14.07880    0   85   14.23310   14.07880  1.08%     -    0s
+     0     0   14.07880    0   85   14.23310   14.07880  1.08%     -    0s
+     0     0   14.07880    0   88   14.23310   14.07880  1.08%     -    0s
+     0     0   14.10496    0   84   14.23310   14.10496  0.90%     -    0s
+     0     0   14.10759    0   84   14.23310   14.10759  0.88%     -    0s
+     0     0   14.14122    0   85   14.23310   14.14122  0.65%     -    0s
+     0     0   14.14516    0   85   14.23310   14.14516  0.62%     -    0s
+     0     2   14.14516    0   85   14.23310   14.14516  0.62%     -    0s
+
+Cutting planes:
+  Gomory: 9
+  MIR: 55
+  Flow cover: 36
+  RLT: 28
+
+Explored 533 nodes (9177 simplex iterations) in 0.32 seconds (0.36 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 8: 14.2331 14.2413 14.2463 ... 46.8516
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.423310107981e+01, best bound 1.423310107981e+01, gap 0.0000%
+[BudgetedRunner] Optimization complete, extracting results...
+[BudgetedRunner] Finished exports.
+[Batch] Running dstar | seed=12
+No robust path provided — running without restricted mode.
+[Batch] dstar failed for seed=12: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_discrete | seed=12
+Loaded robust path with 39 nodes.
+[Batch] dstar_discrete failed for seed=12: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_budgeted | seed=12
+Loaded robust path with 39 nodes.
+[Batch] dstar_budgeted failed for seed=12: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Generating STRF | seed=13 | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0013
+[t=0] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0013/scenario_000
+[t=1] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0013/scenario_001
+[t=2] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0013/scenario_002
+[t=3] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0013/scenario_003
+[t=4] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0013/scenario_004
+[t=5] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0013/scenario_005
+[t=6] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0013/scenario_006
+[t=7] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0013/scenario_007
+[t=8] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0013/scenario_008
+[t=9] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0013/scenario_009
+Saved → statistical_interpretation.json
+
+ STRF Generation Complete
+
+[Batch] Running discrete | seed=13
+Set parameter LogToConsole to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+
+Optimize a model with 410 rows, 1521 columns and 18250 nonzeros (Min)
+Model fingerprint: 0x56589b62
+Model has 1 linear objective coefficients
+Variable types: 1 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [1e-03, 1e+00]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 137.1006143
+Presolve removed 2 rows and 6 columns
+Presolve time: 0.01s
+Presolved: 408 rows, 1515 columns, 13004 nonzeros
+Variable types: 1 continuous, 1514 integer (1514 binary)
+
+Root relaxation: objective 1.353254e+01, 459 iterations, 0.01 seconds (0.01 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   13.53254    0    8  137.10061   13.53254  90.1%     -    0s
+H    0     0                      13.5459874   13.53254  0.10%     -    0s
+H    0     0                      13.5426891   13.53254  0.07%     -    0s
+     0     0   13.53828    0   10   13.54269   13.53828  0.03%     -    0s
+
+Cutting planes:
+  Gomory: 1
+
+Explored 1 nodes (464 simplex iterations) in 0.03 seconds (0.05 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 3: 13.5427 13.546 137.101 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.354268907764e+01, best bound 1.354268907764e+01, gap 0.0000%
+[Batch] Running budgeted | seed=13
+[BudgetedRunner] Starting Budgeted Uncertainty | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0013 | gamma=3.8 | nominal_rule=avg | start=0 | goal=max | time_limit=180.0
+[BudgetedRunner] Preprocessing finished.
+Set parameter OutputFlag to value 1
+Set parameter LogToConsole to value 1
+Set parameter LogFile to value "/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0013/BudgetedUncertainty/gurobi.log"
+Set parameter DisplayInterval to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+DisplayInterval  1
+
+Optimize a model with 1920 rows, 3041 columns and 7600 nonzeros (Min)
+Model fingerprint: 0x3c0c6500
+Model has 3041 linear objective coefficients
+Variable types: 1521 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [2e-02, 1e+00]
+  Objective range  [2e-01, 4e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 44.7776392
+Presolve removed 6 rows and 10 columns
+Presolve time: 0.01s
+Presolved: 1914 rows, 3031 columns, 7576 nonzeros
+Variable types: 1517 continuous, 1514 integer (1514 binary)
+
+Root relaxation: objective 1.366443e+01, 329 iterations, 0.00 seconds (0.01 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   13.66443    0   39   44.77764   13.66443  69.5%     -    0s
+H    0     0                      14.2755089   13.66443  4.28%     -    0s
+H    0     0                      14.2405378   13.66443  4.05%     -    0s
+     0     0   13.84184    0   47   14.24054   13.84184  2.80%     -    0s
+     0     0   13.84184    0   35   14.24054   13.84184  2.80%     -    0s
+     0     0   13.88444    0   55   14.24054   13.88444  2.50%     -    0s
+     0     0   14.07641    0   62   14.24054   14.07641  1.15%     -    0s
+     0     0   14.16688    0   62   14.24054   14.16688  0.52%     -    0s
+
+Cutting planes:
+  Gomory: 2
+  MIR: 27
+  Flow cover: 20
+  RLT: 24
+
+Explored 1 nodes (635 simplex iterations) in 0.08 seconds (0.11 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 3: 14.2405 14.2755 44.7776 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.424053778736e+01, best bound 1.424053778736e+01, gap 0.0000%
+[BudgetedRunner] Optimization complete, extracting results...
+[BudgetedRunner] Finished exports.
+[Batch] Running dstar | seed=13
+No robust path provided — running without restricted mode.
+[Batch] dstar failed for seed=13: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_discrete | seed=13
+Loaded robust path with 39 nodes.
+[Batch] dstar_discrete failed for seed=13: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_budgeted | seed=13
+Loaded robust path with 39 nodes.
+[Batch] dstar_budgeted failed for seed=13: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Generating STRF | seed=14 | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0014
+[t=0] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0014/scenario_000
+[t=1] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0014/scenario_001
+[t=2] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0014/scenario_002
+[t=3] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0014/scenario_003
+[t=4] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0014/scenario_004
+[t=5] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0014/scenario_005
+[t=6] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0014/scenario_006
+[t=7] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0014/scenario_007
+[t=8] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0014/scenario_008
+[t=9] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0014/scenario_009
+Saved → statistical_interpretation.json
+
+ STRF Generation Complete
+
+[Batch] Running discrete | seed=14
+Set parameter LogToConsole to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+
+Optimize a model with 410 rows, 1521 columns and 18250 nonzeros (Min)
+Model fingerprint: 0x1bae12b0
+Model has 1 linear objective coefficients
+Variable types: 1 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [1e-02, 1e+00]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 165.0857018
+Presolve removed 1 rows and 5 columns
+Presolve time: 0.02s
+Presolved: 409 rows, 1516 columns, 13411 nonzeros
+Variable types: 1 continuous, 1515 integer (1514 binary)
+
+Root relaxation: objective 1.959048e+01, 698 iterations, 0.01 seconds (0.02 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   19.59048    0   34  165.08570   19.59048  88.1%     -    0s
+H    0     0                      19.7072160   19.59048  0.59%     -    0s
+H    0     0                      19.6782595   19.59048  0.45%     -    0s
+
+Cutting planes:
+  Gomory: 1
+
+Explored 1 nodes (699 simplex iterations) in 0.04 seconds (0.06 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 3: 19.6783 19.7072 165.086 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.967825945167e+01, best bound 1.967825945167e+01, gap 0.0000%
+[Batch] Running budgeted | seed=14
+[BudgetedRunner] Starting Budgeted Uncertainty | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0014 | gamma=3.8 | nominal_rule=avg | start=0 | goal=max | time_limit=180.0
+[BudgetedRunner] Preprocessing finished.
+Set parameter OutputFlag to value 1
+Set parameter LogToConsole to value 1
+Set parameter LogFile to value "/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0014/BudgetedUncertainty/gurobi.log"
+Set parameter DisplayInterval to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+DisplayInterval  1
+
+Optimize a model with 1920 rows, 3041 columns and 7600 nonzeros (Min)
+Model fingerprint: 0x69de8147
+Model has 3041 linear objective coefficients
+Variable types: 1521 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [4e-02, 1e+00]
+  Objective range  [4e-01, 4e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 53.0664983
+Presolve removed 6 rows and 10 columns
+Presolve time: 0.01s
+Presolved: 1914 rows, 3031 columns, 7576 nonzeros
+Variable types: 1517 continuous, 1514 integer (1514 binary)
+
+Root relaxation: objective 1.883021e+01, 436 iterations, 0.01 seconds (0.01 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   18.83021    0   96   53.06650   18.83021  64.5%     -    0s
+H    0     0                      19.2198113   18.83021  2.03%     -    0s
+H    0     0                      19.2096454   18.83021  1.98%     -    0s
+H    0     0                      19.2010445   18.83021  1.93%     -    0s
+H    0     0                      19.2002745   18.83021  1.93%     -    0s
+H    0     0                      19.1961269   18.83021  1.91%     -    0s
+     0     0   18.92979    0   91   19.19613   18.92979  1.39%     -    0s
+     0     0   18.92979    0   91   19.19613   18.92979  1.39%     -    0s
+     0     0   18.92979    0   86   19.19613   18.92979  1.39%     -    0s
+     0     0   18.93043    0   86   19.19613   18.93043  1.38%     -    0s
+     0     0   18.96120    0   92   19.19613   18.96120  1.22%     -    0s
+     0     0   18.96503    0   91   19.19613   18.96503  1.20%     -    0s
+     0     0   18.97865    0   89   19.19613   18.97865  1.13%     -    0s
+     0     0   18.98151    0   98   19.19613   18.98151  1.12%     -    0s
+     0     0   19.00637    0   99   19.19613   19.00637  0.99%     -    0s
+     0     0   19.01021    0   99   19.19613   19.01021  0.97%     -    0s
+     0     0   19.02277    0   88   19.19613   19.02277  0.90%     -    0s
+     0     0   19.02507    0   91   19.19613   19.02507  0.89%     -    0s
+     0     0   19.03274    0   92   19.19613   19.03274  0.85%     -    0s
+     0     0   19.03767    0   84   19.19613   19.03767  0.83%     -    0s
+     0     0   19.03995    0   92   19.19613   19.03995  0.81%     -    0s
+     0     0   19.03995    0   89   19.19613   19.03995  0.81%     -    0s
+     0     0   19.03995    0   91   19.19613   19.03995  0.81%     -    0s
+     0     0   19.03995    0   88   19.19613   19.03995  0.81%     -    0s
+     0     0   19.04330    0   92   19.19613   19.04330  0.80%     -    0s
+     0     0   19.04338    0   92   19.19613   19.04338  0.80%     -    0s
+     0     0   19.06040    0   85   19.19613   19.06040  0.71%     -    0s
+     0     0   19.06486    0   88   19.19613   19.06486  0.68%     -    0s
+     0     0   19.06888    0   94   19.19613   19.06888  0.66%     -    0s
+     0     0   19.06946    0   90   19.19613   19.06946  0.66%     -    0s
+     0     0   19.07137    0   94   19.19613   19.07137  0.65%     -    0s
+     0     0   19.07213    0  102   19.19613   19.07213  0.65%     -    0s
+     0     0   19.07308    0   98   19.19613   19.07308  0.64%     -    0s
+     0     0   19.07368    0   99   19.19613   19.07368  0.64%     -    0s
+     0     0   19.07495    0   94   19.19613   19.07495  0.63%     -    0s
+     0     0   19.07703    0   98   19.19613   19.07703  0.62%     -    0s
+     0     0   19.07760    0   97   19.19613   19.07760  0.62%     -    0s
+     0     0   19.07829    0   98   19.19613   19.07829  0.61%     -    0s
+     0     0   19.08345    0   98   19.19613   19.08345  0.59%     -    0s
+     0     0   19.08514    0   99   19.19613   19.08514  0.58%     -    0s
+     0     0   19.08938    0   99   19.19613   19.08938  0.56%     -    0s
+     0     0   19.09130    0   99   19.19613   19.09130  0.55%     -    0s
+     0     0   19.09130    0   99   19.19613   19.09130  0.55%     -    0s
+     0     2   19.09130    0   99   19.19613   19.09130  0.55%     -    0s
+
+Cutting planes:
+  Gomory: 9
+  MIR: 86
+  Flow cover: 64
+  RLT: 21
+
+Explored 483 nodes (10477 simplex iterations) in 0.43 seconds (0.39 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 3: 19.1961 19.201 53.0665 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.919612691374e+01, best bound 1.919612691374e+01, gap 0.0000%
+[BudgetedRunner] Optimization complete, extracting results...
+[BudgetedRunner] Finished exports.
+[Batch] Running dstar | seed=14
+No robust path provided — running without restricted mode.
+[Batch] dstar failed for seed=14: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_discrete | seed=14
+Loaded robust path with 39 nodes.
+[Batch] dstar_discrete failed for seed=14: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_budgeted | seed=14
+Loaded robust path with 39 nodes.
+[Batch] dstar_budgeted failed for seed=14: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Generating STRF | seed=15 | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0015
+[t=0] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0015/scenario_000
+[t=1] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0015/scenario_001
+[t=2] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0015/scenario_002
+[t=3] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0015/scenario_003
+[t=4] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0015/scenario_004
+[t=5] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0015/scenario_005
+[t=6] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0015/scenario_006
+[t=7] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0015/scenario_007
+[t=8] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0015/scenario_008
+[t=9] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0015/scenario_009
+Saved → statistical_interpretation.json
+
+ STRF Generation Complete
+
+[Batch] Running discrete | seed=15
+Set parameter LogToConsole to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+
+Optimize a model with 410 rows, 1521 columns and 18250 nonzeros (Min)
+Model fingerprint: 0x4860ed2c
+Model has 1 linear objective coefficients
+Variable types: 1 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [1e-02, 1e+00]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 144.7183900
+Presolve removed 1 rows and 5 columns
+Presolve time: 0.01s
+Presolved: 409 rows, 1516 columns, 13249 nonzeros
+Variable types: 1 continuous, 1515 integer (1514 binary)
+
+Root relaxation: objective 1.819206e+01, 496 iterations, 0.00 seconds (0.01 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   18.19206    0   48  144.71839   18.19206  87.4%     -    0s
+H    0     0                      18.2386886   18.19206  0.26%     -    0s
+H    0     0                      18.2266445   18.19206  0.19%     -    0s
+H    0     0                      18.1951172   18.19206  0.02%     -    0s
+
+Cutting planes:
+  GUB cover: 1
+  RLT: 1
+
+Explored 1 nodes (496 simplex iterations) in 0.04 seconds (0.05 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 4: 18.1951 18.2266 18.2387 144.718 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.819511721385e+01, best bound 1.819349782219e+01, gap 0.0089%
+[Batch] Running budgeted | seed=15
+[BudgetedRunner] Starting Budgeted Uncertainty | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0015 | gamma=3.8 | nominal_rule=avg | start=0 | goal=max | time_limit=180.0
+[BudgetedRunner] Preprocessing finished.
+Set parameter OutputFlag to value 1
+Set parameter LogToConsole to value 1
+Set parameter LogFile to value "/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0015/BudgetedUncertainty/gurobi.log"
+Set parameter DisplayInterval to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+DisplayInterval  1
+
+Optimize a model with 1920 rows, 3041 columns and 7600 nonzeros (Min)
+Model fingerprint: 0xf41b569c
+Model has 3041 linear objective coefficients
+Variable types: 1521 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [2e-02, 1e+00]
+  Objective range  [3e-01, 4e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 45.3431782
+Presolve removed 6 rows and 10 columns
+Presolve time: 0.01s
+Presolved: 1914 rows, 3031 columns, 7576 nonzeros
+Variable types: 1517 continuous, 1514 integer (1514 binary)
+
+Root relaxation: objective 1.686755e+01, 718 iterations, 0.01 seconds (0.01 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   16.86755    0   90   45.34318   16.86755  62.8%     -    0s
+H    0     0                      17.2253256   16.86755  2.08%     -    0s
+H    0     0                      17.2112453   16.86755  2.00%     -    0s
+H    0     0                      17.1997191   16.86755  1.93%     -    0s
+H    0     0                      17.1920395   16.86755  1.89%     -    0s
+H    0     0                      17.1829725   16.86755  1.84%     -    0s
+     0     0   17.04676    0   94   17.18297   17.04676  0.79%     -    0s
+     0     0   17.04676    0   86   17.18297   17.04676  0.79%     -    0s
+     0     0   17.07421    0   84   17.18297   17.07421  0.63%     -    0s
+H    0     0                      17.1731536   17.07421  0.58%     -    0s
+     0     0   17.07986    0   86   17.17315   17.07986  0.54%     -    0s
+     0     0   17.11456    0   86   17.17315   17.11456  0.34%     -    0s
+     0     0   17.12142    0   88   17.17315   17.12142  0.30%     -    0s
+H    0     0                      17.1676507   17.14434  0.14%     -    0s
+     0     0   17.14958    0   92   17.16765   17.14958  0.11%     -    0s
+     0     0   17.15228    0   92   17.16765   17.15228  0.09%     -    0s
+     0     0   17.15228    0   92   17.16765   17.15228  0.09%     -    0s
+     0     0   17.15228    0   57   17.16765   17.15228  0.09%     -    0s
+     0     0   17.15228    0   55   17.16765   17.15228  0.09%     -    0s
+     0     0   17.15228    0   61   17.16765   17.15228  0.09%     -    0s
+     0     0   17.15228    0   63   17.16765   17.15228  0.09%     -    0s
+     0     0   17.15228    0   63   17.16765   17.15228  0.09%     -    0s
+     0     0   17.16717    0   47   17.16765   17.16717  0.00%     -    0s
+
+Cutting planes:
+  Gomory: 7
+  MIR: 54
+  Flow cover: 1
+  RLT: 2
+
+Explored 1 nodes (1365 simplex iterations) in 0.22 seconds (0.16 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 5: 17.1677 17.183 17.2112 ... 45.3432
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.716765072218e+01, best bound 1.716717239081e+01, gap 0.0028%
+[BudgetedRunner] Optimization complete, extracting results...
+[BudgetedRunner] Finished exports.
+[Batch] Running dstar | seed=15
+No robust path provided — running without restricted mode.
+[Batch] dstar failed for seed=15: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_discrete | seed=15
+Loaded robust path with 39 nodes.
+[Batch] dstar_discrete failed for seed=15: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_budgeted | seed=15
+Loaded robust path with 39 nodes.
+[Batch] dstar_budgeted failed for seed=15: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Generating STRF | seed=16 | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0016
+[t=0] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0016/scenario_000
+[t=1] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0016/scenario_001
+[t=2] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0016/scenario_002
+[t=3] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0016/scenario_003
+[t=4] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0016/scenario_004
+[t=5] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0016/scenario_005
+[t=6] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0016/scenario_006
+[t=7] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0016/scenario_007
+[t=8] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0016/scenario_008
+[t=9] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0016/scenario_009
+Saved → statistical_interpretation.json
+
+ STRF Generation Complete
+
+[Batch] Running discrete | seed=16
+Set parameter LogToConsole to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+
+Optimize a model with 410 rows, 1521 columns and 18250 nonzeros (Min)
+Model fingerprint: 0xbf601a17
+Model has 1 linear objective coefficients
+Variable types: 1 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [5e-03, 1e+00]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 147.2514725
+Presolve removed 1 rows and 5 columns
+Presolve time: 0.02s
+Presolved: 409 rows, 1516 columns, 14266 nonzeros
+Variable types: 1 continuous, 1515 integer (1514 binary)
+
+Root relaxation: objective 1.926134e+01, 620 iterations, 0.01 seconds (0.02 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   19.26134    0   66  147.25147   19.26134  86.9%     -    0s
+H    0     0                      19.7224626   19.26134  2.34%     -    0s
+H    0     0                      19.3829957   19.26134  0.63%     -    0s
+H    0     0                      19.3779062   19.26134  0.60%     -    0s
+
+Cutting planes:
+  MIR: 1
+  RLT: 2
+
+Explored 1 nodes (620 simplex iterations) in 0.05 seconds (0.07 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 4: 19.3779 19.383 19.7225 147.251 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.937790618574e+01, best bound 1.937790618574e+01, gap 0.0000%
+[Batch] Running budgeted | seed=16
+[BudgetedRunner] Starting Budgeted Uncertainty | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0016 | gamma=3.8 | nominal_rule=avg | start=0 | goal=max | time_limit=180.0
+[BudgetedRunner] Preprocessing finished.
+Set parameter OutputFlag to value 1
+Set parameter LogToConsole to value 1
+Set parameter LogFile to value "/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0016/BudgetedUncertainty/gurobi.log"
+Set parameter DisplayInterval to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+DisplayInterval  1
+
+Optimize a model with 1920 rows, 3041 columns and 7600 nonzeros (Min)
+Model fingerprint: 0xc6ae649e
+Model has 3041 linear objective coefficients
+Variable types: 1521 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [2e-02, 1e+00]
+  Objective range  [2e-01, 4e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 58.2737730
+Presolve removed 6 rows and 10 columns
+Presolve time: 0.01s
+Presolved: 1914 rows, 3031 columns, 7576 nonzeros
+Variable types: 1517 continuous, 1514 integer (1514 binary)
+
+Root relaxation: objective 1.843788e+01, 384 iterations, 0.00 seconds (0.01 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   18.43788    0   83   58.27377   18.43788  68.4%     -    0s
+H    0     0                      18.8736795   18.43788  2.31%     -    0s
+H    0     0                      18.8134855   18.43788  2.00%     -    0s
+H    0     0                      18.8079827   18.43788  1.97%     -    0s
+H    0     0                      18.8070399   18.43788  1.96%     -    0s
+H    0     0                      18.7814978   18.43788  1.83%     -    0s
+H    0     0                      18.7653456   18.43788  1.75%     -    0s
+     0     0   18.60403    0   74   18.76535   18.60403  0.86%     -    0s
+     0     0   18.62613    0   42   18.76535   18.62613  0.74%     -    0s
+     0     0   18.71679    0   26   18.76535   18.71679  0.26%     -    0s
+     0     0   18.76129    0   29   18.76535   18.76129  0.02%     -    0s
+
+Cutting planes:
+  Gomory: 6
+  MIR: 24
+  Flow cover: 2
+  RLT: 1
+
+Explored 1 nodes (521 simplex iterations) in 0.06 seconds (0.09 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 6: 18.7653 18.7815 18.808 ... 58.2738
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.876534557512e+01, best bound 1.876530651758e+01, gap 0.0002%
+[BudgetedRunner] Optimization complete, extracting results...
+[BudgetedRunner] Finished exports.
+[Batch] Running dstar | seed=16
+No robust path provided — running without restricted mode.
+[Batch] dstar failed for seed=16: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_discrete | seed=16
+Loaded robust path with 39 nodes.
+[Batch] dstar_discrete failed for seed=16: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_budgeted | seed=16
+Loaded robust path with 39 nodes.
+[Batch] dstar_budgeted failed for seed=16: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Generating STRF | seed=17 | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0017
+[t=0] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0017/scenario_000
+[t=1] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0017/scenario_001
+[t=2] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0017/scenario_002
+[t=3] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0017/scenario_003
+[t=4] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0017/scenario_004
+[t=5] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0017/scenario_005
+[t=6] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0017/scenario_006
+[t=7] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0017/scenario_007
+[t=8] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0017/scenario_008
+[t=9] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0017/scenario_009
+Saved → statistical_interpretation.json
+
+ STRF Generation Complete
+
+[Batch] Running discrete | seed=17
+Set parameter LogToConsole to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+
+Optimize a model with 410 rows, 1521 columns and 18250 nonzeros (Min)
+Model fingerprint: 0xd2950ec5
+Model has 1 linear objective coefficients
+Variable types: 1 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [3e-03, 1e+00]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 119.1835515
+Presolve removed 0 rows and 4 columns
+Presolve time: 0.02s
+Presolved: 410 rows, 1517 columns, 13566 nonzeros
+Variable types: 1 continuous, 1516 integer (1514 binary)
+
+Root relaxation: objective 1.654308e+01, 483 iterations, 0.01 seconds (0.02 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   16.54308    0   10  119.18355   16.54308  86.1%     -    0s
+H    0     0                      16.6391765   16.54308  0.58%     -    0s
+H    0     0                      16.5539744   16.54308  0.07%     -    0s
+H    0     0                      16.5493016   16.54308  0.04%     -    0s
+     0     0   16.54406    0    8   16.54930   16.54406  0.03%     -    0s
+
+Cutting planes:
+  Cover: 1
+  GUB cover: 1
+
+Explored 1 nodes (485 simplex iterations) in 0.05 seconds (0.06 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 4: 16.5493 16.554 16.6392 119.184 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.654930162157e+01, best bound 1.654930162157e+01, gap 0.0000%
+[Batch] Running budgeted | seed=17
+[BudgetedRunner] Starting Budgeted Uncertainty | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0017 | gamma=3.8 | nominal_rule=avg | start=0 | goal=max | time_limit=180.0
+[BudgetedRunner] Preprocessing finished.
+Set parameter OutputFlag to value 1
+Set parameter LogToConsole to value 1
+Set parameter LogFile to value "/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0017/BudgetedUncertainty/gurobi.log"
+Set parameter DisplayInterval to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+DisplayInterval  1
+
+Optimize a model with 1920 rows, 3041 columns and 7600 nonzeros (Min)
+Model fingerprint: 0x0feb459a
+Model has 3041 linear objective coefficients
+Variable types: 1521 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [3e-02, 1e+00]
+  Objective range  [2e-01, 4e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 53.5786285
+Presolve removed 6 rows and 10 columns
+Presolve time: 0.01s
+Presolved: 1914 rows, 3031 columns, 7576 nonzeros
+Variable types: 1517 continuous, 1514 integer (1514 binary)
+
+Root relaxation: objective 1.647989e+01, 434 iterations, 0.01 seconds (0.02 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   16.47989    0   45   53.57863   16.47989  69.2%     -    0s
+H    0     0                      17.0006337   16.47989  3.06%     -    0s
+H    0     0                      16.9734000   16.47989  2.91%     -    0s
+     0     0   16.76580    0   62   16.97340   16.76580  1.22%     -    0s
+     0     0   16.76580    0    9   16.97340   16.76580  1.22%     -    0s
+
+Cutting planes:
+  MIR: 16
+  Flow cover: 3
+  RLT: 5
+
+Explored 1 nodes (532 simplex iterations) in 0.06 seconds (0.09 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 2: 16.9734 53.5786 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.697340000191e+01, best bound 1.697340000191e+01, gap 0.0000%
+[BudgetedRunner] Optimization complete, extracting results...
+[BudgetedRunner] Finished exports.
+[Batch] Running dstar | seed=17
+No robust path provided — running without restricted mode.
+[Batch] dstar failed for seed=17: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_discrete | seed=17
+Loaded robust path with 39 nodes.
+[Batch] dstar_discrete failed for seed=17: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_budgeted | seed=17
+Loaded robust path with 39 nodes.
+[Batch] dstar_budgeted failed for seed=17: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Generating STRF | seed=18 | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0018
+[t=0] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0018/scenario_000
+[t=1] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0018/scenario_001
+[t=2] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0018/scenario_002
+[t=3] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0018/scenario_003
+[t=4] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0018/scenario_004
+[t=5] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0018/scenario_005
+[t=6] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0018/scenario_006
+[t=7] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0018/scenario_007
+[t=8] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0018/scenario_008
+[t=9] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0018/scenario_009
+Saved → statistical_interpretation.json
+
+ STRF Generation Complete
+
+[Batch] Running discrete | seed=18
+Set parameter LogToConsole to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+
+Optimize a model with 410 rows, 1521 columns and 18250 nonzeros (Min)
+Model fingerprint: 0x9db48705
+Model has 1 linear objective coefficients
+Variable types: 1 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [3e-04, 1e+00]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 155.0344709
+Presolve removed 2 rows and 6 columns
+Presolve time: 0.02s
+Presolved: 408 rows, 1515 columns, 13134 nonzeros
+Variable types: 1 continuous, 1514 integer (1514 binary)
+
+Root relaxation: objective 1.559385e+01, 677 iterations, 0.01 seconds (0.03 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   15.59385    0   74  155.03447   15.59385  89.9%     -    0s
+H    0     0                      17.9703247   15.59385  13.2%     -    0s
+H    0     0                      17.9554753   15.59385  13.2%     -    0s
+H    0     0                      17.9020400   15.59385  12.9%     -    0s
+H    0     0                      17.8627941   15.59385  12.7%     -    0s
+H    0     0                      17.7604880   15.59385  12.2%     -    0s
+     0     0   15.76284    0   74   17.76049   15.76284  11.2%     -    0s
+H    0     0                      17.6528030   15.76284  10.7%     -    0s
+     0     0   16.26520    0   78   17.65280   16.26520  7.86%     -    0s
+     0     0   16.27174    0   78   17.65280   16.27174  7.82%     -    0s
+     0     2   16.27174    0   78   17.65280   16.27174  7.82%     -    0s
+H   18    22                      17.0164477   16.27174  4.38%  32.2    0s
+*   41    18               8      16.9912314   16.27174  4.23%  25.8    0s
+
+Cutting planes:
+  Gomory: 2
+  Lift-and-project: 13
+
+Explored 96 nodes (2656 simplex iterations) in 0.22 seconds (0.25 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 9: 16.9912 17.0164 17.6528 ... 155.034
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.699123135375e+01, best bound 1.699123135375e+01, gap 0.0000%
+[Batch] Running budgeted | seed=18
+[BudgetedRunner] Starting Budgeted Uncertainty | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0018 | gamma=3.8 | nominal_rule=avg | start=0 | goal=max | time_limit=180.0
+[BudgetedRunner] Preprocessing finished.
+Set parameter OutputFlag to value 1
+Set parameter LogToConsole to value 1
+Set parameter LogFile to value "/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0018/BudgetedUncertainty/gurobi.log"
+Set parameter DisplayInterval to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+DisplayInterval  1
+
+Optimize a model with 1920 rows, 3041 columns and 7600 nonzeros (Min)
+Model fingerprint: 0xc2ad2b44
+Model has 3041 linear objective coefficients
+Variable types: 1521 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [4e-02, 1e+00]
+  Objective range  [1e-01, 4e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 52.6325403
+Presolve removed 6 rows and 10 columns
+Presolve time: 0.01s
+Presolved: 1914 rows, 3031 columns, 7576 nonzeros
+Variable types: 1517 continuous, 1514 integer (1514 binary)
+
+Root relaxation: objective 1.430982e+01, 411 iterations, 0.01 seconds (0.02 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   14.30982    0   88   52.63254   14.30982  72.8%     -    0s
+H    0     0                      14.7685866   14.30982  3.11%     -    0s
+H    0     0                      14.7364997   14.30982  2.90%     -    0s
+     0     0   14.60479    0   65   14.73650   14.60479  0.89%     -    0s
+     0     0   14.60479    0   55   14.73650   14.60479  0.89%     -    0s
+     0     0   14.73650    0   51   14.73650   14.73650  0.00%     -    0s
+
+Cutting planes:
+  Gomory: 3
+  MIR: 8
+  Flow cover: 71
+  RLT: 23
+  Relax-and-lift: 4
+  BQP: 1
+
+Explored 1 nodes (638 simplex iterations) in 0.07 seconds (0.10 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 3: 14.7365 14.7686 52.6325 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.473649968164e+01, best bound 1.473649968164e+01, gap 0.0000%
+[BudgetedRunner] Optimization complete, extracting results...
+[BudgetedRunner] Finished exports.
+[Batch] Running dstar | seed=18
+No robust path provided — running without restricted mode.
+[Batch] dstar failed for seed=18: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_discrete | seed=18
+Loaded robust path with 39 nodes.
+[Batch] dstar_discrete failed for seed=18: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_budgeted | seed=18
+Loaded robust path with 39 nodes.
+[Batch] dstar_budgeted failed for seed=18: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Generating STRF | seed=19 | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0019
+[t=0] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0019/scenario_000
+[t=1] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0019/scenario_001
+[t=2] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0019/scenario_002
+[t=3] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0019/scenario_003
+[t=4] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0019/scenario_004
+[t=5] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0019/scenario_005
+[t=6] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0019/scenario_006
+[t=7] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0019/scenario_007
+[t=8] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0019/scenario_008
+[t=9] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0019/scenario_009
+Saved → statistical_interpretation.json
+
+ STRF Generation Complete
+
+[Batch] Running discrete | seed=19
+Set parameter LogToConsole to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+
+Optimize a model with 410 rows, 1521 columns and 18250 nonzeros (Min)
+Model fingerprint: 0xfc5c1262
+Model has 1 linear objective coefficients
+Variable types: 1 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [3e-03, 1e+00]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 170.8605249
+Presolve added 2 rows and 0 columns
+Presolve removed 0 rows and 2 columns
+Presolve time: 0.02s
+Presolved: 412 rows, 1519 columns, 13392 nonzeros
+Variable types: 1 continuous, 1518 integer (1514 binary)
+
+Root relaxation: objective 2.170407e+01, 385 iterations, 0.00 seconds (0.01 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+*    0     0               0      21.7040673   21.70407  0.00%     -    0s
+
+Explored 1 nodes (385 simplex iterations) in 0.02 seconds (0.04 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 2: 21.7041 170.861 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 2.170406729345e+01, best bound 2.170406729345e+01, gap 0.0000%
+[Batch] Running budgeted | seed=19
+[BudgetedRunner] Starting Budgeted Uncertainty | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0019 | gamma=3.8 | nominal_rule=avg | start=0 | goal=max | time_limit=180.0
+[BudgetedRunner] Preprocessing finished.
+Set parameter OutputFlag to value 1
+Set parameter LogToConsole to value 1
+Set parameter LogFile to value "/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0019/BudgetedUncertainty/gurobi.log"
+Set parameter DisplayInterval to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+DisplayInterval  1
+
+Optimize a model with 1920 rows, 3041 columns and 7600 nonzeros (Min)
+Model fingerprint: 0x9de2b9c4
+Model has 3041 linear objective coefficients
+Variable types: 1521 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [2e-02, 1e+00]
+  Objective range  [3e-01, 4e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 60.2145530
+Presolve removed 6 rows and 10 columns
+Presolve time: 0.01s
+Presolved: 1914 rows, 3031 columns, 7576 nonzeros
+Variable types: 1517 continuous, 1514 integer (1514 binary)
+
+Root relaxation: objective 1.900632e+01, 368 iterations, 0.01 seconds (0.02 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   19.00632    0   74   60.21455   19.00632  68.4%     -    0s
+H    0     0                      19.5256045   19.00632  2.66%     -    0s
+H    0     0                      19.5121767   19.00632  2.59%     -    0s
+H    0     0                      19.5046635   19.00632  2.55%     -    0s
+     0     0   19.31644    0   60   19.50466   19.31644  0.96%     -    0s
+     0     0   19.31644    0   53   19.50466   19.31644  0.96%     -    0s
+     0     0   19.35000    0   51   19.50466   19.35000  0.79%     -    0s
+     0     0   19.47346    0   52   19.50466   19.47346  0.16%     -    0s
+
+Cutting planes:
+  Gomory: 7
+  MIR: 15
+  Flow cover: 48
+  RLT: 17
+
+Explored 1 nodes (623 simplex iterations) in 0.07 seconds (0.10 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 4: 19.5047 19.5122 19.5256 60.2146 
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.950466352654e+01, best bound 1.950466352654e+01, gap 0.0000%
+[BudgetedRunner] Optimization complete, extracting results...
+[BudgetedRunner] Finished exports.
+[Batch] Running dstar | seed=19
+No robust path provided — running without restricted mode.
+[Batch] dstar failed for seed=19: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_discrete | seed=19
+Loaded robust path with 39 nodes.
+[Batch] dstar_discrete failed for seed=19: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Running dstar_budgeted | seed=19
+Loaded robust path with 39 nodes.
+[Batch] dstar_budgeted failed for seed=19: DStarLite.__init__() got an unexpected keyword argument 'debug'
+[Batch] Generating STRF | seed=20 | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0020
+[t=0] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0020/scenario_000
+[t=1] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0020/scenario_001
+[t=2] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0020/scenario_002
+[t=3] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0020/scenario_003
+[t=4] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0020/scenario_004
+[t=5] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0020/scenario_005
+[t=6] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0020/scenario_006
+[t=7] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0020/scenario_007
+[t=8] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0020/scenario_008
+[t=9] Exported → /Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0020/scenario_009
+Saved → statistical_interpretation.json
+
+ STRF Generation Complete
+
+[Batch] Running discrete | seed=20
+Set parameter LogToConsole to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+
+Optimize a model with 410 rows, 1521 columns and 18250 nonzeros (Min)
+Model fingerprint: 0xd9ce4bde
+Model has 1 linear objective coefficients
+Variable types: 1 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [2e-04, 1e+00]
+  Objective range  [1e+00, 1e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 146.2382401
+Presolve removed 2 rows and 6 columns
+Presolve time: 0.02s
+Presolved: 408 rows, 1515 columns, 13218 nonzeros
+Variable types: 1 continuous, 1514 integer (1514 binary)
+
+Root relaxation: objective 1.834721e+01, 480 iterations, 0.01 seconds (0.01 work units)
+
+    Nodes    |    Current Node    |     Objective Bounds      |     Work
+ Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+
+     0     0   18.34721    0   57  146.23824   18.34721  87.5%     -    0s
+H    0     0                      19.9495922   18.34721  8.03%     -    0s
+H    0     0                      19.6192090   18.34721  6.48%     -    0s
+H    0     0                      19.1480271   18.34721  4.18%     -    0s
+H    0     0                      18.5291159   18.34721  0.98%     -    0s
+H    0     0                      18.5253136   18.34721  0.96%     -    0s
+H    0     0                      18.5216418   18.34721  0.94%     -    0s
+H    0     0                      18.5150216   18.34721  0.91%     -    0s
+H    0     0                      18.5126174   18.34721  0.89%     -    0s
+     0     0   18.39223    0   70   18.51262   18.39223  0.65%     -    0s
+     0     0   18.39223    0   46   18.51262   18.39223  0.65%     -    0s
+
+Cutting planes:
+  Gomory: 4
+
+Explored 1 nodes (629 simplex iterations) in 0.08 seconds (0.08 work units)
+Thread count was 8 (of 8 available processors)
+
+Solution count 9: 18.5126 18.515 18.5216 ... 146.238
+
+Optimal solution found (tolerance 1.00e-04)
+Best objective 1.851261744241e+01, best bound 1.851245557244e+01, gap 0.0009%
+[Batch] Running budgeted | seed=20
+[BudgetedRunner] Starting Budgeted Uncertainty | data_root=/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0020 | gamma=3.8 | nominal_rule=avg | start=0 | goal=max | time_limit=180.0
+[BudgetedRunner] Preprocessing finished.
+Set parameter OutputFlag to value 1
+Set parameter LogToConsole to value 1
+Set parameter LogFile to value "/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments/BASELINE/data/seed_0020/BudgetedUncertainty/gurobi.log"
+Set parameter DisplayInterval to value 1
+Set parameter TimeLimit to value 60
+Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[arm] - Darwin 24.6.0 24G222)
+
+CPU model: Apple M2
+Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+
+Non-default parameters:
+TimeLimit  60
+DisplayInterval  1
+
+Optimize a model with 1920 rows, 3041 columns and 7600 nonzeros (Min)
+Model fingerprint: 0x2bed491c
+Model has 3041 linear objective coefficients
+Variable types: 1521 continuous, 1520 integer (1520 binary)
+Coefficient statistics:
+  Matrix range     [3e-02, 1e+00]
+  Objective range  [3e-01, 4e+00]
+  Bounds range     [1e+00, 1e+00]
+  RHS range        [1e+00, 1e+00]
+Found heuristic solution: objective 58.5532316
+Presolve removed 6 rows and 10 columns
+Presolve time: 0.01s
+Presolved: 1914 rows, 3031 columns, 7576 nonzeros

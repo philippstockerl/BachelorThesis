@@ -7,9 +7,6 @@ def find_robust_path_file(base: Path, mode: str) -> Path | None:
     if mode == "discrete":
         p = base / "DiscreteUncertainty" / "discrete_uncertainty_path.csv"
         return p if p.exists() else None
-    if mode == "discrete_adaptive":
-        p = base / "DiscreteUncertaintyAdaptive" / "discrete_uncertainty_adaptive_path.csv"
-        return p if p.exists() else None
     if mode == "budgeted":
         p = base / "BudgetedUncertainty" / "budgeted_uncertainty_path.csv"
         return p if p.exists() else None
@@ -18,9 +15,11 @@ def find_robust_path_file(base: Path, mode: str) -> Path | None:
 
 def run_dstar_pipeline(cfg):
     base = Path(cfg["paths"]["data_root"]).expanduser()
-    mode = cfg["dstar_lite"].get("warmstart_mode", "none")
+    mode = str(cfg["dstar_lite"].get("warmstart_mode", "none"))
     if mode == "lbu":  # legacy alias
         mode = "budgeted"
+    if mode not in {"none", "discrete", "budgeted"}:
+        mode = "none"
     robust_cfg = cfg.get("robust_model", {})
     start_node = int(robust_cfg.get("start_node", 0))
     goal_cfg = robust_cfg.get("goal_node", "auto")
@@ -63,7 +62,6 @@ def run_dstar_pipeline(cfg):
     if export_overlays:
         out_folder = base / (
             "DStarLiteDiscreteUncertainty" if mode == "discrete"
-            else "DStarLiteDiscreteAdaptiveUncertainty" if mode == "discrete_adaptive"
             else "DStarLiteBudgetedUncertainty" if mode == "budgeted"
             else "DStarLite"
         ) / "overlays"
@@ -83,8 +81,6 @@ def run_dstar_pipeline(cfg):
     json_name = (
         "DStarLiteDiscreteUncertainty_result.json"
         if mode == "discrete"
-        else "DStarLiteDiscreteAdaptiveUncertainty_result.json"
-        if mode == "discrete_adaptive"
         else "DStarLiteBudgetedUncertainty_result.json"
         if mode == "budgeted"
         else "DStarLite_result.json"

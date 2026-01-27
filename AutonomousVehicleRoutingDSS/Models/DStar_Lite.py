@@ -1,3 +1,12 @@
+"""
+D* Lite path planning with scenario-based edge updates and optional beacons.
+
+High-level flow:
+- Preprocessing loads nodes, edges, scenario updates, and optional robust path.
+- DStarLite runs D* Lite with dynamic cost changes and beacon milestones.
+- ExportPathOverlay renders scenario frames and a path animation.
+"""
+
 import pandas as pd
 import heapq as hq
 import os
@@ -14,6 +23,10 @@ import math
 
 
 def Preprocessing(nodes_path, edges_path, base_folder, robust_path_path):
+    """
+    Load all input artifacts needed by D* Lite.
+    Returns: nodes, graph, predecessor list, scenario changes, robust path.
+    """
 
     def load_nodes(path):
         """
@@ -131,6 +144,9 @@ def Preprocessing(nodes_path, edges_path, base_folder, robust_path_path):
 
 
 class DStarLite:
+    """
+    D* Lite planner with dynamic edge updates and optional beacon milestones.
+    """
     def __init__(
         self,
         nodes,
@@ -145,21 +161,21 @@ class DStarLite:
         debug_stride=0,
         max_steps=None,
     ):
-        # graph data
+        # Input graph data and scenario updates.
         self.nodes = nodes
         self.graph = graph
         self.pred_list = pred
         self.scenario_changes = scenario_changes
         self.max_scenario = max(scenario_changes.keys(), default=0)
         
-        # warm-start path
+        # Warm-start path used to place beacon milestones (optional).
         self.robust_path = robust_path
 
-        # core D* Lite maps
+        # Core D* Lite maps: g-values and one-step lookahead rhs-values.
         self.g = {}
         self.rhs = {}
 
-        # start/ goal node
+        # Start/goal nodes (defaults: min/max node id).
         if start_node is None:
             start_node = min(nodes.keys())
         if goal_node is None:
@@ -173,30 +189,30 @@ class DStarLite:
         self.current_goal = self.final_goal
 
 
-        # {02"}
+        # {02"} priority queue U of (key, node) pairs.
         self.U = []
 
-        # {03"}
+        # {03"} km: key modifier for moving start state.
         self.km = 0
         
-        # {29"}
+        # {29"} last start state used for km updates.
         self.s_last = self.s_start
 
 
-        # variables for the scenario switch
+        # Scenario switch bookkeeping and queue state.
         self.step = 0
         self.current_scenario = 1
         self.last_applied_scenario = 0
         self.beacons_applied_for_scenario = None
-        self.key = {}
-        self.in_queue = {}
+        self.key = {}       # cached key per node to detect stale queue entries
+        self.in_queue = {}  # best-effort marker to limit duplicate pushes
 
-        # main solution data
+        # Main solution data.
         self.path = [self.s_start]
         self.cost = 0.0
         
 
-        # Solution metrics
+        # Solution metrics.
         self.arcs = []  # every arc taken by D* Lite during forward greedy execution
         self.cumulative_costs = []
         self.scenario_per_step = [0]
@@ -210,29 +226,31 @@ class DStarLite:
         self.robust_g = {}
         self.coords = nodes
 
-        # grid size for overlay reconstruction
+        # Grid size for overlay reconstruction.
         self.grid_size = int(max(y for (_, y) in nodes.values()) + 1)
         self.replans = 0
         self.step_cost_details = []
         self.result = {}
         self.max_steps = int(max_steps) if max_steps else None
+        self.debug = bool(debug)
+        self.debug_stride = int(debug_stride) if debug_stride else 0
 
         self.baseline_cost = []
-        self.baseline_cost_map = []
+        self.baseline_cost_map = []  # g-map snapshot after initial planning
 
-        self.manual_g_per_scenario = {}
+        self.manual_g_per_scenario = {}  # optional storage for manual inspection
         self.beacon_cap = beacon_cap
 
         self.grid_size = int(max(y for (_, y) in nodes.values()) + 1)
 
-        # Calculate the appropriate number of steps to take 
+        # Calculate steps per scenario layer using Manhattan distance.
         sx, sy = self.nodes[self.s_start]
         gx, gy = self.nodes[self.final_goal]
         min_steps = abs(sx - gx) + abs(gy - sy)
         num_scenarios = self.max_scenario + 1
         self.steps_per_layer = math.ceil(min_steps / num_scenarios)
 
-        # Beacon implementation (scheduled one per scenario/layer)
+        # Beacon implementation (scheduled one per scenario/layer).
         self.beacon_sequence = []
         if self.robust_path:
             # skip start/goal; cap to at most 10 evenly spaced beacons to limit queue blow-up
@@ -257,6 +275,7 @@ class DStarLite:
         self.next_beacon_idx = 0
         self.goal_from_scenario = None
         total_layers = self.max_scenario + 1 if self.max_scenario is not None else 1
+        # Spread beacons roughly evenly across scenario layers.
         self.beacon_interval = (
             math.ceil(total_layers / len(self.beacon_sequence))
             if self.beacon_sequence
@@ -275,6 +294,7 @@ class DStarLite:
         self.U = []
         self.km = 0
         self.s_last = self.s_start
+        # D* Lite sets rhs(goal) = 0 and inserts it into the queue.
         self.rhs[self.current_goal] = 0
         initial_key = self.CalculateKey(self.current_goal)
         self.key[self.current_goal] = initial_key
@@ -287,6 +307,7 @@ class DStarLite:
         """
         if self.next_beacon_idx >= len(self.beacon_sequence):
             return False
+        # Only allow one beacon activation per scenario layer unless forced.
         if (not force) and (self.goal_from_scenario == self.current_scenario):
             return False
 
@@ -297,6 +318,7 @@ class DStarLite:
         self.current_goal = m
         self.goal_from_scenario = self.current_scenario
         self.beacons_applied_for_scenario = self.current_scenario
+        # Reset search to aim at the new temporary goal.
         self.ResetSearchForGoal()
         return True
 
@@ -329,11 +351,6 @@ class DStarLite:
         (x2, y2) = self.nodes[b]
         return abs(x1 - x2) + abs(y1 - y2)
 
-    # Euclidean heuristic
-    #def h(self, a, b):
-    #    (x1, y1) = self.nodes[a]
-    #   (x2, y2) = self.nodes[b]
-    #    return ((x1 - x2)**2 + (y1 - y2)**2)**0.5
 
     # procedure CalculateKey(s)
     def CalculateKey(self, s):
@@ -350,6 +367,7 @@ class DStarLite:
     # procedure UpdateVertex(u)
     def UpdateVertex(self, u):
         if u != self.current_goal:
+            # rhs(u) = min_{s in pred(u)}(c(s,u) + g(s))
             rhs_new = float('inf')
             for s in self.pred(u):
                 rhs_new = min(rhs_new, self.graph[s][u] + self.g[s])
@@ -365,6 +383,7 @@ class DStarLite:
                 self.in_queue[u] = True
                 hq.heappush(self.U, (key_u, u))
         else:
+            # Node is locally consistent; remove from queue bookkeeping.
             self.key[u] = (float('inf'), float('inf'))
             self.in_queue[u] = False
 
@@ -387,6 +406,7 @@ class DStarLite:
             return self.U[0][0]
         
         # {10"}
+        # Process until start is locally consistent and no better key is in the queue.
         popped = 0
         while (top_key() < self.CalculateKey(self.s_start)) or (self.rhs[self.s_start] != self.g[self.s_start]):
 
@@ -482,6 +502,7 @@ class DStarLite:
         # {31"}  
         pops = self.ComputeShortestPath()
 
+        # Save initial g-values for baseline cost comparison.
         self.baseline_cost_map = dict(self.g)
         self.baseline_cost = self.g[self.s_start]
 
@@ -521,7 +542,7 @@ class DStarLite:
 
                 return None
             
-            # helper variables
+            # Choose next step based on one-step lookahead to current goal.
             next_s = None
 
             # {34"}
@@ -606,6 +627,7 @@ class DStarLite:
             # change to next scenario
             scenario_changed = self.current_scenario != self.last_applied_scenario
             if scenario_changed:
+                # Only update edges whose costs actually changed.
                 raw_changes = self.scenario_changes.get(self.current_scenario, [])
                 changed_edges = []
                 for (u, v, new_cost) in raw_changes:
@@ -618,7 +640,7 @@ class DStarLite:
 
 
 
-            # {37"}
+            # {37"} Apply changed edges and repair rhs/g values.
             need_replan = False
             replan_due_to_edges = bool(changed_edges)
             if changed_edges:
@@ -660,6 +682,7 @@ class DStarLite:
                 need_replan = True
             
             if scenario_changed:
+                # Activate a new beacon at scenario boundaries if scheduled.
                 should_activate_beacon = (
                     self.beacon_interval > 0
                     and ((self.current_scenario - 1) % self.beacon_interval == 0)
@@ -715,6 +738,9 @@ class DStarLite:
 
 
     def ExportPathOverlay(self, base_folder, out_folder):
+        """
+        Render the planned path over each scenario frame and save a GIF.
+        """
         out_dir = Path(out_folder) 
         out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -801,9 +827,9 @@ class DStarLite:
 
             out_png = out_dir / f"dstar_frame_{i:03d}.png"
             ax.axis("off")
-            ax.set_title(f"Scenario {i:03d}")
-            ax.set_xlabel("X coordinate")
-            ax.set_ylabel("Y coordinate")
+            #ax.set_title(f"Scenario {i:03d}")
+            #ax.set_xlabel("X coordinate")
+            #ax.set_ylabel("Y coordinate")
             fig.tight_layout(pad=0)
             fig.savefig(out_png, dpi=150)
             plt.close(fig)
@@ -822,6 +848,9 @@ class DStarLite:
 
 
 def main(nodes_path, edges_path, base_folder, robust_path_path, out_folder):
+    """
+    Entry point for running D* Lite with file-based inputs.
+    """
     # 1. Load input data
     nodes, graph, pred, scenario_changes, robust_path = Preprocessing(
         nodes_path, edges_path, base_folder, robust_path_path

@@ -144,20 +144,14 @@ DEFAULT_BATCH_TEMPLATE: Dict[str, Any] = {
     "seeds": [0],
     "algorithms": [
         "discrete",
-        "discrete_adaptive",
         "budgeted",
         "dstar",
         "dstar_discrete",
-        "dstar_discrete_adaptive",
         "dstar_budgeted",
     ],
     "srf": copy.deepcopy(DEFAULT_CONFIG_TEMPLATE["srf"]),
     "graph": copy.deepcopy(DEFAULT_CONFIG_TEMPLATE["graph"]),
-    "robust_model": {
-        **copy.deepcopy(DEFAULT_CONFIG_TEMPLATE["robust_model"]),
-        "adaptive_window": 1,
-        "adaptive_commit": None,
-    },
+    "robust_model": copy.deepcopy(DEFAULT_CONFIG_TEMPLATE["robust_model"]),
     "budgeted_model": copy.deepcopy(DEFAULT_CONFIG_TEMPLATE["budgeted_model"]),
     "dstar_lite": copy.deepcopy(DEFAULT_CONFIG_TEMPLATE["dstar_lite"]),
     "visualizations": {
@@ -179,22 +173,18 @@ DEFAULT_BATCH_TEMPLATE: Dict[str, Any] = {
 
 BATCH_ALGORITHM_LABELS: Dict[str, str] = {
     "discrete": "Discrete Uncertainty",
-    "discrete_adaptive": "Discrete Uncertainty (Adaptive)",
     "budgeted": "Budgeted Uncertainty",
     "dstar": "DStar Lite",
     "dstar_discrete": "DStar Lite (Discrete)",
-    "dstar_discrete_adaptive": "DStar Lite (Discrete Adaptive)",
     "dstar_budgeted": "DStar Lite (Budgeted)",
 }
 
 DEFAULT_METRICS: List[Dict[str, Any]] = [
     {"Model": "STRF Generator", "Cost": "-", "Edges": "-", "Run Time": "-", "Replans": "-"},
     {"Model": "Discrete Uncertainty", "Cost": "-", "Edges": "-", "Run Time": "-", "Replans": "-"},
-    {"Model": "Discrete Uncertainty Adaptive", "Cost": "-", "Edges": "-", "Run Time": "-", "Replans": "-"},
     {"Model": "Budgeted Uncertainty", "Cost": "-", "Edges": "-", "Run Time": "-", "Replans": "-"},
     {"Model": "DStar Lite", "Cost": "-", "Edges": "-", "Run Time": "-", "Replans": "-"},
     {"Model": "DStar Lite Discrete Uncertainty", "Cost": "-", "Edges": "-", "Run Time": "-", "Replans": "-"},
-    {"Model": "DStar Lite Discrete Uncertainty Adaptive", "Cost": "-", "Edges": "-", "Run Time": "-", "Replans": "-"},
     {"Model": "DStar Lite Budgeted Uncertainty", "Cost": "-", "Edges": "-", "Run Time": "-", "Replans": "-"},
 ]
 METRICS_FILENAME = "metrics.json"
@@ -864,6 +854,83 @@ def inject_css() -> None:
             font-size: 0.9rem;
             color: var(--muted);
         }}
+        .action-marker {{
+            display: none;
+        }}
+        div[data-testid="stVerticalBlock"]:has(.action-marker):not(:has(div[data-testid="stVerticalBlock"] .action-marker)) {{
+            background: var(--panel);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+            padding: 1rem 1.2rem;
+            box-shadow: 0 0 18px rgba(0,0,0,0.45);
+            margin-top: 0.6rem;
+        }}
+        div[data-testid="stVerticalBlock"]:has(.action-marker):not(:has(div[data-testid="stVerticalBlock"] .action-marker)) .gif-panel {{
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            padding: 0.6rem 0.5rem;
+        }}
+        div[data-testid="stVerticalBlock"]:has(.action-marker):not(:has(div[data-testid="stVerticalBlock"] .action-marker)) .stButton {{
+            display: flex;
+            justify-content: center;
+        }}
+        div[data-testid="stVerticalBlock"]:has(.action-marker):not(:has(div[data-testid="stVerticalBlock"] .action-marker)) .stButton > button {{
+            width: 100%;
+            max-width: 260px;
+        }}
+        .action-button-wrap {{
+            display: flex;
+            justify-content: center;
+            margin-top: 0.35rem;
+        }}
+        .action-button-wrap .stButton > button {{
+            width: 100%;
+            max-width: 260px;
+        }}
+        .viz-box {{
+            background: var(--panel);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+            padding: 1rem 1.2rem;
+            box-shadow: 0 0 18px rgba(0,0,0,0.45);
+            margin-top: 0.6rem;
+        }}
+        .viz-grid {{
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 0.9rem;
+        }}
+        .viz-item.wide {{
+            grid-column: span 3;
+        }}
+        .viz-item.narrow {{
+            grid-column: span 2;
+        }}
+        .viz-box .gif-panel {{
+            background: transparent;
+            border: none;
+            box-shadow: none;
+            padding: 0.6rem 0.5rem;
+        }}
+        @media (max-width: 800px) {{
+            .viz-grid {{
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }}
+            .viz-item.wide,
+            .viz-item.narrow {{
+                grid-column: span 2;
+            }}
+        }}
+        @media (max-width: 520px) {{
+            .viz-grid {{
+                grid-template-columns: 1fr;
+            }}
+            .viz-item.wide,
+            .viz-item.narrow {{
+                grid-column: span 1;
+            }}
+        }}
         .run-button button {{
             width: 100%;
             background: linear-gradient(90deg, rgba(255,255,255,0.12), rgba(0,0,0,0));
@@ -970,14 +1037,6 @@ def run_discrete(cfg: Dict[str, Any]) -> Dict[str, Any]:
     return run_discrete_pipeline(clone_config(cfg))
 
 
-def run_discrete_adaptive(cfg: Dict[str, Any]) -> Dict[str, Any]:
-    if run_discrete_pipeline is None:
-        raise RuntimeError("Adaptive Discrete Uncertainty model is unavailable in this environment.")
-    cfg_local = clone_config(cfg)
-    cfg_local.setdefault("robust_model", {})["discrete_mode"] = "adaptive"
-    return run_discrete_pipeline(cfg_local)
-
-
 def run_dstar(cfg: Dict[str, Any]) -> Dict[str, Any]:
     if dstar_pipeline is None:
         raise RuntimeError("DStar Lite runner is unavailable in this environment.")
@@ -1025,11 +1084,9 @@ def run_batch_queue(cfg: Dict[str, Any]) -> Dict[str, Any]:
 ACTIONS: Dict[str, Tuple[str, Optional[Runner]]] = {
     "run_strf": ("STRF Generator", run_strf),
     "run_discrete": ("Discrete Uncertainty", run_discrete),
-    "run_discrete_adaptive": ("Discrete Uncertainty Adaptive", run_discrete_adaptive),
     "run_budgeted_uncertainty": ("Budgeted Uncertainty", run_budgeted_uncertainty),
     "run_dstar": ("DStar Lite", run_dstar),
     "run_dstar_discrete": ("DStar Lite Discrete Uncertainty", run_dstar),
-    "run_dstar_discrete_adaptive": ("DStar Lite Discrete Uncertainty Adaptive", run_dstar),
     "run_dstar_budgeted": ("DStar Lite Budgeted Uncertainty", run_dstar),
     "run_batch": ("Batch Runner", run_batch),
     "run_batch_queue": ("Batch Queue Runner", run_batch_queue),
@@ -1183,110 +1240,108 @@ def render_action_dashboard() -> None:
         cfg.setdefault("dstar_lite", {})["warmstart_mode"] = mode
         save_config(cfg)
 
-    # -------------------------------
-    # GIF PATHS
-    # -------------------------------
-    strf_gif                = data_root / "animation.gif"
-    robust_gif              = data_root / "DiscreteUncertainty"                  / "overlays" / "discrete_uncertainty_path_overlay.gif"
-    robust_adaptive_gif     = data_root / "DiscreteUncertaintyAdaptive"          / "overlays" / "discrete_uncertainty_adaptive_path_overlay.gif"
-    budgeted_gif            = data_root / "BudgetedUncertainty"                  / "overlays" / "budgeted_uncertainty_path_overlay.gif"
-    dstar_gif               = data_root / "DStarLite"                            / "overlays" / "dstar_overlay_animation.gif"
-    dstar_disc_gif          = data_root / "DStarLiteDiscreteUncertainty"         / "overlays" / "dstar_overlay_animation.gif"
-    dstar_disc_adaptive_gif = data_root / "DStarLiteDiscreteAdaptiveUncertainty" / "overlays" / "dstar_overlay_animation.gif"
-    dstar_budgeted_gif      = data_root / "DStarLiteBudgetedUncertainty"         / "overlays" / "dstar_overlay_animation.gif"
+    with st.container():
+        st.markdown("<div class='action-marker'></div>", unsafe_allow_html=True)
 
-    # -------------------------------
-    # ROW 1: STRF ONLY
-    # -------------------------------
-    gif_cols = st.columns(1)
-    with gif_cols[0]:
-        render_gif_panel("Spatio-Temporal Random Field Generator", "Scenario GIF", strf_gif)
+        # -------------------------------
+        # GIF PATHS
+        # -------------------------------
+        strf_gif                = data_root / "animation.gif"
+        robust_gif         = data_root / "DiscreteUncertainty"          / "overlays" / "discrete_uncertainty_path_overlay.gif"
+        budgeted_gif       = data_root / "BudgetedUncertainty"          / "overlays" / "budgeted_uncertainty_path_overlay.gif"
+        dstar_gif          = data_root / "DStarLite"                    / "overlays" / "dstar_overlay_animation.gif"
+        dstar_disc_gif     = data_root / "DStarLiteDiscreteUncertainty" / "overlays" / "dstar_overlay_animation.gif"
+        dstar_budgeted_gif = data_root / "DStarLiteBudgetedUncertainty" / "overlays" / "dstar_overlay_animation.gif"
 
-    btn_cols = st.columns(1)
-    if btn_cols[0].button("Run STRF Generator", key="btn_strf", use_container_width=True):
-        st.session_state["pending_action"] = "run_strf"
+        # -------------------------------
+        # ROW 1: STRF ONLY
+        # -------------------------------
+        gif_cols = st.columns(1)
+        with gif_cols[0]:
+            render_gif_panel("Spatio-Temporal Random Field Generator", "Scenario GIF", strf_gif)
+            st.markdown("<div class='action-button-wrap'>", unsafe_allow_html=True)
+            if st.button("Run STRF Generator", key="btn_strf", use_container_width=False):
+                st.session_state["pending_action"] = "run_strf"
+            st.markdown("</div>", unsafe_allow_html=True)
 
-    # -------------------------------
-    # ROW 2: ROBUST MODELS (DISCRETE / ADAPTIVE / BUDGETED)
-    # -------------------------------
-    row2_cards = [
-        ("Discrete Uncertainty Model", "Discrete Uncertainty Path Overlay GIF", robust_gif),
-        ("Adaptive Discrete Uncertainty Model", "Adaptive Discrete Path Overlay GIF", robust_adaptive_gif),
-        ("Budgeted Uncertainty Model", "Budgeted Uncertainty Path Overlay GIF", budgeted_gif),
-    ]
+        # -------------------------------
+        # ROW 2: ROBUST MODELS (DISCRETE / BUDGETED)
+        # -------------------------------
+        row2_cards = [
+            ("Discrete Uncertainty Model", "Discrete Uncertainty Path Overlay GIF", robust_gif),
+            ("Budgeted Uncertainty Model", "Budgeted Uncertainty Path Overlay GIF", budgeted_gif),
+        ]
 
-    gif_cols2 = st.columns(3)
-    for (title, subtitle, path), col in zip(row2_cards, gif_cols2):
-        with col:
-            render_gif_panel(title, subtitle, path)
+        gif_cols2 = st.columns(2)
+        for (title, subtitle, path), col in zip(row2_cards, gif_cols2):
+            with col:
+                render_gif_panel(title, subtitle, path)
+                st.markdown("<div class='action-button-wrap'>", unsafe_allow_html=True)
+                if title == "Discrete Uncertainty Model":
+                    if st.button("Run Discrete Uncertainty Model", key="btn_discrete", use_container_width=False):
+                        st.session_state["pending_action"] = "run_discrete"
+                else:
+                    if st.button("Run Budgeted Uncertainty Model", key="btn_budgeted", use_container_width=False):
+                        st.session_state["pending_action"] = "run_budgeted_uncertainty"
+                st.markdown("</div>", unsafe_allow_html=True)
 
-    btn_cols2 = st.columns(3)
-    if btn_cols2[0].button("Run Discrete Uncertainty Model", key="btn_discrete", use_container_width=True):
-        st.session_state["pending_action"] = "run_discrete"
-    if btn_cols2[1].button("Run Adaptive Discrete Uncertainty Model", key="btn_discrete_adaptive", use_container_width=True):
-        st.session_state["pending_action"] = "run_discrete_adaptive"
-    if btn_cols2[2].button("Run Budgeted Uncertainty Model", key="btn_budgeted", use_container_width=True):
-        st.session_state["pending_action"] = "run_budgeted_uncertainty"
+        # -------------------------------
+        # ROW 3: D* LITE BASELINE
+        # -------------------------------
+        gif_cols3 = st.columns(1)
+        with gif_cols3[0]:
+            render_gif_panel("DStar Lite Baseline", "DStar Lite Baseline Path GIF", dstar_gif)
+            st.markdown("<div class='action-button-wrap'>", unsafe_allow_html=True)
+            if st.button("Run DStar Lite", key="btn_dstar", use_container_width=False):
+                st.session_state["pending_action"] = "run_dstar"
+            st.markdown("</div>", unsafe_allow_html=True)
 
-    # -------------------------------
-    # ROW 3: D* LITE BASELINE
-    # -------------------------------
-    gif_cols3 = st.columns(1)
-    with gif_cols3[0]:
-        render_gif_panel("DStar Lite Baseline", "DStar Lite Baseline Path GIF", dstar_gif)
+        # -------------------------------
+        # ROW 4: D* LITE WITH WARM-STARTS
+        # -------------------------------
+        row4_cards = [
+            ("DStar Lite w. Discrete Uncertainty Optimal Path", "DStar Lite Restricted Path GIF", dstar_disc_gif),
+            ("DStar Lite w. Budgeted Uncertainty Optimal Path", "DStar Lite Restricted Path GIF", dstar_budgeted_gif),
+        ]
 
-    btn_cols3 = st.columns(1)
-    if btn_cols3[0].button("Run DStar Lite", key="btn_dstar", use_container_width=True):
-        st.session_state["pending_action"] = "run_dstar"
+        gif_cols4 = st.columns(2)
+        for (title, subtitle, path), col in zip(row4_cards, gif_cols4):
+            with col:
+                render_gif_panel(title, subtitle, path)
+                st.markdown("<div class='action-button-wrap'>", unsafe_allow_html=True)
+                if title.startswith("DStar Lite w. Discrete"):
+                    if st.button("Run DStar Lite with Discrete Uncertainty Path", key="btn_dstar_discrete", use_container_width=False):
+                        set_warmstart("discrete")
+                        st.session_state["pending_action"] = "run_dstar_discrete"
+                else:
+                    if st.button("Run DStar Lite with Budgeted Uncertainty Path", key="btn_dstar_budgeted", use_container_width=False):
+                        set_warmstart("budgeted")
+                        st.session_state["pending_action"] = "run_dstar_budgeted"
+                st.markdown("</div>", unsafe_allow_html=True)
 
-    # -------------------------------
-    # ROW 4: D* LITE WITH WARM-STARTS
-    # -------------------------------
-    row4_cards = [
-        ("DStar Lite w. Discrete Uncertainty Optimal Path", "DStar Lite Restricted Path GIF", dstar_disc_gif),
-        ("DStar Lite w. Adaptive Discrete Uncertainty Optimal Path", "DStar Lite Restricted Path GIF", dstar_disc_adaptive_gif),
-        ("DStar Lite w. Budgeted Uncertainty Optimal Path", "DStar Lite Restricted Path GIF", dstar_budgeted_gif),
-    ]
-
-    gif_cols4 = st.columns(3)
-    for (title, subtitle, path), col in zip(row4_cards, gif_cols4):
-        with col:
-            render_gif_panel(title, subtitle, path)
-
-    btn_cols4 = st.columns(3)
-    if btn_cols4[0].button("Run DStar Lite with Discrete Uncertainty Path", key="btn_dstar_discrete", use_container_width=True):
-        set_warmstart("discrete")
-        st.session_state["pending_action"] = "run_dstar_discrete"
-    if btn_cols4[1].button("Run DStar Lite with Adaptive Discrete Uncertainty Path", key="btn_dstar_discrete_adaptive", use_container_width=True):
-        set_warmstart("discrete_adaptive")
-        st.session_state["pending_action"] = "run_dstar_discrete_adaptive"
-    if btn_cols4[2].button("Run DStar Lite with Budgeted Uncertainty Path", key="btn_dstar_budgeted", use_container_width=True):
-        set_warmstart("budgeted")
-        st.session_state["pending_action"] = "run_dstar_budgeted"
-
-    # -------------------------------
-    # Restart all GIFs simultaneously
-    # -------------------------------
-    st.markdown(
-        """
-        <script>
-        const gifs = document.querySelectorAll('.gif-panel img.gif-preview');
-        const restart = () => {
-            gifs.forEach(img => {
-                const src = img.src;
-                img.src = '';
-                img.src = src;
-            });
-        };
-        if (document.readyState === 'complete') {
-            restart();
-        } else {
-            window.addEventListener('load', restart, { once: true });
-        }
-        </script>
-        """,
-        unsafe_allow_html=True,
-    )
+        # -------------------------------
+        # Restart all GIFs simultaneously
+        # -------------------------------
+        st.markdown(
+            """
+            <script>
+            const gifs = document.querySelectorAll('.gif-panel img.gif-preview');
+            const restart = () => {
+                gifs.forEach(img => {
+                    const src = img.src;
+                    img.src = '';
+                    img.src = src;
+                });
+            };
+            if (document.readyState === 'complete') {
+                restart();
+            } else {
+                window.addEventListener('load', restart, { once: true });
+            }
+            </script>
+            """,
+            unsafe_allow_html=True,
+        )
 
 def parse_gamma_input(text: str):
     return float(text.strip())
@@ -1402,7 +1457,7 @@ def parameter_form(cfg: Dict[str, Any]) -> None:
             # DStar Lite params
             with col_dstar:
                 st.markdown("#### DStar Lite")
-                warmstart_options = ["none", "discrete", "discrete_adaptive", "budgeted"]
+                warmstart_options = ["none", "discrete", "budgeted"]
                 warmstart_current = str(cfg["dstar_lite"].get("warmstart_mode", "none"))
                 warmstart_mode = st.selectbox(
                     "Warm-Start Mode",
@@ -1598,16 +1653,6 @@ def batch_mode_form(cfg: Dict[str, Any]) -> None:
                 )
                 goal_value = str(robust_cfg.get("goal_node", "auto"))
                 goal_node = st.text_input("Goal Node", value=goal_value)
-                adaptive_window = st.number_input(
-                    "Adaptive Window",
-                    min_value=1,
-                    step=1,
-                    value=int(robust_cfg.get("adaptive_window", 1)),
-                )
-                adaptive_commit_raw = st.text_input(
-                    "Adaptive Commit Length (blank=auto)",
-                    value="" if robust_cfg.get("adaptive_commit") is None else str(robust_cfg.get("adaptive_commit")),
-                )
 
             with col_m2:
                 gamma_raw = st.text_input(
@@ -1646,11 +1691,6 @@ def batch_mode_form(cfg: Dict[str, Any]) -> None:
                     st.error("Batch run requires at least one seed and one algorithm.")
                     return
 
-                adaptive_commit = None
-                adaptive_commit_raw = adaptive_commit_raw.strip()
-                if adaptive_commit_raw:
-                    adaptive_commit = int(adaptive_commit_raw)
-
                 batch_cfg["config_id"] = config_id.strip() or "batch_default"
                 batch_cfg["experiments_root"] = experiments_root.strip() or str(APP_ROOT / "experiments")
                 batch_cfg["results_csv"] = results_csv.strip() or "batch_results.csv"
@@ -1680,8 +1720,6 @@ def batch_mode_form(cfg: Dict[str, Any]) -> None:
                     {
                         "start_node": int(start_node),
                         "goal_node": goal_node.strip() or "auto",
-                        "adaptive_window": int(adaptive_window),
-                        "adaptive_commit": adaptive_commit,
                     }
                 )
 
@@ -1820,34 +1858,50 @@ def render_metrics_summary(cfg: Dict[str, Any]) -> None:
         "gif_violin": data_root / "animation_violin.gif",
     }
 
-    # ----- ROW 1: 4 cards -----
-    row1 = st.columns(2)
-    row1_items = [
-        ("3D Map GIF",        "gif_3d"),
-        ("Heat GIF",          "gif_heat"),
+    def build_gif_panel_html(title: str, key: str) -> str:
+        enabled = bool(viz_cfg.get(key, False))
+        path = gif_map[key]
+        if enabled and path.exists():
+            encoded = b64encode(path.read_bytes()).decode("utf-8")
+            return (
+                "<div class=\"gif-panel\">"
+                f"<span class=\"label\">{title}</span>"
+                f"<img src=\"data:image/gif;base64,{encoded}\" alt=\"{title} preview\" class=\"gif-preview\"/>"
+                f"<div class=\"gif-caption\">{title} preview</div>"
+                "</div>"
+            )
+        subtitle = "Active" if enabled else "Waiting for checkbox"
+        tone = "#f0f0f0" if enabled else "#7c7f8a"
+        return (
+            f"<div class=\"gif-panel\" style=\"border-color:{tone}\">"
+            f"<span class=\"label\">{subtitle}</span>"
+            f"<h4>{title}</h4>"
+            "</div>"
+        )
+
+    items = [
+        ("3D Map GIF", "gif_3d", "wide"),
+        ("Heat GIF", "gif_heat", "wide"),
+        ("Histogram GIF", "gif_hist", "narrow"),
+        ("KDE GIF", "gif_kde", "narrow"),
+        ("Violin GIF", "gif_violin", "narrow"),
     ]
 
-    for col, (title, key) in zip(row1, row1_items):
-        with col:
-            if viz_cfg.get(key, False) and gif_map[key].exists():
-                render_gif_panel(title, title, gif_map[key])
-            else:
-                render_controlled_gif_panel(title, viz_cfg.get(key, False))
+    panels_html = "\n".join(
+        f"<div class=\"viz-item {size}\">{build_gif_panel_html(title, key)}</div>"
+        for title, key, size in items
+    )
 
-    # ----- ROW 2: 3 cards -----
-    row2 = st.columns(3)
-    row2_items = [
-        ("Histogram GIF",     "gif_hist"),
-        ("KDE GIF",           "gif_kde"),
-        ("Violin GIF",        "gif_violin"),
-    ]
-
-    for col, (title, key) in zip(row2, row2_items):
-        with col:
-            if viz_cfg.get(key, False) and gif_map[key].exists():
-                render_gif_panel(title, title, gif_map[key])
-            else:
-                render_controlled_gif_panel(title, viz_cfg.get(key, False))
+    st.markdown(
+        f"""
+        <div class="viz-box">
+            <div class="viz-grid">
+                {panels_html}
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
     # ----- Metrics below -----
     st.markdown("### Model Comparison")
@@ -1896,11 +1950,9 @@ def render_interpretation_report(cfg: Dict[str, Any]) -> None:
 # ===============================================================
 MODEL_KEY_MAP = {
     "Discrete Uncertainty": "last_result_Discrete_Uncertainty",
-    "Discrete Uncertainty Adaptive": "last_result_Discrete_Uncertainty_Adaptive",
     "Budgeted Uncertainty": "last_result_Budgeted_Uncertainty",
     "DStar Lite": "last_result_DStar_Lite",
     "DStar Lite Discrete Uncertainty": "last_result_DStar_Lite_Discrete_Robust",
-    "DStar Lite Discrete Uncertainty Adaptive": "last_result_DStar_Lite_Discrete_Adaptive",
     "DStar Lite Budgeted Uncertainty": "last_result_DStar_Lite_Budgeted",
 }
 
@@ -2055,11 +2107,9 @@ def comparison_data_path(cfg: Dict[str, Any], model_label: str) -> Path:
 def load_comparison_result(cfg: Dict[str, Any], model_label: str) -> Optional[Dict[str, Any]]:
     MAPPING = {
         "Discrete Uncertainty": "DiscreteUncertainty_result.json",
-        "Discrete Uncertainty Adaptive": "DiscreteUncertaintyAdaptive_result.json",
         "Budgeted Uncertainty": "BudgetedUncertainty_result.json",      # adjust
         "DStar Lite": "DStarLite_result.json",                               # adjust
         "DStar Lite Discrete Uncertainty": "DStarLiteDiscreteUncertainty_result.json",
-        "DStar Lite Discrete Uncertainty Adaptive": "DStarLiteDiscreteAdaptiveUncertainty_result.json",
         "DStar Lite Budgeted Uncertainty": "DStarLiteBudgetedUncertainty_result.json",
     }
 
@@ -2303,17 +2353,11 @@ def execute_pending_action(
             elif action_key == "run_dstar_discrete":
                 st.session_state["last_result_DStar_Lite_Discrete_Robust"] = result
 
-            elif action_key == "run_dstar_discrete_adaptive":
-                st.session_state["last_result_DStar_Lite_Discrete_Adaptive"] = result
-
             elif action_key == "run_dstar_budgeted":
                 st.session_state["last_result_DStar_Lite_Budgeted"] = result
             
             elif action_key == "run_discrete":
                 st.session_state["last_result_Discrete_Uncertainty"] = result
-
-            elif action_key == "run_discrete_adaptive":
-                st.session_state["last_result_Discrete_Uncertainty_Adaptive"] = result
 
             elif action_key == "run_budgeted_uncertainty":
                 st.session_state["last_result_Budgeted_Uncertainty"] = result
@@ -2379,7 +2423,7 @@ def main() -> None:
 
     boxed_section(path_selector, cfg)
 
-    boxed_section(render_action_dashboard)
+    render_action_dashboard()
 
     boxed_section(parameter_form, cfg)
     boxed_section(batch_mode_form, cfg)

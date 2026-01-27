@@ -171,6 +171,6 @@
     "robust_path_overlay": false,
     "show_log": false,
     "export_metadata": true,
-    "export_overlays": false
+    "export_overlays": true
   }
 }

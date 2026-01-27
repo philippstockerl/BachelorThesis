@@ -146,7 +146,7 @@
   },
   "budgeted_model": {
     "gamma": 38.0,
-    "gamma_input": "38",
+    "gamma_input": "38.0",
     "gamma_value": 38.0,
     "nominal_rule": "avg"
   },

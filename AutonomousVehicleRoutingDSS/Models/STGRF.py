@@ -1,7 +1,6 @@
 from __future__ import annotations
 import os, io, json
 from pathlib import Path
-import math
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -12,6 +11,12 @@ import networkx as nx
 
 
 class STGRF:
+    """
+    Spatio-temporal random field generator.
+
+    Produces a 2D grid of costs per scenario, exports nodes/edges,
+    and optionally creates visualization frames and GIFs.
+    """
 
     def __init__(
         self,
@@ -77,13 +82,16 @@ class STGRF:
 
 
     def JSONImport(self, json_path):
+        """Load a JSON config file and apply it to this instance."""
         json_path = Path(json_path)
         with json_path.open("r", encoding="utf-8") as fh:
             cfg = json.load(fh)
         self.DSSImport(cfg)
 
 
+
     def DSSImport(self, cfg):
+        """Apply config dict values (paths/srf/visualizations) with defaults."""
         self.seed = cfg.get("seed", self.seed)
         paths = cfg.get("paths", {})
         self.data_root = paths.get("data_root", self.data_root)
@@ -116,11 +124,12 @@ class STGRF:
 
 
     def ensure_dir(self, path):
+        """Ensure a directory exists and return it as a Path."""
         os.makedirs(path, exist_ok=True)
         return Path(path)
 
-
     def _figure_to_array(self, fig, save_path=None, desktop_copy=False, desktop_name=None):
+        """Render a Matplotlib figure to an image array, optionally saving it."""
         buf = io.BytesIO()
         fig.savefig(buf, format="png", dpi=120)
         if save_path:
@@ -134,7 +143,7 @@ class STGRF:
             if desktop_name:
                 desktop_file = desktop_name
             elif save_path:
-                # Try to include scenario folder for uniqueness (scenario_xxx/frame/frame.png → scenario_xxx__frame__frame.png)
+                # Include scenario folder for uniqueness (scenario_xxx/frame/frame.png → scenario_xxx__frame__frame.png)
                 if len(save_path.parents) > 1:
                     desktop_file = f"{save_path.parents[1].name}__{save_path.parent.name}__{save_path.name}"
                 else:
@@ -142,12 +151,17 @@ class STGRF:
             else:
                 desktop_file = "frame.png"
             fig.savefig(desktop_dir / desktop_file, dpi=120)
+        # Always close to avoid accumulating open figures.
         plt.close(fig)
         buf.seek(0)
         return imageio.imread(buf)
 
-
     def build_nodes(self):
+        # Coordinate/flattening convention:
+        # - Grid coordinates are (x, y) where x is column index and y is row index.
+        # - Node IDs are flattened as u = y * N + x, so x changes fastest.
+        # - This same convention is used when mapping (x, y) ↔ node_id in edges.
+        """Create grid nodes with stable IDs (x changes fastest, then y)."""
         N = self.grid_size
         ids = np.arange(N * N)
         xs = np.tile(np.arange(N), N)
@@ -168,18 +182,20 @@ class STGRF:
 
         rows = []
         for (x, y) in G.nodes():
-            u = x * N + y  # flatten
+            # Flatten (x, y) to node id; keep consistent with build_nodes ordering.
+            u = y * N + x
             for (nx_, ny_) in G.successors((x, y)):
-                v = nx_ * N + ny_
+                v = ny_ * N + nx_
                 f_u = float(f_t[x, y])
                 f_v = float(f_t[nx_, ny_])
+                # Edge cost is the average of the two endpoint node costs.
                 cost = 0.5 * (f_u + f_v)
                 rows.append((u, v, cost))
 
         return pd.DataFrame(rows, columns=["u", "v", "cost"])
 
-
     def _plot_surface3d_rotate(self, field, scen_dir=None):
+        """Create 3D surface frames by rotating the view angle."""
 
         N = field.shape[0]
         X, Y = np.meshgrid(np.arange(N), np.arange(N))
@@ -203,14 +219,15 @@ class STGRF:
 
         return frames
 
-
     def STRF(self):
+        """Generate the field, export nodes/edges, and create visuals."""
 
+        # 1. Generate axes for space (x/y) and scenario index (t).
         x = np.arange(0, self.grid_size, self.cell_size)
         y = np.arange(0, self.grid_size, self.cell_size)
         t = np.arange(self.num_scenarios)
 
-
+        # 2. Build covariance model for gstools.
         Kernel = getattr(gs, self.kernel)
         kernel_kwargs = {
             "temporal": False,
@@ -226,9 +243,13 @@ class STGRF:
 
         model = Kernel(**kernel_kwargs)
 
+        # 3. Generate random field.
         srf = gs.SRF(model, seed=self.seed)
+
+        # Create the full 3d array on the structured grid defined by (x,y,t)
         field = srf.structured([x, y, t])
 
+        # 4. Normalize costs globally to [0, 1], if enabled.
         if self.use_normalization:
             field = (field - np.min(field)) / (np.max(field) - np.min(field))
 
@@ -236,6 +257,7 @@ class STGRF:
 
         base_dir = self.ensure_dir(self.data_root)
 
+        # Nodes are static across scenarios.
         nodes = self.build_nodes()
         nodes.to_csv(base_dir / "nodes.csv", index=False)
 
@@ -249,16 +271,19 @@ class STGRF:
             "gif_3d": [],
         }
 
+        # 5. For every slice, generate visuals and map the edge costs.
         for t_idx in range(T):
 
             scen_dir = base_dir / f"scenario_{t_idx:03d}"
             scen_dir.mkdir(parents=True, exist_ok=True)
+
+            # This is where we slice our 3d array in variable 'field' into 2d slices
             f_t = field[:, :, t_idx]
 
-            # Save field
+            # Save the raw field for this scenario.
             np.save(scen_dir / "field.npy", f_t)
 
-            # Build edges
+            # Build edge list with costs derived from node values.
             edges = self.build_edges_networkx(f_t)
 
             edges.to_csv(scen_dir / "edges.csv", index=False)
@@ -269,9 +294,9 @@ class STGRF:
                 ax = fig.add_subplot(111)
                 if self.frame_2d_legend:
                     im = ax.imshow(f_t, cmap="viridis", origin="lower")
-                    ax.set_title(f"Scenario {t_idx:03d}")
-                    ax.set_xlabel("X coordinate")
-                    ax.set_ylabel("Y coordinate")
+                    #ax.set_title(f"Scenario {t_idx:03d}")
+                    #ax.set_xlabel("X coordinate")
+                    #ax.set_ylabel("Y coordinate")
                     step = max(1, f_t.shape[0] // 10)
                     ax.set_xticks(np.arange(0, f_t.shape[0], step))
                     ax.set_yticks(np.arange(0, f_t.shape[0], step))
@@ -294,11 +319,11 @@ class STGRF:
             if self.gif_2d:
                 fig = plt.figure(figsize=(6,6))
                 ax = fig.add_subplot(111)
-                ax.axis("on")
+                ax.axis("off")
                 ax.imshow(f_t, cmap="viridis", origin="lower")
-                ax.set_title(f"Scenario {t_idx:03d}")
-                ax.set_xlabel("X coordinate")
-                ax.set_ylabel("Y coordinate")
+                #ax.set_title(f"Scenario {t_idx:03d}")
+                #ax.set_xlabel("X coordinate")
+                #ax.set_ylabel("Y coordinate")
                 fig.tight_layout(pad=0)
                 img = self._figure_to_array(fig)
                 self.gif_buffers["gif_2d"].append(img)
@@ -395,6 +420,7 @@ class STGRF:
         # =====================================================
         # EXPORT GLOBAL GIFS
         # =====================================================
+        # Bundle collected frames into animations.
         gif_output_map = {
             "gif_2d": ("animation.gif", 2),
             "gif_3d": ("animation_3d.gif", 10),
@@ -415,6 +441,7 @@ class STGRF:
             try:
                 from Models.statistical_interpreter import StatisticalInterpreter
 
+                # Optional statistical summaries over all scenarios.
                 interpreter = StatisticalInterpreter(
                     data_root=base_dir,
                     params={
@@ -430,7 +457,7 @@ class STGRF:
             except Exception as exc:
                 print(f"[warn] Statistical interpretation export failed: {exc}")
 
-        print("\n✓ STRF Generation Complete\n")
+        print("\n STRF Generation Complete\n")
 
 
         return str(base_dir)
@@ -442,6 +469,7 @@ class STGRF:
 # ENTRYPOINT
 # ===============================================================
 def main():
+    """Standalone entrypoint using the default DSS config."""
     sp = STGRF()
     sp.JSONImport("/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/config/default.json")
     sp.STRF()

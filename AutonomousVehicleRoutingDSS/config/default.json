@@ -1,19 +1,19 @@
 {
-    "seed": 420,
+    "seed": 1,
     "paths": {
-        "data_root": "AutonomousVehicleRoutingDSS/Data/ShowCase2",
+        "data_root": "/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/Data/KernelGaussian",
         "dstar_edges_scenario": 0,
         "dstar_robust_path": "/path/to/robust/path.csv"
     },
     "srf": {
-        "grid_size": 100,
+        "grid_size": 20,
         "cell_size": 1,
         "kernel": "Gaussian",
         "variance": 1.0,
         "length_scale": [
-            15.0,
-            15.0,
-            5.0
+            5.0,
+            5.0,
+            3.0
         ],
         "anis": [
             1.0,
@@ -21,9 +21,9 @@
             1.0
         ],
         "use_global_normalization": true,
-        "num_scenarios": 20,
+        "num_scenarios": 10,
         "t_start": 0,
-        "t_end": 20,
+        "t_end": 10,
         "t_step": 1,
         "nu": 1.4,
         "alpha": 0.1
@@ -34,22 +34,22 @@
         "step_per_layer": 10
     },
     "robust_model": {
-        "start_node": 1010,
-        "goal_node": "8989"
+        "start_node": 0,
+        "goal_node": "auto"
     },
     "budgeted_model": {
-        "gamma": 20.0,
+        "gamma": 3.8,
         "K": 1,
-        "gamma_input": "20",
-        "gamma_value": 20.0,
+        "gamma_input": "3.8",
+        "gamma_value": 3.8,
         "gamma_list": null,
-        "nominal_rule": "min"
+        "nominal_rule": "avg"
     },
     "dstar_lite": {
         "change_interval_steps": 20,
         "export_overlays": true,
         "max_steps": 2000,
-        "warmstart_mode": "none",
+        "warmstart_mode": "budgeted",
         "max_milestones": 10,
         "debug": false,
         "debug_stride": 50

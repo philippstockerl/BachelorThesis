@@ -11,8 +11,21 @@ import numpy as np
 import pandas as pd
 
 
+# =============================================================================
+# PRIMARY USE: Generate figures from summary.csv (and optional raw CSV).
+# =============================================================================
+# Entry point: run_all_plots(...)
+# =============================================================================
+
+
+# -----------------------------------------------------------------------------
+# Helper utilities (I/O, naming, parsing, colors).
+# -----------------------------------------------------------------------------
+
 def _require_matplotlib():
+    """Import matplotlib lazily and raise a clear error if missing."""
     try:
+        # Delayed import keeps matplotlib optional for non-plot workflows.
         import matplotlib.pyplot as plt
     except Exception as exc:  # pragma: no cover - optional dependency
         raise RuntimeError("matplotlib is required for plotting.") from exc
@@ -20,7 +33,9 @@ def _require_matplotlib():
 
 
 def set_plot_style() -> None:
+    """Configure global matplotlib style for publication-ready plots."""
     plt = _require_matplotlib()
+    # Serif fonts and consistent sizing for thesis-quality figures.
     plt.rcParams.update(
         {
             "font.family": "serif",
@@ -42,12 +57,14 @@ def set_plot_style() -> None:
 
 
 def _safe_name(value: str) -> str:
+    """Sanitize a string so it is safe for filenames."""
     cleaned = re.sub(r"[^A-Za-z0-9_-]+", "_", str(value))
     cleaned = cleaned.strip("_")
     return cleaned or "unnamed"
 
 
 def _format_algorithm_label(algo: str) -> str:
+    """Prettify algorithm labels for legends and annotations."""
     text = str(algo).replace("_", " ").strip()
     if not text:
         return str(algo)
@@ -55,6 +72,7 @@ def _format_algorithm_label(algo: str) -> str:
 
 
 def _save_figure(fig, output_dir: Path, filename_base: str) -> None:
+    """Save a figure as both PNG and PDF to the output directory."""
     output_dir.mkdir(parents=True, exist_ok=True)
     png_path = output_dir / f"{filename_base}.png"
     pdf_path = output_dir / f"{filename_base}.pdf"
@@ -63,6 +81,7 @@ def _save_figure(fig, output_dir: Path, filename_base: str) -> None:
 
 
 def _algorithm_order(df: pd.DataFrame, preferred: Optional[Sequence[str]] = None) -> List[str]:
+    """Return algorithms in preferred order, falling back to sorted values."""
     algos = list(df["algorithm"].dropna().astype(str).unique())
     if preferred:
         order = [a for a in preferred if a in algos]
@@ -72,6 +91,7 @@ def _algorithm_order(df: pd.DataFrame, preferred: Optional[Sequence[str]] = None
 
 
 def _color_map(algorithms: Sequence[str], cmap_name: str = "tab10") -> Dict[str, Any]:
+    """Assign deterministic colors to algorithms from a matplotlib colormap."""
     plt = _require_matplotlib()
     cmap = plt.get_cmap(cmap_name)
     colors = {}
@@ -81,6 +101,7 @@ def _color_map(algorithms: Sequence[str], cmap_name: str = "tab10") -> Dict[str,
 
 
 def _coerce_numeric(df: pd.DataFrame, columns: Iterable[str]) -> pd.DataFrame:
+    """Coerce named columns to numeric values in place."""
     for col in columns:
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="coerce")
@@ -88,6 +109,7 @@ def _coerce_numeric(df: pd.DataFrame, columns: Iterable[str]) -> pd.DataFrame:
 
 
 def _resolve_raw_csv(summary_path: Path, raw_csv: Optional[str | Path]) -> Optional[Path]:
+    """Locate the raw CSV next to a summary when not explicitly provided."""
     if raw_csv:
         candidate = Path(raw_csv).expanduser()
         return candidate if candidate.exists() else None
@@ -104,6 +126,7 @@ def _resolve_raw_csv(summary_path: Path, raw_csv: Optional[str | Path]) -> Optio
 
 
 def _load_raw_results(csv_path: Path) -> pd.DataFrame:
+    """Load raw results CSV and normalize expected column names."""
     df = pd.read_csv(csv_path)
     column_map = {
         "configuration_id": "config_id",
@@ -122,6 +145,7 @@ def _load_raw_results(csv_path: Path) -> pd.DataFrame:
 
 
 def _parse_list_field(value: Any) -> Optional[List[float]]:
+    """Parse a list-like field that may be a list or JSON string."""
     if isinstance(value, list):
         return [float(v) for v in value if _is_number(v)]
     if isinstance(value, str) and value.strip():
@@ -135,6 +159,7 @@ def _parse_list_field(value: Any) -> Optional[List[float]]:
 
 
 def _is_number(value: Any) -> bool:
+    """Return True if the value can be parsed as a float."""
     try:
         float(value)
         return True
@@ -146,6 +171,7 @@ def _extract_samples_by_algorithm(
     group: pd.DataFrame,
     column_candidates: Sequence[str],
 ) -> Tuple[Optional[str], Dict[str, List[float]]]:
+    """Extract per-algorithm sample lists from candidate columns."""
     for col in column_candidates:
         if col not in group.columns:
             continue
@@ -162,17 +188,23 @@ def _extract_samples_by_algorithm(
     return None, {}
 
 
+# -----------------------------------------------------------------------------
+# Plot builders (each function renders a specific view).
+# -----------------------------------------------------------------------------
+
 def plot_cost_ci_dot(
     summary_df: pd.DataFrame,
     output_dir: Path,
     algorithm_order: Optional[Sequence[str]] = None,
     colors: Optional[Dict[str, Any]] = None,
 ) -> None:
+    """Plot cost medians with optional CI error bars."""
     if "cost_median" not in summary_df.columns:
         print("[plot] cost_median missing; skipping cost CI dot plots.")
         return
     summary_df = _coerce_numeric(summary_df, ["cost_median", "cost_ci_low", "cost_ci_high"])
 
+    # Render one figure per config.
     for config_id, group in summary_df.groupby("config_id"):
         group = group.dropna(subset=["cost_median"])
         if group.empty:
@@ -220,6 +252,7 @@ def plot_cost_distribution(
     algorithm_order: Optional[Sequence[str]] = None,
     colors: Optional[Dict[str, Any]] = None,
 ) -> None:
+    """Plot cost distributions using per-seed samples in the summary table."""
     column, samples = _extract_samples_by_algorithm(
         summary_df,
         ["cost_values", "cost_samples", "realized_cost_samples"],
@@ -262,6 +295,7 @@ def plot_cost_distribution_raw(
     colors: Optional[Dict[str, Any]] = None,
     ok_statuses: Sequence[str] = ("success", "ok"),
 ) -> None:
+    """Plot cost distributions directly from raw results CSV."""
     if "realized_cost" not in raw_df.columns:
         print("[plot] realized_cost missing; skipping cost distribution plots.")
         return
@@ -272,6 +306,7 @@ def plot_cost_distribution_raw(
         df["status"] = df["status"].astype(str).str.lower()
         df = df[df["status"].isin(ok_set)]
 
+    # Ensure numeric costs and remove invalid rows.
     df = _coerce_numeric(df, ["realized_cost"])
     df = df.dropna(subset=["realized_cost"])
     if df.empty:
@@ -279,6 +314,7 @@ def plot_cost_distribution_raw(
         return
 
     for config_id, group in df.groupby("config_id"):
+        # Order algorithms by median cost for consistent plots.
         median_costs = (
             group.groupby("algorithm")["realized_cost"].median().sort_values()
         )
@@ -320,6 +356,7 @@ def plot_runtime_distribution(
     algorithm_order: Optional[Sequence[str]] = None,
     colors: Optional[Dict[str, Any]] = None,
 ) -> None:
+    """Plot runtime distributions from per-seed samples (log scale)."""
     column, samples = _extract_samples_by_algorithm(
         summary_df,
         ["runtime_values", "runtime_samples", "runtime_ms_samples"],
@@ -362,6 +399,7 @@ def plot_runtime_median(
     algorithm_order: Optional[Sequence[str]] = None,
     colors: Optional[Dict[str, Any]] = None,
 ) -> None:
+    """Plot runtime medians as a bar chart."""
     if "runtime_median_ms" not in summary_df.columns:
         print("[plot] runtime_median_ms missing; skipping runtime median plots.")
         return
@@ -397,6 +435,7 @@ def plot_runtime_quantiles(
     algorithm_order: Optional[Sequence[str]] = None,
     colors: Optional[Dict[str, Any]] = None,
 ) -> None:
+    """Plot runtime median vs 95th percentile (log scale)."""
     if "runtime_median_ms" not in summary_df.columns or "runtime_q_ms" not in summary_df.columns:
         print("[plot] runtime_median_ms/runtime_q_ms missing; skipping runtime quantile plots.")
         return
@@ -448,6 +487,7 @@ def plot_runtime_quantiles(
 
 
 def _expanded_nodes_column(summary_df: pd.DataFrame) -> Optional[str]:
+    """Return the expanded-nodes column name if present."""
     candidates = [
         "expanded_nodes_median",
         "expanded_nodes_mean",
@@ -466,6 +506,7 @@ def plot_search_effort(
     algorithm_order: Optional[Sequence[str]] = None,
     colors: Optional[Dict[str, Any]] = None,
 ) -> None:
+    """Plot expanded-nodes metrics per algorithm."""
     col = _expanded_nodes_column(summary_df)
     if not col:
         print("[plot] Expanded node metric missing; skipping search effort plots.")
@@ -501,6 +542,7 @@ def plot_cost_decomposition(
     algorithm_order: Optional[Sequence[str]] = None,
     colors: Optional[Dict[str, Any]] = None,
 ) -> None:
+    """Plot nominal vs robust cost and the robustness premium."""
     needed = ["metric_nominal_cost_median", "metric_robust_cost_median"]
     if not all(col in summary_df.columns for col in needed):
         print("[plot] Nominal/robust cost metrics missing; skipping cost decomposition plots.")
@@ -551,6 +593,7 @@ def plot_cost_decomposition(
         _save_figure(fig, output_dir, filename)
         _require_matplotlib().close(fig)
 
+        # Plot robustness premium as robust - nominal.
         premium = robust - nominal
         fig, ax = _require_matplotlib().subplots(figsize=(7.5, 4.0))
         for idx, algo in enumerate(order):
@@ -573,6 +616,7 @@ def _aggregate_param_sweep(
     ci_low: Optional[str] = None,
     ci_high: Optional[str] = None,
 ) -> pd.DataFrame:
+    """Aggregate summary metrics for parameter sweep plots."""
     agg: Dict[str, Any] = {
         metric: "mean",
     }
@@ -590,6 +634,7 @@ def plot_parameter_sweeps(
     algorithm_order: Optional[Sequence[str]] = None,
     colors: Optional[Dict[str, Any]] = None,
 ) -> None:
+    """Plot cost/runtime vs parameter values for sweep studies."""
     params = [
         "grid_size",
         "length_scale_x",
@@ -683,6 +728,7 @@ def plot_tradeoff_scatter(
     colors: Optional[Dict[str, Any]] = None,
     annotate: bool = False,
 ) -> None:
+    """Plot runtime vs cost trade-off scatter (log scale on runtime)."""
     if runtime_metric not in summary_df.columns or "cost_median" not in summary_df.columns:
         print("[plot] Missing runtime or cost metrics; skipping trade-off scatter plot.")
         return
@@ -737,6 +783,7 @@ def plot_replans_vs_cost(
     colors: Optional[Dict[str, Any]] = None,
     ok_statuses: Sequence[str] = ("success", "ok"),
 ) -> None:
+    """Plot replans vs cost for D* Lite variants, using raw JSON outputs."""
     if "realized_cost" not in raw_df.columns:
         print("[plot] realized_cost missing; skipping replans vs cost plots.")
         return
@@ -744,10 +791,10 @@ def plot_replans_vs_cost(
         print("[plot] seed/algorithm/config_id missing; skipping replans vs cost plots.")
         return
 
+    # Map algorithms to JSON result filenames for replans.
     algo_to_file = {
         "dstar": "DStarLite_result.json",
         "dstar_discrete": "DStarLiteDiscreteUncertainty_result.json",
-        "dstar_discrete_adaptive": "DStarLiteDiscreteAdaptiveUncertainty_result.json",
         "dstar_budgeted": "DStarLiteBudgetedUncertainty_result.json",
     }
 
@@ -764,6 +811,7 @@ def plot_replans_vs_cost(
         print("[plot] No D* Lite rows available for replans vs cost plots.")
         return
 
+    # Cache replans lookups to avoid repeated JSON parsing.
     replans_cache: Dict[Tuple[str, int, str], Optional[float]] = {}
 
     def lookup_replans(config_id: str, seed: int, algorithm: str) -> Optional[float]:
@@ -818,6 +866,7 @@ def plot_replans_vs_cost(
             algo_df = plot_df[plot_df["algorithm"] == algo]
             if algo_df.empty:
                 continue
+            # Add jitter so points are easier to distinguish.
             jitter = rng.uniform(-0.25, 0.25, size=len(algo_df))
             ax.scatter(
                 algo_df["realized_cost"].to_numpy(),
@@ -854,6 +903,7 @@ def plot_path_geometry(
     algorithm_order: Optional[Sequence[str]] = None,
     colors: Optional[Dict[str, Any]] = None,
 ) -> None:
+    """Plot boundary-edge share metrics if present."""
     candidates = [
         "metric_boundary_edge_share_median",
         "metric_boundary_edge_share_mean",
@@ -887,6 +937,10 @@ def plot_path_geometry(
         _require_matplotlib().close(fig)
 
 
+# -----------------------------------------------------------------------------
+# Orchestration and CLI entry point.
+# -----------------------------------------------------------------------------
+
 def run_all_plots(
     summary_csv: str | Path,
     output_dir: Optional[str | Path] = None,
@@ -894,11 +948,13 @@ def run_all_plots(
     annotate_tradeoff: bool = False,
     raw_csv: Optional[str | Path] = None,
 ) -> None:
+    """Generate the standard set of figures from a summary CSV."""
     set_plot_style()
     summary_path = Path(summary_csv).expanduser()
     summary_df = pd.read_csv(summary_path)
     output_dir = Path(output_dir or (Path.cwd() / "figures" / "experiment_results")).expanduser()
 
+    # Establish consistent order and colors across plots.
     algorithm_order = _algorithm_order(summary_df)
     colors = _color_map(algorithm_order)
 
@@ -916,6 +972,7 @@ def run_all_plots(
     raw_path = _resolve_raw_csv(summary_path, raw_csv)
     raw_df = _load_raw_results(raw_path) if raw_path else pd.DataFrame()
     if not raw_df.empty:
+        # Use raw results for distribution and replans plots when available.
         plot_cost_distribution_raw(
             raw_df,
             output_dir,
@@ -935,6 +992,7 @@ def run_all_plots(
 
 
 def main() -> None:
+    """CLI entry point for plotting experiment results."""
     parser = argparse.ArgumentParser(description="Plot aggregated experiment results.")
     parser.add_argument("summary_csv", help="Path to summary.csv from batch aggregation.")
     parser.add_argument(

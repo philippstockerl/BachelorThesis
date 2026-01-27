@@ -1,5 +1,5 @@
 {
-    "config_id": "URBAN_VS_REGIONAL_SCALE_100",
+    "config_id": "BEACONS_20",
     "experiments_root": "/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments",
     "results_csv": "batch_results.csv",
     "seeds": [
@@ -112,14 +112,14 @@
         "dstar_budgeted"
     ],
     "srf": {
-        "grid_size": 100,
+        "grid_size": 20,
         "cell_size": 1,
         "kernel": "Gaussian",
         "variance": 1.0,
         "nu": 1.5,
         "length_scale": [
-            25.0,
-            25.0,
+            5.0,
+            5.0,
             3.0
         ],
         "anis": [
@@ -145,14 +145,14 @@
         "adaptive_commit": null
     },
     "budgeted_model": {
-        "gamma": 19.8,
-        "gamma_input": "19.8",
-        "gamma_value": 19.8,
+        "gamma": 3.8,
+        "gamma_input": "3.8",
+        "gamma_value": 3.8,
         "nominal_rule": "avg"
     },
     "dstar_lite": {
         "warmstart_mode": "none",
-        "max_milestones": 10,
+        "max_milestones": 20,
         "export_overlays": false,
         "debug": true,
         "debug_stride": 100,

@@ -1,6 +1,22 @@
 [
-  "config/batches/URBAN_VS_REGIONAL_SCALE_10.json",
-  "config/batches/URBAN_VS_REGIONAL_SCALE_50_20260107_130917.json",
-  "config/batches/URBAN_VS_REGIONAL_SCALE_75_20260107_131001.json",
-  "config/batches/URBAN_VS_REGIONAL_SCALE_100_20260107_131039.json"
+  "config/batches/BASELINE_20260120_214610.json",
+  "config/batches/KERNEL_CHOICE_EXPONENTIAL.json",
+  "config/batches/KERNEL_CHOICE_CUBIC.json",
+  "config/batches/KERNEL_CHOICE_CIRCULAR.json",
+  "config/batches/URBAN_VS_REGIONAL_50.json",
+  "config/batches/URBAN_VS_REGIONAL_75.json",
+  "config/batches/URBAN_VS_REGIONAL_100.json",
+  "config/batches/SHORT_VS_LONG_EXP_1.json",
+  "config/batches/SHORT_VS_LONG_EXP_5.json",
+  "config/batches/SHORT_VS_LONG_EXP_50.json",
+  "config/batches/SHORT_VS_LONG_EXP_100.json",
+  "config/batches/TEMP_STAB_0.1.json",
+  "config/batches/TEMP_STAB_0.6.json",
+  "config/batches/UNCERTAINTY_BUDGET_0.json",
+  "config/batches/UNCERTAINTY_BUDGET_0.25.json",
+  "config/batches/UNCERTAINTY_BUDGET_0.50.json",
+  "config/batches/UNCERTAINTY_BUDGET_1.json",
+  "config/batches/BEACONS_1.json",
+  "config/batches/BEACONS_5.json",
+  "config/batches/BEACONS_20.json"
 ]

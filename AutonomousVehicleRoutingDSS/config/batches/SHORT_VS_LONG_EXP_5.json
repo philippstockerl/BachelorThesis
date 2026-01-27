@@ -145,9 +145,9 @@
     "adaptive_commit": null
   },
   "budgeted_model": {
-    "gamma": 4.0,
-    "gamma_input": "4",
-    "gamma_value": 4.0,
+    "gamma": 3.8,
+    "gamma_input": "3.8",
+    "gamma_value": 3.8,
     "nominal_rule": "avg"
   },
   "dstar_lite": {
