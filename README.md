@@ -14,7 +14,7 @@ In comparison, incremental search methods, specifically D* Lite, discover uncert
 
 The robust optimization approaches where implemented as Mixed Integer Linear Programs and solved with the Gurobi Python solver.
 
-D* Lite was also implemented from pseudocode (see Likhachev & Koenig 2001, D* Lite) and extended to my problem and data structure.
+D* Lite was also implemented in Python from pseudocode (see Likhachev & Koenig 2001, D* Lite) and extended to my problem and data structure.
 
 In addition, I have used D* Lite's structure to implement an experimental hybrid of both approaches.
 While I compare the two standalone paradigms, I also used the robust combinatorial shortest-path solutions to guide D* Lite.
