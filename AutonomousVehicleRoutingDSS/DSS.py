@@ -946,6 +946,31 @@ def inject_css() -> None:
             overflow-y: auto;
             color: var(--text);
         }}
+        .metrics-table-wrap {{
+            overflow-x: auto;
+        }}
+        table.metrics-table {{
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.92rem;
+            color: var(--text);
+        }}
+        table.metrics-table th,
+        table.metrics-table td {{
+            border: 1px solid var(--panel-border);
+            padding: 0.45rem 0.6rem;
+            text-align: left;
+        }}
+        table.metrics-table thead th {{
+            background: rgba(255, 255, 255, 0.08);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            font-size: 0.78rem;
+            color: var(--accent);
+        }}
+        table.metrics-table tbody tr:nth-child(even) {{
+            background: rgba(255, 255, 255, 0.03);
+        }}
         .highlight-label {{
             font-size: 0.95rem;
             text-transform: uppercase;
@@ -1833,12 +1858,17 @@ def render_log_terminal(show_log: bool) -> Tuple[Any, bool]:
     return placeholder, show_log
 
 
+def render_html_table(df: pd.DataFrame) -> None:
+    html_table = df.to_html(index=False, classes="metrics-table", border=0)
+    st.markdown(f"<div class='metrics-table-wrap'>{html_table}</div>", unsafe_allow_html=True)
+
+
 def render_metrics_table() -> None:
     df = pd.DataFrame(st.session_state["metrics"]).reset_index(drop=True)
     for col in ("Cost", "Nominal Cost", "Deviation Cost", "Edges", "Run Time", "Replans"):
         if col in df.columns:
             df[col] = df[col].astype(str)
-    st.dataframe(df, use_container_width=True)
+    render_html_table(df)
 
 
 def render_metrics_summary(cfg: Dict[str, Any]) -> None:
@@ -2288,7 +2318,7 @@ def render_custom_model_comparison(cfg: Dict[str, Any]) -> None:
     if not mismatches:
         st.success("✔️ No cost differences on shared arcs.")
     else:
-        st.dataframe(pd.DataFrame(mismatches))
+        render_html_table(pd.DataFrame(mismatches))
 
     # ---------------- TOTAL COST SUMMARY ----------------
     st.markdown("### Total Cost Summary")
