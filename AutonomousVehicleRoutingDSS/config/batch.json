@@ -1,6 +1,6 @@
 {
     "config_id": "BEACONS_20",
-    "experiments_root": "/Users/philippstockerl/BachelorThesis/AutonomousVehicleRoutingDSS/experiments",
+    "experiments_root": "BachelorThesis/AutonomousVehicleRoutingDSS/experiments",
     "results_csv": "batch_results.csv",
     "seeds": [
         1,
